@@ -16,7 +16,7 @@ var Footer = require('./Footer.react');
 var Header = require('./Header.react');
 var MainSection = require('./MainSection.react');
 var React = require('react');
-var TodoStore = require('../stores/TodoStore');
+var TodoStore = require('../stores/Store');
 
 /**
  * Retrieve the current TODO data from the TodoStore

@@ -9,7 +9,7 @@
 
 var React = require('react');
 var TodoActions = require('../actions/TodoActions');
-var TodoTextInput = require('./TodoTextInput.react');
+var TextInput = require('./TextInput.react');
 
 var Header = React.createClass({
 
@@ -20,7 +20,7 @@ var Header = React.createClass({
     return (
       <header id="header">
         <h1>todos</h1>
-        <TodoTextInput
+        <TextInput
           id="new-todo"
           placeholder="What needs to be done?"
           onSave={this._onSave}

@@ -10,9 +10,9 @@
  */
 
 var AppDispatcher = require('../dispatcher/AppDispatcher');
-var TodoConstants = require('../constants/TodoConstants');
+var TodoConstants = require('../constants/Constants');
 
-var TodoActions = {
+var Actions = {
 
   /**
    * @param  {string} text
@@ -82,4 +82,4 @@ var TodoActions = {
 
 };
 
-module.exports = TodoActions;
+module.exports = Actions;

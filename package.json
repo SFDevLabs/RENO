@@ -23,8 +23,15 @@
     "url": "https://github.com/SFDevLabs/reno/issues"
   },
   "homepage": "https://github.com/SFDevLabs/reno",
+  "dependencies": {
+    "babel-loader": "^5.3.2",
+    "classnames": "^2.2.1",
+    "flux": "^2.1.1",
+    "keymirror": "^0.1.1",
+    "object-assign": "^4.0.1",
+    "react": "^0.14.3"
+  },
   "devDependencies": {
-    "babel-loader": "^6.2.0",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.0"
   }

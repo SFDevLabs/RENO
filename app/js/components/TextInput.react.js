@@ -12,7 +12,7 @@ var ReactPropTypes = React.PropTypes;
 
 var ENTER_KEY_CODE = 13;
 
-var TodoTextInput = React.createClass({
+var TextInput = React.createClass({
 
   propTypes: {
     className: ReactPropTypes.string,
@@ -77,4 +77,4 @@ var TodoTextInput = React.createClass({
 
 });
 
-module.exports = TodoTextInput;
+module.exports = TextInput;
