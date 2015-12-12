@@ -1,0 +1,31 @@
+{
+  "name": "reno",
+  "version": "0.0.1",
+  "description": "A simple app powered by node.js, react.js and mongoDB.",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --content-base ./build --inline --port 3000",
+    "test": "test",
+    "build": "webpack --optimize-minimize"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SFDevLabs/reno.git"
+  },
+  "keywords": [
+    "express",
+    "mongoose",
+    "mongodb"
+  ],
+  "author": "Jeff Jenkins",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SFDevLabs/reno/issues"
+  },
+  "homepage": "https://github.com/SFDevLabs/reno",
+  "devDependencies": {
+    "babel-loader": "^6.2.0",
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0"
+  }
+}
