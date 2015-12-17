@@ -13,7 +13,6 @@
  */
 
 var Footer = require('./Footer.react');
-var Header = require('./Header.react');
 var MainSection = require('./MainSection.react');
 var React = require('react');
 var ArticleStore = require('../stores/ArticleStore');
@@ -49,7 +48,7 @@ var TodoApp = React.createClass({
   render: function() {
     return (
       <div>
-        <Header />
+        
 
         <MainSection
           allTodos={this.state.allTodos}

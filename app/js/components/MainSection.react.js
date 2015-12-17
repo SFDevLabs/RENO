@@ -34,7 +34,7 @@ var MainSection = React.createClass({
     var todos = [];
 
     for (var key in allTodos) {
-      todos.push(<Item key={key} todo={allTodos[key]} />);
+      todos.push(<Item key={key} article={allTodos[key]} />);
     }
 
     return (
@@ -43,24 +43,16 @@ var MainSection = React.createClass({
           id="list"
           placeholder="What needs to be done?"
           onSave={this._onSave}/>
-        <input
-          id="toggle-all"
-          type="checkbox"
-          onChange={this._onToggleCompleteAll}
-          checked={this.props.areAllComplete ? 'checked' : ''}
-        />
-        <label htmlFor="toggle-all">Mark all as complete</label>
-        <ul id="todo-list">{todos}</ul>
+        <div className="content" id="todo-list">{todos}</div>
+        <div className="content pagination">
+          <a type="button" className="btn btn-primary active" >
+            More        
+          </a>
+        </div>
       </section>
     );
   },
 
-  /**
-   * Event handler to mark all TODOs as complete
-   */
-  _onToggleCompleteAll: function() {
-    ArticleActions.toggleCompleteAll();
-  },
   /**
    * Event handler called within TodoTextInput.
    * Defining this here allows TodoTextInput to be used in multiple places
