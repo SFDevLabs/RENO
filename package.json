@@ -19,9 +19,10 @@
     "node": ">=4.x"
   },
   "scripts": {
-    "start": "NODE_ENV=development ./node_modules/.bin/nodemon server.js",
+    "start": "webpack-dev-server --port 8090 & NODE_ENV=development ./node_modules/.bin/nodemon server.js",
     "debug": "NODE_ENV=development ./node_modules/.bin/nodemon --debug server.js",
-    "test": "NODE_ENV=test ./node_modules/.bin/ava --serial test/test-*.js"
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --reporter spec --timeout 10000 test/test-*.js",
+    "build": "webpack --optimize-minimize"
   },
   "dependencies": {
     "async": "~1.5.0",
@@ -53,13 +54,24 @@
     "passport-twitter": "~1.0.3",
     "swig": "~1.4.2",
     "view-helpers": "~0.1.5",
-    "winston": "~2.1.1"
+    "winston": "~2.1.1",
+    "react": "^0.14.3",
+    "react-dom": "^0.14.3",
+    "flux": "^2.1.1",
+    "classnames": "^2.2.1",
+    "keymirror": "^0.1.1"
   },
   "devDependencies": {
-    "ava": "^0.5.0",
-    "describe": "^1.2.0",
+    "babel-loader": "^5.3.2",
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0",
+    "jest-cli": "^0.8.1",
     "nodemon": "*",
-    "should": "^8.0.1",
-    "supertest": "*"
+    "supertest": "1.0.1",
+    "should": "7.0.1",
+    "mocha": "2.2.5"
+  },
+  "jest": {
+    "rootDir": "./app/js"
   }
 }

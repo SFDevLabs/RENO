@@ -1,0 +1,6 @@
+services:
+  - mongodb
+language: node_js
+node_js:
+  - "4.2.2"
+  - "5.0.0"
