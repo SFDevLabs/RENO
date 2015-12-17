@@ -7,12 +7,30 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
-var ReactDOM = require('react-dom');
+const React = require('react');
+const ReactDOM = require('react-dom');
+import { Router, Route, Link } from 'react-router';
 
-var TodoApp = require('./components/App.react');
 
-ReactDOM.render(
-  <TodoApp />,
+const App = require('./components/App.react');
+
+const About = React.createClass({
+  render :function() {
+    return (
+      <div>
+        <h2>About</h2>
+        <Link to="/">Home</Link>
+      </div>
+    )
+  }
+})
+
+
+ReactDOM.render((
+  <Router>
+    <Route path="/" component={App} />
+    <Route path="/about" component={About} />
+  </Router>
+  ),
   document.getElementById('app')
 );

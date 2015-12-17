@@ -9,13 +9,13 @@
  * TodoStore-test
  */
 
-jest.dontMock('../../constants/Constants');
-jest.dontMock('../Store');
+jest.dontMock('../../constants/ArticleConstants');
+jest.dontMock('../ArticleStore');
 jest.dontMock('object-assign');
 
 describe('Store', function() {
 
-  var Constants = require('../../constants/Constants');
+  var Constants = require('../../constants/ArticleConstants');
   var AppDispatcher;
   var TodoStore;
   var callback;
@@ -32,7 +32,7 @@ describe('Store', function() {
 
   beforeEach(function() {
     AppDispatcher = require('../../dispatcher/AppDispatcher');
-    TodoStore = require('../Store');
+    TodoStore = require('../ArticleStore');
     callback = AppDispatcher.register.mock.calls[0][0];
   });
 

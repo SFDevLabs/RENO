@@ -10,16 +10,25 @@
  */
 
 var AppDispatcher = require('../dispatcher/AppDispatcher');
-var TodoConstants = require('../constants/Constants');
+var ArticleConstants = require('../constants/ArticleConstants');
+var ArticleApi = require('../api/ArticlesApi');
+
 
 var Actions = {
 
   /**
    * @param  {string} text
    */
+  getAll: function(text) {
+    ArticleApi.getEntityData();
+  },
+
+  /**
+   * @param  {string} text
+   */
   create: function(text) {
     AppDispatcher.dispatch({
-      actionType: TodoConstants.TODO_CREATE,
+      actionType: ArticleConstants.TODO_CREATE,
       text: text
     });
   },
@@ -30,7 +39,7 @@ var Actions = {
    */
   updateText: function(id, text) {
     AppDispatcher.dispatch({
-      actionType: TodoConstants.TODO_UPDATE_TEXT,
+      actionType: ArticleConstants.TODO_UPDATE_TEXT,
       id: id,
       text: text
     });
@@ -43,8 +52,8 @@ var Actions = {
   toggleComplete: function(todo) {
     var id = todo.id;
     var actionType = todo.complete ?
-        TodoConstants.TODO_UNDO_COMPLETE :
-        TodoConstants.TODO_COMPLETE;
+        ArticleConstants.TODO_UNDO_COMPLETE :
+        ArticleConstants.TODO_COMPLETE;
 
     AppDispatcher.dispatch({
       actionType: actionType,
@@ -57,7 +66,7 @@ var Actions = {
    */
   toggleCompleteAll: function() {
     AppDispatcher.dispatch({
-      actionType: TodoConstants.TODO_TOGGLE_COMPLETE_ALL
+      actionType: ArticleConstants.TODO_TOGGLE_COMPLETE_ALL
     });
   },
 
@@ -66,7 +75,7 @@ var Actions = {
    */
   destroy: function(id) {
     AppDispatcher.dispatch({
-      actionType: TodoConstants.TODO_DESTROY,
+      actionType: ArticleConstants.TODO_DESTROY,
       id: id
     });
   },
@@ -76,7 +85,7 @@ var Actions = {
    */
   destroyCompleted: function() {
     AppDispatcher.dispatch({
-      actionType: TodoConstants.TODO_DESTROY_COMPLETED
+      actionType: ArticleConstants.TODO_DESTROY_COMPLETED
     });
   }
 

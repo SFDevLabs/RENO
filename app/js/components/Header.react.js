@@ -8,8 +8,8 @@
  */
 
 var React = require('react');
-var TodoActions = require('../actions/TodoActions');
-var TextInput = require('./TextInput.react');
+var TodoActions = require('../actions/ArticleActions');
+import { Link } from 'react-router';
 
 var Header = React.createClass({
 
@@ -18,28 +18,45 @@ var Header = React.createClass({
    */
   render: function() {
     return (
-      <header id="header">
-        <h1>List of Stuff</h1>
-        <TextInput
-          id="list"
-          placeholder="What needs to be done?"
-          onSave={this._onSave}
-        />
-      </header>
+      <nav role="navigation" className="navbar navbar-default navbar-fixed-top">
+        <div className="container">
+          <div className="navbar-header">
+            <button type="button" data-toggle="collapse" data-target=".navbar-collapse" className="navbar-toggle">
+              <span className="sr-only">Toggle navigation</span>
+              <span className="icon-bar"></span>
+              <span className="icon-bar"></span>
+              <span className="icon-bar"></span>
+            </button>
+            <a href="/" className="navbar-brand">Node Express Mongoose Demo</a>
+          </div>
+          <div className="collapse navbar-collapse">
+            <ul className="nav navbar-nav">
+              <li className="{% if (isActive('/articles/new')) %}active{% endif %}">
+                <a href="/articles/new" title="new article">New</a>
+              </li>
+
+                <li className="{% if (isActive('/users/' + req.user.id )) %}active{% endif %}">
+                  <a href="{{ '/users/' + req.user.id }}" title="Profile">Profile</a>
+                </li>
+                <li>
+                  <a href="/logout" title="logout">Logout</a>
+                </li>
+
+                <li className="{% if (isActive('/login')) %}active{% endif %}">
+                  <a href="/login" title="Login">Login</a>
+                </li>
+
+            </ul>
+
+            <ul className="nav navbar-nav navbar-right">
+              <li>
+                <Link to="/about">Home</Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
     );
-  },
-
-  /**
-   * Event handler called within TodoTextInput.
-   * Defining this here allows TodoTextInput to be used in multiple places
-   * in different ways.
-   * @param {string} text
-   */
-  _onSave: function(text) {
-    if (text.trim()){
-      TodoActions.create(text);
-    }
-
   }
 
 });

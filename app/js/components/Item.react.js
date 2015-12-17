@@ -9,7 +9,7 @@
 
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
-var TodoActions = require('../actions/TodoActions');
+var TodoActions = require('../actions/ArticleActions');
 var TextInput = require('./TextInput.react');
 
 var classNames = require('classnames');
@@ -53,7 +53,7 @@ var TodoItem = React.createClass({
           'completed': todo.complete,
           'editing': this.state.isEditing
         })}
-        key={todo.id}>
+        key={todo._id}>
         <div className="view">
           <input
             className="toggle"
@@ -62,9 +62,9 @@ var TodoItem = React.createClass({
             onChange={this._onToggleComplete}
           />
           <label onDoubleClick={this._onDoubleClick}>
-            {todo.text}
+            {todo.title} - {todo.body}
           </label>
-          <button className="destroy" onClick={this._onDestroyClick} />
+          <button className="destroy" onClick={this._onDestroyClick} > Remove </ button>
         </div>
         {input}
       </li>
@@ -86,12 +86,12 @@ var TodoItem = React.createClass({
    * @param  {string} text
    */
   _onSave: function(text) {
-    TodoActions.updateText(this.props.todo.id, text);
+    TodoActions.updateText(this.props.todo._id, text);
     this.setState({isEditing: false});
   },
 
   _onDestroyClick: function() {
-    TodoActions.destroy(this.props.todo.id);
+    TodoActions.destroy(this.props.todo._id);
   }
 
 });

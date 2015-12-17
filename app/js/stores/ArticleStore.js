@@ -6,18 +6,18 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * TodoStore
+ * ArticleStore
  */
 
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
-var TodoConstants = require('../constants/Constants');
+var ArticleConstants = require('../constants/ArticleConstants');
 var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
 
-var _todos = {};
-
+var _articles = {};
+var _didInitalGet = false;
 /**
  * Create a TODO item.
  * @param  {string} text The content of the TODO
@@ -27,12 +27,35 @@ function create(text) {
   // server-side storage.
   // Using the current timestamp + random number in place of a real id.
   var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
-  _todos[id] = {
+  _articles[id] = {
     id: id,
     complete: false,
     text: text
   };
 }
+
+/**
+ * Create a ARTICLE item.
+ * @param  {string} text The content of the TODO
+ */
+function set(articles) {
+  // Hand waving here -- not showing how this interacts with XHR or persistent
+  // server-side storage.
+  // Using the current timestamp + random number in place of a real id.
+  // var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
+  // _articles[id] = {
+  //   id: id,
+  //   complete: false,
+  //   text: text
+  // };
+  _didInitalGet = true
+  for (var i = articles.length - 1; i >= 0; i--) {
+    var article = articles[i]
+    var id = article._id
+    _articles[id] = article;
+  };
+}
+
 
 /**
  * Update a TODO item.
@@ -41,7 +64,7 @@ function create(text) {
  *     updated.
  */
 function update(id, updates) {
-  _todos[id] = assign({}, _todos[id], updates);
+  _articles[id] = assign({}, _articles[id], updates);
 }
 
 /**
@@ -50,7 +73,7 @@ function update(id, updates) {
  *     updated.
  */
 function updateAll(updates) {
-  for (var id in _todos) {
+  for (var id in _articles) {
     update(id, updates);
   }
 }
@@ -60,29 +83,29 @@ function updateAll(updates) {
  * @param  {string} id
  */
 function destroy(id) {
-  delete _todos[id];
+  delete _articles[id];
 }
 
 /**
  * Delete all the completed TODO items.
  */
 function destroyCompleted() {
-  for (var id in _todos) {
-    if (_todos[id].complete) {
+  for (var id in _articles) {
+    if (_articles[id].complete) {
       destroy(id);
     }
   }
 }
 
-var TodoStore = assign({}, EventEmitter.prototype, {
+var ArticleStore = assign({}, EventEmitter.prototype, {
 
   /**
    * Tests whether all the remaining TODO items are marked as completed.
    * @return {boolean}
    */
   areAllComplete: function() {
-    for (var id in _todos) {
-      if (!_todos[id].complete) {
+    for (var id in _articles) {
+      if (!_articles[id].complete) {
         return false;
       }
     }
@@ -94,7 +117,11 @@ var TodoStore = assign({}, EventEmitter.prototype, {
    * @return {object}
    */
   getAll: function() {
-    return _todos;
+    return _articles;
+  },
+  
+  didInitalGet: function() {
+    return _didInitalGet;
   },
 
   emitChange: function() {
@@ -121,49 +148,58 @@ AppDispatcher.register(function(action) {
   var text;
 
   switch(action.actionType) {
-    case TodoConstants.TODO_CREATE:
-      text = action.text.trim();
-      if (text !== '') {
-        create(text);
-        TodoStore.emitChange();
+
+    case ArticleConstants.GET_ALL_ARTICLES_DATA:
+      var articles = action.response.body
+      if (articles) {
+        set(articles);
+        ArticleStore.emitChange();
       }
       break;
 
-    case TodoConstants.TODO_TOGGLE_COMPLETE_ALL:
-      if (TodoStore.areAllComplete()) {
+    case ArticleConstants.TODO_CREATE:
+      text = action.text.trim();
+      if (text !== '') {
+        create(text);
+        ArticleStore.emitChange();
+      }
+      break;
+
+    case ArticleConstants.TODO_TOGGLE_COMPLETE_ALL:
+      if (ArticleStore.areAllComplete()) {
         updateAll({complete: false});
       } else {
         updateAll({complete: true});
       }
-      TodoStore.emitChange();
+      ArticleStore.emitChange();
       break;
 
-    case TodoConstants.TODO_UNDO_COMPLETE:
+    case ArticleConstants.TODO_UNDO_COMPLETE:
       update(action.id, {complete: false});
-      TodoStore.emitChange();
+      ArticleStore.emitChange();
       break;
 
-    case TodoConstants.TODO_COMPLETE:
+    case ArticleConstants.TODO_COMPLETE:
       update(action.id, {complete: true});
-      TodoStore.emitChange();
+      ArticleStore.emitChange();
       break;
 
-    case TodoConstants.TODO_UPDATE_TEXT:
+    case ArticleConstants.TODO_UPDATE_TEXT:
       text = action.text.trim();
       if (text !== '') {
         update(action.id, {text: text});
-        TodoStore.emitChange();
+        ArticleStore.emitChange();
       }
       break;
 
-    case TodoConstants.TODO_DESTROY:
+    case ArticleConstants.TODO_DESTROY:
       destroy(action.id);
-      TodoStore.emitChange();
+      ArticleStore.emitChange();
       break;
 
-    case TodoConstants.TODO_DESTROY_COMPLETED:
+    case ArticleConstants.TODO_DESTROY_COMPLETED:
       destroyCompleted();
-      TodoStore.emitChange();
+      ArticleStore.emitChange();
       break;
 
     default:
@@ -171,4 +207,4 @@ AppDispatcher.register(function(action) {
   }
 });
 
-module.exports = TodoStore;
+module.exports = ArticleStore;

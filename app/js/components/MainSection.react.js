@@ -9,25 +9,26 @@
 
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
-var TodoActions = require('../actions/TodoActions');
+var ArticleActions = require('../actions/ArticleActions');
 var Item = require('./Item.react');
+var TextInput = require('./TextInput.react');
 
 var MainSection = React.createClass({
 
   propTypes: {
     allTodos: ReactPropTypes.object.isRequired,
-    areAllComplete: ReactPropTypes.bool.isRequired
+    areAllComplete: ReactPropTypes.bool.isRequired,
+    initalGet: ReactPropTypes.bool.isRequired,
   },
-
+  componentDidMount: function() {
+    if (!this.props.initalGet){
+      ArticleActions.getAll();
+    }
+  },
   /**
    * @return {object}
    */
   render: function() {
-    // This section should be hidden by default
-    // and shown when there are todos.
-    if (Object.keys(this.props.allTodos).length < 1) {
-      return null;
-    }
 
     var allTodos = this.props.allTodos;
     var todos = [];
@@ -38,6 +39,10 @@ var MainSection = React.createClass({
 
     return (
       <section id="main">
+        <TextInput
+          id="list"
+          placeholder="What needs to be done?"
+          onSave={this._onSave}/>
         <input
           id="toggle-all"
           type="checkbox"
@@ -54,7 +59,18 @@ var MainSection = React.createClass({
    * Event handler to mark all TODOs as complete
    */
   _onToggleCompleteAll: function() {
-    TodoActions.toggleCompleteAll();
+    ArticleActions.toggleCompleteAll();
+  },
+  /**
+   * Event handler called within TodoTextInput.
+   * Defining this here allows TodoTextInput to be used in multiple places
+   * in different ways.
+   * @param {string} text
+   */
+  _onSave: function(text) {
+    if (text.trim()){
+      ArticleActions.create(text);
+    }
   }
 
 });

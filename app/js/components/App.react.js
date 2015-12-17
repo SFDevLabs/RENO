@@ -16,15 +16,16 @@ var Footer = require('./Footer.react');
 var Header = require('./Header.react');
 var MainSection = require('./MainSection.react');
 var React = require('react');
-var TodoStore = require('../stores/Store');
+var ArticleStore = require('../stores/ArticleStore');
 
 /**
- * Retrieve the current TODO data from the TodoStore
+ * Retrieve the current ARTICLE data from the ArticleStore
  */
 function getTodoState() {
   return {
-    allTodos: TodoStore.getAll(),
-    areAllComplete: TodoStore.areAllComplete()
+    allTodos: ArticleStore.getAll(),
+    areAllComplete: ArticleStore.areAllComplete(),
+    initalGet: ArticleStore.didInitalGet()
   };
 }
 
@@ -35,11 +36,11 @@ var TodoApp = React.createClass({
   },
 
   componentDidMount: function() {
-    TodoStore.addChangeListener(this._onChange);
+    ArticleStore.addChangeListener(this._onChange);
   },
 
   componentWillUnmount: function() {
-    TodoStore.removeChangeListener(this._onChange);
+    ArticleStore.removeChangeListener(this._onChange);
   },
 
   /**
@@ -49,16 +50,18 @@ var TodoApp = React.createClass({
     return (
       <div>
         <Header />
+
         <MainSection
           allTodos={this.state.allTodos}
-          areAllComplete={this.state.areAllComplete}/>
+          areAllComplete={this.state.areAllComplete}
+          initalGet= {this.state.initalGet}/>
         <Footer allTodos={this.state.allTodos} />
       </div>
     );
   },
 
   /**
-   * Event handler for 'change' events coming from the TodoStore
+   * Event handler for 'change' events coming from the ArticleStore
    */
   _onChange: function() {
     this.setState(getTodoState());
