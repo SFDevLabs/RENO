@@ -7,32 +7,49 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
-var TodoActions = require('../actions/ArticleActions');
-import { Link } from 'react-router';
+const React = require('react');
+const TodoActions = require('../actions/ArticleActions');
+const Link = require('react-router').Link
+
 
 var Header = React.createClass({
-
+  getInitialState:function(){
+    return {
+      collapsed: true,
+      collapsing: false
+    };
+  },
   /**
    * @return {object}
    */
   render: function() {
+
+    var navBar = 'navbar-collapse';
+    var styleStuff = {};
+    if (this.state.collapsing){
+      navBar += ' collapsing';
+      styleStuff.height = this.state.collapsed?'0px':' 184px';
+    }else{
+      navBar += this.state.collapsed?' collapse':' in';
+      styleStuff.height = 'auto';
+    }    
+
     return (
       <nav role="navigation" className="navbar navbar-default navbar-fixed-top">
         <div className="container">
           <div className="navbar-header">
-            <button type="button" data-toggle="collapse" data-target=".navbar-collapse" className="navbar-toggle">
+            <button onClick={this._onClick} type="button" data-toggle="collapse" data-target=".navbar-collapse" className="navbar-toggle">
               <span className="sr-only">Toggle navigation</span>
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
             </button>
-            <a href="/" className="navbar-brand">Node Express Mongoose Demo</a>
+            <Link to="/" className="navbar-brand">Node Express Mongoose Demo</ Link>
           </div>
-          <div className="collapse navbar-collapse">
+          <div className={navBar} style={styleStuff}>
             <ul className="nav navbar-nav">
               <li className="{% if (isActive('/articles/new')) %}active{% endif %}">
-                <a href="/articles/new" title="new article">New</a>
+                  <Link to="/articles/new" className="navbar-brand">New</ Link>
               </li>
 
                 <li className="{% if (isActive('/users/' + req.user.id )) %}active{% endif %}">
@@ -50,13 +67,29 @@ var Header = React.createClass({
 
             <ul className="nav navbar-nav navbar-right">
               <li>
-                <Link to="/about">Home</Link>
+                <a href="#">Home</a>
               </li>
             </ul>
           </div>
         </div>
       </nav>
     );
+  },
+  _onClick:function(){
+    var that = this;
+    this.setState({
+      collapsing: true,
+    });
+    setTimeout(function(){ 
+      that.setState({
+        collapsed: !that.state.collapsed
+      });
+     }, 10);
+    setTimeout(function(){ 
+      that.setState({
+        collapsing: false
+      });
+     }, 500);
   }
 
 });

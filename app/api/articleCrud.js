@@ -16,8 +16,15 @@
   //
   function getListController(model) {
     return function (req, res) {
-      //console.log('list', req.body);
-      model.find({}, function (err, result) {
+
+      const page = (req.query.page > 0 ? req.query.page : 1) - 1;
+      const perPage = 30;
+      const options = {
+        perPage: perPage,
+        page: page
+      };
+
+      model.list(options, function (err, result) {
         if (!err) {
           res.send(result);
         } else {
@@ -50,7 +57,7 @@
   function getReadController(model) {
     return function (req, res) {
       //console.log('read', req.body);
-      model.findById(req.params.id, function (err, result) {
+      model.load(req.params.id, function (err, result) {
         if (!err) {
           res.send(result);
         } else {

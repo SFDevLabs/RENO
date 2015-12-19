@@ -28,7 +28,10 @@ exports.load = function (req, res, next, id){
  */
 
 exports.index = function (req, res) {
-  res.render('index')
+  req.flash('success', 'Successfully created article!');
+  res.render('index',{
+    title: 'Home'
+  })
   // const page = (req.query.page > 0 ? req.query.page : 1) - 1;
   // const perPage = 30;
   // const options = {
@@ -50,6 +53,7 @@ exports.index = function (req, res) {
 };
 
 exports.indexOld = function (req, res) {
+  
   const page = (req.query.page > 0 ? req.query.page : 1) - 1;
   const perPage = 30;
   const options = {
@@ -64,7 +68,8 @@ exports.indexOld = function (req, res) {
         title: 'Articles',
         articles: articles,
         page: page + 1,
-        pages: Math.ceil(count / perPage)
+        pages: Math.ceil(count / perPage),
+        errors: utils.errors([{message:"jeff"}])
       });
     });
   });

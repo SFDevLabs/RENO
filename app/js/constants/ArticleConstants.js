@@ -15,11 +15,13 @@ module.exports = keyMirror({
   TODO_CREATE: null,
   TODO_COMPLETE: null,
   TODO_DESTROY: null,
-  TODO_DESTROY_COMPLETED: null,
   TODO_TOGGLE_COMPLETE_ALL: null,
   TODO_UNDO_COMPLETE: null,
   TODO_UPDATE_TEXT: null,
   GET_ENTITY_DATA: null,
   PENDING: null,
-  GET_ALL_ARTICLES_DATA: null
+  ERROR: null,
+  TIMEOUT: null,
+  GET_ALL_ARTICLES_DATA: null,
+  GET_ARTICLE_DATA: null
 });

@@ -18,36 +18,13 @@ var CHANGE_EVENT = 'change';
 
 var _articles = {};
 var _didInitalGet = false;
-/**
- * Create a TODO item.
- * @param  {string} text The content of the TODO
- */
-function create(text) {
-  // Hand waving here -- not showing how this interacts with XHR or persistent
-  // server-side storage.
-  // Using the current timestamp + random number in place of a real id.
-  var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
-  _articles[id] = {
-    id: id,
-    complete: false,
-    text: text
-  };
-}
+
 
 /**
- * Create a ARTICLE item.
- * @param  {string} text The content of the TODO
+ * Set all ARTICLE item.
+ * @param  {string} text The content of the ARTICLES
  */
-function set(articles) {
-  // Hand waving here -- not showing how this interacts with XHR or persistent
-  // server-side storage.
-  // Using the current timestamp + random number in place of a real id.
-  // var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
-  // _articles[id] = {
-  //   id: id,
-  //   complete: false,
-  //   text: text
-  // };
+function setAll(articles) {
   _didInitalGet = true
   for (var i = articles.length - 1; i >= 0; i--) {
     var article = articles[i]
@@ -56,9 +33,17 @@ function set(articles) {
   };
 }
 
+/**
+ * Set one ARTICLE item.
+ * @param  {string} text The content of the ARTICLES
+ */
+function set(article) {
+  _articles[article._id] = article;
+}
+
 
 /**
- * Update a TODO item.
+ * Update a ARTICLES item.
  * @param  {string} id
  * @param {object} updates An object literal containing only the data to be
  *     updated.
@@ -68,7 +53,7 @@ function update(id, updates) {
 }
 
 /**
- * Update all of the TODO items with the same object.
+ * Update all of the ARTICLES items with the same object.
  * @param  {object} updates An object literal containing only the data to be
  *     updated.
  */
@@ -79,7 +64,7 @@ function updateAll(updates) {
 }
 
 /**
- * Delete a TODO item.
+ * Delete a ARTICLES item.
  * @param  {string} id
  */
 function destroy(id) {
@@ -87,7 +72,7 @@ function destroy(id) {
 }
 
 /**
- * Delete all the completed TODO items.
+ * Delete all the completed ARTICLES items.
  */
 function destroyCompleted() {
   for (var id in _articles) {
@@ -100,7 +85,7 @@ function destroyCompleted() {
 var ArticleStore = assign({}, EventEmitter.prototype, {
 
   /**
-   * Tests whether all the remaining TODO items are marked as completed.
+   * Tests whether all the remaining ARTICLES items are marked as completed.
    * @return {boolean}
    */
   areAllComplete: function() {
@@ -113,11 +98,19 @@ var ArticleStore = assign({}, EventEmitter.prototype, {
   },
 
   /**
-   * Get the entire collection of TODOs.
+   * Get the entire collection of ARTICLEs.
    * @return {object}
    */
   getAll: function() {
     return _articles;
+  },
+
+  /**
+   * Get the article by id
+   * @return {object}
+   */
+  getById: function(id) {
+    return _articles[id];
   },
   
   didInitalGet: function() {
@@ -152,7 +145,15 @@ AppDispatcher.register(function(action) {
     case ArticleConstants.GET_ALL_ARTICLES_DATA:
       var articles = action.response.body
       if (articles) {
-        set(articles);
+        setAll(articles);
+        ArticleStore.emitChange();
+      }
+      break;
+
+    case ArticleConstants.GET_ARTICLE_DATA:
+      var article = action.response.body
+      if (article) {
+        set(article);
         ArticleStore.emitChange();
       }
       break;
@@ -194,11 +195,6 @@ AppDispatcher.register(function(action) {
 
     case ArticleConstants.TODO_DESTROY:
       destroy(action.id);
-      ArticleStore.emitChange();
-      break;
-
-    case ArticleConstants.TODO_DESTROY_COMPLETED:
-      destroyCompleted();
       ArticleStore.emitChange();
       break;
 

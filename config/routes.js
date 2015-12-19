@@ -14,7 +14,7 @@ const tags = require('../app/controllers/tags');
 
 const mongoose = require('mongoose')
 const Article = mongoose.model('Article');
-const crud = require('../lib/crud');
+const articleCrud = require('../app/api/articleCrud');
 
 
 const auth = require('./middlewares/authorization');
@@ -106,7 +106,7 @@ module.exports = function (app, passport) {
 
   // home route
   app.get('/', articles.index);
-  crud.initRoutesForModel({ 'app': app, 'model': Article, path: '/api/articles' });
+  articleCrud.initRoutesForModel({ 'app': app, 'model': Article, path: '/api/articles' });
 
   // comment routes
   app.param('commentId', comments.load);

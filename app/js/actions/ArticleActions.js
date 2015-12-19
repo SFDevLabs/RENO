@@ -19,8 +19,14 @@ var Actions = {
   /**
    * @param  {string} text
    */
-  getAll: function(text) {
+  getAll: function() {
     ArticleApi.getEntityData();
+  },
+  /**
+   * @param  {string} text
+   */
+  getById: function(id) {
+    ArticleApi.getEntityDataById(id);
   },
 
   /**

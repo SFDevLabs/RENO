@@ -36,11 +36,11 @@ function dispatch(key, response, params) {
 function makeDigestFun(key, params) {
     return function (err, res) {
         if (err && err.timeout === TIMEOUT) {
-            dispatch(key, Constants.request.TIMEOUT, params);
+            dispatch(Constants.TIMEOUT, params);
         } else if (res.status === 400) {
             UserActions.logout();
         } else if (!res.ok) {
-            dispatch(key, Constants.request.ERROR, params);
+            dispatch(Constants.ERROR, params);
         } else {
             dispatch(key, res, params);
         }
@@ -59,6 +59,17 @@ var Api = {
     getEntityData: function() {
         var url = makeUrl("");
         var key = Constants.GET_ALL_ARTICLES_DATA;
+        var params = {};
+        abortPendingRequests(key);
+        dispatch(Constants.PENDING, params);
+        _pendingRequests[key] = get(url).end(
+            makeDigestFun(key, params)
+        );
+    },
+    getEntityDataById: function(id) {
+        if (!id){ return false;}
+        var url = makeUrl("/"+id);
+        var key = Constants.GET_ARTICLE_DATA;
         var params = {};
         abortPendingRequests(key);
         dispatch(Constants.PENDING, params);

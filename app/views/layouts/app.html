@@ -1,14 +1,8 @@
   {% include '../includes/head.html' %}
-
   <body>
-    <div class="container">
-      <div class="messages">
-        {% include '../includes/messages.html' %}
-      </div>
-      {% block main %}{% endblock %}
-    </div>
-    {% include '../includes/footer.html' %}
-    {% include '../includes/foot.html' %}
+    {% block main %}{% endblock %}
+    {% include '../includes/ga.html' %}
+
     <script src="{{ bundle_js }}"></script>
   </body>
 </html>

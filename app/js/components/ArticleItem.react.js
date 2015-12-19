@@ -10,15 +10,14 @@
 var React = require('react');
 var ReactPropTypes = React.PropTypes;
 var ArticleActions = require('../actions/ArticleActions');
-var TextInput = require('./TextInput.react');
 import { Link } from 'react-router';
 
 var classNames = require('classnames');
 
-var TodoItem = React.createClass({
+var ArticleItem = React.createClass({
 
   propTypes: {
-   article: ReactPropTypes.object.isRequired,
+   article: React.PropTypes.object.isRequired,
   },
 
   getInitialState: function() {
@@ -66,4 +65,4 @@ var TodoItem = React.createClass({
 
 });
 
-module.exports = TodoItem;
+module.exports = ArticleItem;
