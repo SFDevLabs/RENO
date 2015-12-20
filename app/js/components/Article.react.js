@@ -10,6 +10,7 @@
 var React = require('react');
 var ArticleActions = require('../actions/ArticleActions');
 var ArticleStore = require('../stores/ArticleStore');
+var Messages = require('./Messages.react');
 
 import { Link } from 'react-router';
 
@@ -70,19 +71,11 @@ var ArticleSection = React.createClass({
     }
 
     return (
-      <section>
-
+      <section className="container">
         <div className="page-header">
           <h1>{article.title}</h1>
         </div>
-        <div className="messages">
-          <div className="fade in alert alert-info">
-            <button className="close" type="button" data-dismiss="alert">×</button>
-            <ul>
-              <li>Some Info</li>
-            </ul>
-          </div>
-        </div>
+        <Messages messages={[{message:"Some Info"}]} type="success" />
 
         <div className="content">
           <div className="row">

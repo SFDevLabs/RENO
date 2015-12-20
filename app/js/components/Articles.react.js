@@ -10,6 +10,8 @@
 var React = require('react');
 var ArticleActions = require('../actions/ArticleActions');
 var ArticleStore = require('../stores/ArticleStore');
+var Messages = require('./Messages.react');
+
 
 var ArticleItem = require('./ArticleItem.react');
 
@@ -46,15 +48,12 @@ var ArticleSection = React.createClass({
    * @return {object}
    */
   render: function() {
-//in alert
+
     var alertBox = 'fade alert-info';
-//    var styleStuff = {};
     if (this.state.collapsing){
       alertBox += '  alert';
-//      styleStuff.height = this.state.collapsed?'0px':' 200px';
     }else{
       alertBox += this.state.collapsed?' ':' in alert';
-//      styleStuff.height = 'auto';
     }
 
     var allArticles = this.state.allArticles;
@@ -65,18 +64,11 @@ var ArticleSection = React.createClass({
     }
 
     return (
-      <section>
+      <section className="container">
         <div className="page-header">
           <h1>Articles</h1>
         </div>
-        <div className="messages">
-          <div className={alertBox}>
-            <button onClick={this._onClick} className="close" type="button" data-dismiss="alert">×</button>
-            <ul>
-              <li>Some Info</li>
-            </ul>
-          </div>
-        </div>
+        <Messages messages={[{message:"Some Info"}]} type="success" />
         <div className="content" id="todo-list">{articles}</div>
         <div className="content pagination">
           <a type="button" className="btn btn-primary active" >
