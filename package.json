@@ -60,6 +60,7 @@
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
     "react-router": "^1.0.2",
+    "react-tagsinput": "^3.0.3",
     "superagent": "^1.6.1",
     "swig": "~1.4.2",
     "view-helpers": "~0.1.5",

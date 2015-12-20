@@ -32,11 +32,8 @@ var Actions = {
   /**
    * @param  {string} text
    */
-  create: function(text) {
-    AppDispatcher.dispatch({
-      actionType: ArticleConstants.TODO_CREATE,
-      text: text
-    });
+  create: function(obj) {
+    ArticleApi.getEntityData(obj);
   },
 
   /**
