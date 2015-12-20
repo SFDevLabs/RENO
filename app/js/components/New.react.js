@@ -9,22 +9,8 @@
 
 var React = require('react');
 var ArticleActions = require('../actions/ArticleActions');
-var ArticleStore = require('../stores/ArticleStore');
 
-var ArticleItem = require('./ArticleItem.react');
-
-/**
- * Retrieve the current ARTICLE data from the ArticleStore
- */
-function getTodoState() {
-  return {
-    allArticles: ArticleStore.getAll(),
-    initalGet: ArticleStore.didInitalGet()
-  };
-}
-
-
-var ArticleSection = React.createClass({
+var NewArticle = React.createClass({
 
   /**
    * @return {object}
@@ -82,13 +68,8 @@ var ArticleSection = React.createClass({
         </div>
       </section>
     );
-  },
-  /**
-   * Event handler for 'change' events coming from the ArticleStore
-   */
-  _onChange: function() {
   }
 
 });
 
-module.exports = ArticleSection;
+module.exports = NewArticle;
