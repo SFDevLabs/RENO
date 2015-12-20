@@ -7,10 +7,20 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
-var ArticleActions = require('../actions/ArticleActions');
+const React = require('react');
+const ArticleActions = require('../actions/ArticleActions');
+const TagsInput = require('react-tagsinput');
+
 
 var NewArticle = React.createClass({
+
+ getInitialState: function() {
+      return {
+      title: '',
+      body: '',
+      tags: []
+    }
+  },
 
   /**
    * @return {object}
@@ -18,7 +28,7 @@ var NewArticle = React.createClass({
   render: function() {
 
     return (
-      <section>
+      <section className="container">
         <div className="page-header">
           <h1>title</h1>
         </div>
@@ -28,28 +38,28 @@ var NewArticle = React.createClass({
               <div className="form-group">
                 <label  className="col-sm-2 control-label">Title</label>
                 <div className="col-sm-10">
-                  <input type="text" name="title" value="" placeholder="Enter the title" className="form-control" id="title" />
+                  <input onChange={this._onChangeTitle} value={this.state.title} type="text" name="title" placeholder="Enter the title" className="form-control" id="title" />
                 </div>
               </div>
 
               <div className="form-group">
                 <label className="col-sm-2 control-label">Image</label>
                 <div className="col-sm-10">
-                  <input type="file" name="image" className="form-control" id="file" />
+                  <input onChange={this._onChange} type="file" name="image" className="form-control" id="file" />
                 </div>
               </div>
 
               <div className="form-group">
                 <label className="col-sm-2 control-label">Body</label>
                 <div className="col-sm-10">
-                  <textarea value="jeff" rows="5" name="body" placeholder="Enter the article description" id="desc" cols="30" rows="10" className="form-control"/>
+                  <textarea onChange={this._onChangeBody} value={this.state.body} rows="5" name="body" placeholder="Enter the article description" id="desc" cols="30" rows="10" className="form-control"/>
                 </div>
               </div>
 
               <div className="form-group">
                 <label className="col-sm-2 control-label">Tags</label>
                 <div className="col-sm-10">
-                  <input type="text" name="tags" value="" placeholder="Enter the tags" className="form-control" id="tags" />
+                  <TagsInput value={this.state.tags} onChange={this._onChangeTags} />
                 </div>
               </div>
 
@@ -68,6 +78,30 @@ var NewArticle = React.createClass({
         </div>
       </section>
     );
+  },
+  /**
+   * Event handler for 'change' events coming from the DOM
+   */
+  _onChangeTitle: function(event) {
+    this.setState({
+        title: event.target.value
+    });
+  },
+  /**
+   * Event handler for 'change' events coming from the DOM
+   */
+  _onChangeBody: function(event) {
+    this.setState({
+        body: event.target.value
+    });
+  },
+  /**
+   * Event handler for 'change' events coming from the DOM
+   */
+  _onChangeTags: function(value) {
+    this.setState({
+        tags: value
+    });
   }
 
 });

@@ -48,9 +48,9 @@ var Header = React.createClass({
           </div>
           <div className={navBar} style={styleStuff}>
             <ul className="nav navbar-nav">
-              <li className="{% if (isActive('/articles/new')) %}active{% endif %}">
-                  <Link to="/articles/new" className="navbar-brand">New</ Link>
-              </li>
+                <li className="{% if (isActive('/articles/new')) %}active{% endif %}">
+                    <Link to="/articles/new">New</ Link>
+                </li>
 
                 <li className="{% if (isActive('/users/' + req.user.id )) %}active{% endif %}">
                   <a href="{{ '/users/' + req.user.id }}" title="Profile">Profile</a>

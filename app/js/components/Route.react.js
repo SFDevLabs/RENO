@@ -24,7 +24,7 @@ var New = require('./New.react');
 const Main = React.createClass({
   render() {
     return (
-        <div className="container">
+        <div>
           <Header />
           {this.props.children}
         </div>
