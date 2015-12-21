@@ -12,14 +12,14 @@
  * the TodoStore and passes the new data to its children.
  */
 
-var React = require('react');
+const React = require('react');
 import { Router, Route, Link, IndexRoute } from 'react-router';
 
-var Header = require('./Header.react');
-var Articles = require('./Articles.react');
-var Article = require('./Article.react');
-var About = require('./About.react');
-var New = require('./New.react');
+const Header = require('./Header.react');
+const Articles = require('./Articles.react');
+const Article = require('./Article.react');
+const About = require('./About.react');
+const New = require('./New.react');
 
 const Main = React.createClass({
   render() {
@@ -32,7 +32,7 @@ const Main = React.createClass({
   }
 })
 
-var Root = React.createClass({
+const Root = React.createClass({
   /**
    * @return {object}
    */
