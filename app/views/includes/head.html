@@ -1,6 +1,6 @@
 <!doctype html>
 <html>
-  <head prefix="og: http://ogp.me/ns# nodejsexpressdemo: http://ogp.me/ns/apps/nodejsexpressdemo#">
+  <head prefix="og: http://ogp.me/ns# reno: http://ogp.me/ns/apps/reno#">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -8,20 +8,20 @@
     <title>{{ title }} | {{ pkg.name }}</title>
     <meta name="keywords" content="{{ pkg.keywords.join(',') }}">
     <meta name="description" content="{{ pkg.description }}">
+    <meta property="csrf" id="csrf" content="{{ csrf_token }}">
 
     {# Opengraph tags #}
-    <meta property="fb:app_id" content="293989217296609">
+    <meta property="fb:app_id" content="">
     <meta property="og:title" content=pkg.name + ' - ' + title>
     <meta property="og:description" content=pkg.description>
-    <meta property="og:url" content="http://nodejs-express-demo.herokuapp.com">
-    <meta property="og:site_name" content="Node.js Express Mongoose Demo">
-    <meta property="fb:admins" content="1037213945">
+    <meta property="og:url" content="https://github.com/sfdevlabs/reno">
+    <meta property="og:site_name" content="Reno">
+    <meta property="fb:admins" content="">
 
     {% block head %}
       {# Styles #}
       <link href="/css/bootstrap.min.css" rel="stylesheet">
       <link href="/css/jquery.tagsinput.css" rel="stylesheet">
-      <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
       <link rel="stylesheet" href="/css/app.css">
       <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
       <link rel="stylesheet" href="/css/react.tagged.input.css">

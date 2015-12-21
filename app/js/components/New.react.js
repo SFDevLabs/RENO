@@ -10,23 +10,35 @@
 const React = require('react');
 const ArticleActions = require('../actions/ArticleActions');
 const TagsInput = require('react-tagsinput');
+const Actions = require('../actions/ArticleActions');
+import { Link, History } from 'react-router';
+const ArticleStore = require('../stores/ArticleStore');
 
+const csrf = document.getElementById('csrf');
+const csrfToken = csrf?csrf.content:'';
 
-var NewArticle = React.createClass({
-
+const NewArticle = React.createClass({
+ mixins: [ History ],
  getInitialState: function() {
       return {
       title: '',
       body: '',
-      tags: []
+      tags: [],
+      _csrf:csrfToken
     }
+  },
+  componentDidMount: function() {
+    ArticleStore.addChangeListener(this._onChange);
+  },
+
+  componentWillUnmount: function() {
+    ArticleStore.removeChangeListener(this._onChange);
   },
 
   /**
    * @return {object}
    */
   render: function() {
-
     return (
       <section className="container">
         <div className="page-header">
@@ -34,7 +46,7 @@ var NewArticle = React.createClass({
         </div>
         <div className="row">
           <div className="col-md-8">
-            <form method="post" action="" role="form" className="form-horizontal">
+            <div className="form-horizontal">
               <div className="form-group">
                 <label  className="col-sm-2 control-label">Title</label>
                 <div className="col-sm-10">
@@ -65,12 +77,12 @@ var NewArticle = React.createClass({
 
               <div className="form-group">
                 <div className="col-sm-offset-2 col-sm-10">
-                  <button className="btn btn-primary" type="submit">Save</button>
+                  <button onClick={this._save} className="btn btn-primary" type="submit">Save</button>
                   &nbsp;
-                  <a href="/articles" className="btn btn-link">Cancel</a>
+                  <Link to="/" className="btn btn-link">Cancel</ Link>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
           <div className="col-md-4">
             <img src="/img/twitter.png" alt="" />
@@ -78,6 +90,18 @@ var NewArticle = React.createClass({
         </div>
       </section>
     );
+  },
+  /**
+   * Event handler for 'change' events coming from store
+   */
+  _onChange: function() {
+    var pending = ArticleStore.getPendingState();
+    var newArticleId = ArticleStore.getNewArticleId();
+    if (!pending && newArticleId){
+      this.history.pushState(null, '/articles/'+newArticleId);
+    }else{
+      this.setState({pending:pending});
+    }
   },
   /**
    * Event handler for 'change' events coming from the DOM
@@ -102,7 +126,17 @@ var NewArticle = React.createClass({
     this.setState({
         tags: value
     });
-  }
+  },
+  /**
+   * Event handler called within.
+   * in different ways.
+   * @param  {string} text
+   */
+  _save: function() {
+    Actions.create(this.state);
+  },
+
+
 
 });
 

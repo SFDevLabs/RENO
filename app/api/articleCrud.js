@@ -16,7 +16,6 @@
   //
   function getListController(model) {
     return function (req, res) {
-
       const page = (req.query.page > 0 ? req.query.page : 1) - 1;
       const perPage = 30;
       const options = {
@@ -39,8 +38,8 @@
   //
   function getCreateController(model) {
     return function (req, res) {
-      //console.log('create', req.body);
       var m = new model(req.body);
+      m.user = req.user;
       m.save(function (err) {
         if (!err) {
           res.send(m);
@@ -56,7 +55,6 @@
   //
   function getReadController(model) {
     return function (req, res) {
-      //console.log('read', req.body);
       model.load(req.params.id, function (err, result) {
         if (!err) {
           res.send(result);
@@ -94,7 +92,6 @@
   //
   function getDeleteController(model) {
     return function (req, res) {
-      //console.log('delete', req.body);
       model.findById(req.params.id, function (err, result) {
         if (err) {
           res.send(errMsg(err));
@@ -113,10 +110,15 @@
   }
 
   exports.initRoutesForModel = function (options) {
-    var app = options.app,
-      model = options.model,
-      path,
-      pathWithId;
+    const app = options.app;
+    const model = options.model;
+    const auth = options.auth;
+
+    var path;
+    var pathWithId;
+
+    const articleAuth = [auth.requiresLogin, auth.article.hasAuthorization];
+    const commentAuth = [auth.requiresLogin, auth.comment.hasAuthorization];
 
     if (!app || !model) {
       return;
@@ -126,10 +128,10 @@
     pathWithId = path + '/:id';
 
     app.get(path, getListController(model));
-    app.post(path, getCreateController(model));
+    app.post(path, auth.requiresLogin, getCreateController(model));
     app.get(pathWithId, getReadController(model));
-    app.put(pathWithId, getUpdateController(model));
-    app.delete(pathWithId, getDeleteController(model));
+    app.put(pathWithId, articleAuth, getUpdateController(model));
+    app.delete(pathWithId, articleAuth, getDeleteController(model));
   };
 
 }(exports));

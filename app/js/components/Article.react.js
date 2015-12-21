@@ -24,10 +24,7 @@ function getState(id) {
   };
 }
 
-var ArticleSection = React.createClass({
-
-  propTypes: {
-  },
+const ArticleSection = React.createClass({
 
   getInitialState: function() {
     return getState(this.props.params.id);
@@ -69,14 +66,23 @@ var ArticleSection = React.createClass({
           </div>
           ));
     }
+    var tags = [];
+    for (var i = article.tags.length - 1; i >= 0; i--) {
+      tags.push(
+        (<span key={i}>
+            <i className="muted fa fa-tag"></i>&nbsp;
+            <a className="tag"> {article.tags[i]} </a>
+         </span>)
+      )
+    };
 
     return (
       <section className="container">
         <div className="page-header">
           <h1>{article.title}</h1>
         </div>
-        <Messages messages={[{message:"Some Info"}]} type="success" />
-
+        <Messages messages={[{message:"Successfully created article!"}]} type="success" />
+        
         <div className="content">
           <div className="row">
             <div className="col-md-8">
@@ -84,13 +90,11 @@ var ArticleSection = React.createClass({
               <div className="meta">
                   Author: &nbsp;
                   <a href="#">
-                    Jeff Jenkins - Hard Coded
+                    {article.user.username}
                   </a>
-
                   <p>
                     Tags: &nbsp;
-                      <i className="muted fa fa-tag"></i>&nbsp;
-                      <a href="" className="tag">111 - Hard Coded </a>
+                      {tags}
                       &nbsp;&nbsp;
                   </p>
                 <span className="muted">{dateString}</span>

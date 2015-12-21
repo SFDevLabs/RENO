@@ -9,16 +9,17 @@
  * ArticleStore
  */
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var EventEmitter = require('events').EventEmitter;
-var ArticleConstants = require('../constants/ArticleConstants');
-var assign = require('object-assign');
+const AppDispatcher = require('../dispatcher/AppDispatcher');
+const EventEmitter = require('events').EventEmitter;
+const ArticleConstants = require('../constants/ArticleConstants');
+const assign = require('object-assign');
 
-var CHANGE_EVENT = 'change';
+const CHANGE_EVENT = 'change';
 
 var _articles = {};
 var _didInitalGet = false;
-
+var _pending = false;
+var _newArticleId;
 
 /**
  * Set all ARTICLE item.
@@ -117,6 +118,14 @@ var ArticleStore = assign({}, EventEmitter.prototype, {
     return _didInitalGet;
   },
 
+  getPendingState: function() {
+    return _pending;
+  },
+
+  getNewArticleId: function() {
+    return _newArticleId;
+  },
+
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
@@ -143,6 +152,7 @@ AppDispatcher.register(function(action) {
   switch(action.actionType) {
 
     case ArticleConstants.GET_ALL_ARTICLES_DATA:
+      _pending = false;
       var articles = action.response.body
       if (articles) {
         setAll(articles);
@@ -151,6 +161,7 @@ AppDispatcher.register(function(action) {
       break;
 
     case ArticleConstants.GET_ARTICLE_DATA:
+      _pending = false;
       var article = action.response.body
       if (article) {
         set(article);
@@ -158,45 +169,45 @@ AppDispatcher.register(function(action) {
       }
       break;
 
-    case ArticleConstants.TODO_CREATE:
-      text = action.text.trim();
-      if (text !== '') {
-        create(text);
+    case ArticleConstants.POST_ARTICLE_DATA:
+      _pending = false;
+      var article = action.response.body
+      if (article) {
+        set(article);
+        _newArticleId = article._id;
         ArticleStore.emitChange();
       }
       break;
 
-    case ArticleConstants.TODO_TOGGLE_COMPLETE_ALL:
-      if (ArticleStore.areAllComplete()) {
-        updateAll({complete: false});
-      } else {
-        updateAll({complete: true});
-      }
+    case ArticleConstants.PENDING:
+      _pending = true;
       ArticleStore.emitChange();
       break;
 
-    case ArticleConstants.TODO_UNDO_COMPLETE:
-      update(action.id, {complete: false});
-      ArticleStore.emitChange();
-      break;
+    // case ArticleConstants.ARTICLE_CREATE:
+    //   text = action.text.trim();
+    //   if (text !== '') {
+    //     create(text);
+    //     ArticleStore.emitChange();
+    //   }
+    //   break;
 
-    case ArticleConstants.TODO_COMPLETE:
-      update(action.id, {complete: true});
-      ArticleStore.emitChange();
-      break;
+    // case ArticleConstants.TODO_TOGGLE_COMPLETE_ALL:
+    //   if (ArticleStore.areAllComplete()) {
+    //     updateAll({complete: false});
+    //   } else {
+    //     updateAll({complete: true});
+    //   }
+    //   ArticleStore.emitChange();
+    //   break;
 
-    case ArticleConstants.TODO_UPDATE_TEXT:
-      text = action.text.trim();
-      if (text !== '') {
-        update(action.id, {text: text});
-        ArticleStore.emitChange();
-      }
-      break;
 
-    case ArticleConstants.TODO_DESTROY:
-      destroy(action.id);
-      ArticleStore.emitChange();
-      break;
+
+
+    // case ArticleConstants.TODO_DESTROY:
+    //   destroy(action.id);
+    //   ArticleStore.emitChange();
+    //   break;
 
     default:
       // no op

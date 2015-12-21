@@ -106,7 +106,7 @@ module.exports = function (app, passport) {
 
   // home route
   app.get('/', articles.index);
-  articleCrud.initRoutesForModel({ 'app': app, 'model': Article, path: '/api/articles' });
+  articleCrud.initRoutesForModel({ 'app': app, 'model': Article, path: '/api/articles', auth:auth });
 
   // comment routes
   app.param('commentId', comments.load);

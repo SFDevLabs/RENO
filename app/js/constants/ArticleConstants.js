@@ -23,5 +23,6 @@ module.exports = keyMirror({
   ERROR: null,
   TIMEOUT: null,
   GET_ALL_ARTICLES_DATA: null,
+  POST_ARTICLE_DATA: null,
   GET_ARTICLE_DATA: null
 });

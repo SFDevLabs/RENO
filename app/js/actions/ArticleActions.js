@@ -9,12 +9,12 @@
  * TodoActions
  */
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var ArticleConstants = require('../constants/ArticleConstants');
-var ArticleApi = require('../api/ArticlesApi');
+const AppDispatcher = require('../dispatcher/AppDispatcher');
+const ArticleConstants = require('../constants/ArticleConstants');
+const ArticleApi = require('../api/ArticlesApi');
 
 
-var Actions = {
+const Actions = {
 
   /**
    * @param  {string} text
@@ -33,7 +33,7 @@ var Actions = {
    * @param  {string} text
    */
   create: function(obj) {
-    ArticleApi.getEntityData(obj);
+    ArticleApi.postEntityData(obj);
   },
 
   /**
