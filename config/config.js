@@ -28,19 +28,8 @@ const defaults = {
 /**
  * Expose
  */
-console.log(process.env.NODE_ENV)
-
-
-console.log(extend(production, defaults), 'config.js1')
-
-
-var data = {
+module.exports = {
   development: extend(development, defaults),
   test: extend(test, defaults),
   production: extend(production, defaults)
 }[process.env.NODE_ENV || 'development'];
-
-console.log(data, 'config.js2')
-
-
-module.exports = data
