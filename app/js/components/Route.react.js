@@ -20,6 +20,7 @@ const Articles = require('./Articles.react');
 const Article = require('./Article.react');
 const About = require('./About.react');
 const New = require('./New.react');
+const User = require('./User.react');
 
 const Main = React.createClass({
   render() {
@@ -44,6 +45,8 @@ const Root = React.createClass({
           <IndexRoute component={Articles} />
           <Route path="articles/new" component={New} />
           <Route path="articles/:id" component={Article}/>
+          <Route path="articles/:id/edit" component={New}/>
+          <Route path="users/:id" component={User}/>
           <Route path="about" component={About} />
         </Route>
       </Router>

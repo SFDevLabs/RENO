@@ -52,7 +52,7 @@ var Header = React.createClass({
                 </li>
 
                 <li className="{% if (isActive('/users/' + req.user.id )) %}active{% endif %}">
-                  <a href="{{ '/users/' + req.user.id }}" title="Profile">Profile</a>
+                  <Link to="/users/5671cfb78705fe7e4d9e954a">User</ Link>
                 </li>
                 <li>
                   <a href="/logout" title="logout">Logout</a>
