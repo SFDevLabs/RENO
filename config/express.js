@@ -119,7 +119,7 @@ module.exports = function (app, passport) {
     // This could be moved to view-helpers :-)
     app.use(function (req, res, next) {
       res.locals.csrf_token = req.csrfToken();
-      res.locals.bundle_js = (env==='development')?'http://localhost:8090/app/js/bundle.js':'/js/build.js';
+      res.locals.bundle_js = (env==='development')?'http://localhost:8090/app/js/bundle.js':'/js/bundle.js';
       next();
     });
   }
