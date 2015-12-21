@@ -9,12 +9,11 @@
 
 const React = require('react');
 
-
-var Header = React.createClass({
+const Header = React.createClass({
   
   props:{
   	messages: React.PropTypes.func.isRequired,
-  	type: React.PropTypes.string.isRequired
+  	type: React.PropTypes.string.isRequired//warning, danger, info, success
   },
 
   getInitialState:function(){
@@ -28,15 +27,16 @@ var Header = React.createClass({
    */
   render: function() {
     var alertBox = 'fade alert-'+this.props.type;
+    var main = "alert"
     if (this.state.collapsing){
       alertBox += '  alert';
     }else{
       alertBox += this.state.collapsed?' ':' in alert';
+      main += this.state.collapsed?' hidden':' ';
     }
 
     var messages = []
     for (var i = this.props.messages.length - 1; i >= 0; i--) {
-
     	messages.push((
 		        <ul key={i}>
 		          <li>{this.props.messages[i].message}</li>
@@ -45,7 +45,7 @@ var Header = React.createClass({
     };
 
     return (
-	    <div className="alert">
+	    <div className={main}>
 	      <div className={alertBox}>
 	        <button onClick={this._onClick} className="close" type="button" data-dismiss="alert">×</button>
 	        {messages}
