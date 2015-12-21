@@ -13,8 +13,8 @@ const User = mongoose.model('User');
  * Expose
  */
 
-const clientID = config.google.clientID?config.google.clientID:''; //preventing a crash in the GoogleStrategy if we do not have a clientid
-
+const clientID = config.google.clientID!==undefined?config.google.clientID:'_'; //preventing a crash in the GoogleStrategy if we do not have a clientid
+console.log(clientID, 'clientID')
 module.exports = new GoogleStrategy({
     clientID: clientID,
     clientSecret: config.google.clientSecret,
