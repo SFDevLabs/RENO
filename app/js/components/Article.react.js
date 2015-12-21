@@ -107,9 +107,9 @@ const ArticleSection = React.createClass({
           <form action="" method="post" onsubmit="return confirm('Are you sure?')">
             <br />
             <input type="hidden" name="_csrf" value="" />
-            <a href="" title="edit" className="btn btn-default">
+            <Link  to={'/articles/'+article._id+'/edit'} title="edit" className="btn btn-default">
               Edit
-            </a>
+            </Link>
             &nbsp;&nbsp;
             <input type="hidden" name="_method" value="DELETE" />
             <button className="btn btn-danger" type="submit">Delete</button>

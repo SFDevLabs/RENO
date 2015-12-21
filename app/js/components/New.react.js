@@ -17,17 +17,40 @@ const ArticleStore = require('../stores/ArticleStore');
 const csrf = document.getElementById('csrf');
 const csrfToken = csrf?csrf.content:'';
 
+
+/**
+ * Retrieve the current ARTICLE data from the ArticleStore
+ */
+function getState(id) {
+  return {
+    article: ArticleStore.getById(id)
+  };
+}
+
+
 const NewArticle = React.createClass({
  mixins: [ History ],
  getInitialState: function() {
-      return {
-      title: '',
-      body: '',
-      tags: [],
-      _csrf:csrfToken
-    }
+
+    var id = this.props.params.id;
+    var data;
+    if (id){
+      data =  ArticleStore.getById(id)
+    } else {
+      data = {
+          title: '',
+          body: '',
+          tags: [],
+          _csrf:csrfToken
+      }
+    }    
+    return data;
   },
   componentDidMount: function() {
+    var id = this.props.params.id;
+    if(id){
+      ArticleStore.getById(id)
+    }
     ArticleStore.addChangeListener(this._onChange);
   },
 
@@ -134,6 +157,8 @@ const NewArticle = React.createClass({
    */
   _save: function() {
     Actions.create(this.state);
+
+    //Actions.update(this.state);
   },
 
 
