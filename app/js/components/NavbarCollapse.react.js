@@ -9,12 +9,9 @@
 
 const React = require('react');
 const TodoActions = require('../actions/ArticleActions');
-const r = require('react-router');
-const Link = r.Link
+const Link = require('react-router').Link;
 
-
-
-var Header = React.createClass({
+const Header = React.createClass({
   getInitialState:function(){
     return {
       collapsed: true,

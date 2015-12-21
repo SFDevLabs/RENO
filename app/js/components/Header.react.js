@@ -8,7 +8,6 @@
  */
 
 const React = require('react');
-const TodoActions = require('../actions/ArticleActions');
 const Link = require('react-router').Link
 
 
@@ -75,6 +74,10 @@ var Header = React.createClass({
       </nav>
     );
   },
+  /**
+   * _onClick - Boostrap functions for collapsing the nav bar.
+   * @return {[type]} [description]
+   */
   _onClick:function(){
     var that = this;
     this.setState({

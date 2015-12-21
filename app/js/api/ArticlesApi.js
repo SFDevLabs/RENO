@@ -52,7 +52,16 @@ function get(url) {
     return request
         .get(url)
         .timeout(TIMEOUT)
-        //.query({authtoken: token()});
+}
+
+// a get request with an authtoken param
+function post(url, data) {
+    var r = request.post(url)
+    for (var key in data) {
+       r.field(key, data[key])
+    };
+
+    return r.timeout(TIMEOUT);
 }
 
 var Api = {
@@ -67,15 +76,28 @@ var Api = {
         );
     },
     getEntityDataById: function(id) {
-        if (!id){ return false;}
-        var url = makeUrl("/"+id);
-        var key = Constants.GET_ARTICLE_DATA;
-        var params = {};
+        if (!id){ return false;}else{
+            var url = makeUrl("/"+id);
+            var key = Constants.GET_ARTICLE_DATA;
+            var params = {};
+            abortPendingRequests(key);
+            dispatch(Constants.PENDING, params);
+            _pendingRequests[key] = get(url).end(
+                makeDigestFun(key, params)
+            );            
+        }
+
+    },
+    postEntityData: function(data) {
+        var url = makeUrl("");
+        var key = Constants.POST_ARTICLE_DATA;
+        var params = data;
         abortPendingRequests(key);
         dispatch(Constants.PENDING, params);
-        _pendingRequests[key] = get(url).end(
+        _pendingRequests[key] = post(url, params).end(
             makeDigestFun(key, params)
         );
+        
     }
 };
 

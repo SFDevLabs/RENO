@@ -7,14 +7,14 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
-var ReactPropTypes = React.PropTypes;
-var ArticleActions = require('../actions/ArticleActions');
+const React = require('react');
+const ReactPropTypes = React.PropTypes;
+const ArticleActions = require('../actions/ArticleActions');
 import { Link } from 'react-router';
 
-var classNames = require('classnames');
+const classNames = require('classnames');
 
-var ArticleItem = React.createClass({
+const ArticleItem = React.createClass({
 
   propTypes: {
    article: React.PropTypes.object.isRequired,
@@ -32,11 +32,6 @@ var ArticleItem = React.createClass({
   render: function() {
     var article = this.props.article;
 
-    // List items should get the class 'editing' when editing
-    // and 'completed' when marked as completed.
-    // Note that 'completed' is a classification while 'complete' is a state.
-    // This differentiation between classification and state becomes important
-    // in the naming of view actions toggleComplete() vs. destroyCompleted().
     var dateString = new Date(article.createdAt).toLocaleString();
     return (
 
