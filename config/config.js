@@ -28,7 +28,7 @@ const defaults = {
 /**
  * Expose
  */
-
+console.log(process.env.NODE_ENV)
 module.exports = {
   development: extend(development, defaults),
   test: extend(test, defaults),

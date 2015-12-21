@@ -12,7 +12,7 @@ const User = mongoose.model('User');
 /**
  * Expose
  */
-
+console.log(config.google)
 module.exports = new GoogleStrategy({
     clientID: config.google.clientID,
     clientSecret: config.google.clientSecret,
