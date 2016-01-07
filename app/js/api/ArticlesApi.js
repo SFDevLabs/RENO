@@ -85,9 +85,17 @@ function put(url, data) {
     return r.timeout(TIMEOUT);
 }
 
+// a delete request with an authtoken param
+function del(url) {
+    var r = request.delete(url)
+    r.field('_csrf', csrfToken);//adding the csrf token
+
+    return r.timeout(TIMEOUT);
+}
+
 var Api = {
     getEntityData: function() {
-        var url = makeUrl("");
+        var url = makeUrl('');
         var key = Constants.GET_ALL_ARTICLES_DATA;
         var params = {};
         abortPendingRequests(key);
@@ -110,7 +118,7 @@ var Api = {
 
     },
     postEntityData: function(data) {
-        var url = makeUrl("");
+        var url = makeUrl('');
         var key = Constants.POST_ARTICLE_DATA;
         var params = data;
         abortPendingRequests(key);
@@ -121,15 +129,24 @@ var Api = {
         
     },
     postEntityCommentData: function(id, data) {
-        var url = makeUrl("/"+id+"/comments");
+        var url = makeUrl('/'+id+'/comments');
         var key = Constants.POST_ARTICLE_COMMENT_DATA;
         var params = data;
         abortPendingRequests(key);
         dispatch(Constants.PENDING, params);
         _pendingRequests[key] = post(url, params).end(
             makeDigestFun(key, params)
-        );
-        
+        ); 
+    },
+    deleteEntityCommentData: function(id, commentId) {
+        var url = makeUrl('/'+ id +'/comments/'+ commentId);
+        var key = Constants.DELETE_ARTICLE_COMMENT_DATA;
+        var params = {};
+        abortPendingRequests(key);
+        dispatch(Constants.PENDING, params);
+        _pendingRequests[key] = del(url).end(
+            makeDigestFun(key, params)
+        ); 
     }
 };
 

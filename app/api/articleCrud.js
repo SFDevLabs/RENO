@@ -57,18 +57,22 @@
   //
   function getCreateCommentController(model) {
     return function (req, res) {
-      const article = req.article;
-      const user = req.user;
-      if (!req.body.body) return res.status(500).send(errMsg("Requires a comment body."));
+      model.findById(req.params.id, function (err, result) {
+        if (err || !result) return res.status(500).send(errMsg('There was an error in your request.'));
 
-      article.addComment(user, req.body, function (err) {
-        if (err) return res.status(500).send(errMsg(err));
-        
-        var articleObj = article.toObject();//Adding the populated comments from a pure JS object.
-        var comments = articleObj.comments;
-        comments[comments.length-1].user=_.pick(user, ['username', '_id']);
+        const article = result;
+        const user = req.user;
+        if (!req.body.body) return res.status(500).send(errMsg('Requires a comment body.'));
 
-        res.send(articleObj);
+        article.addComment(user, req.body, function (err) {
+          if (err) return res.status(500).send(errMsg(err));
+          
+          var articleObj = article.toObject();//Adding the populated comments from a pure JS object.
+          var comments = articleObj.comments;
+          comments[comments.length-1].user=_.pick(user, ['username', '_id']);
+
+          res.send(articleObj);
+        });
       });
     };
   }
@@ -93,7 +97,6 @@
   //
   function getUpdateController(model) {
     return function (req, res) {
-      //console.log('update', req.body);
       model.findById(req.params.id, function (err, result) {
         var key;
         for (key in req.body) {
@@ -140,15 +143,24 @@
       model.findById(req.params.id, function (err, result) {
         if (err) {
           res.send(errMsg(err));
-        } else {
-          result.remove();
-          result.save(function (err) {
-            if (!err) {
-              res.send({});
-            } else {
-              res.send(errMsg(err));
+        } else if (!result){
+          res.send(errMsg('There was an error in your request.'));
+        }else {
+          var article = result;
+          article.removeComment(req.params.commentId, function (err) {
+            if (err) {
+              res.send(errMsg('Oops! The comment was not found'));
             }
+            res.send(article);
           });
+          // result.remove();
+          // result.save(function (err) {
+          //   if (!err) {
+          //     res.send({});
+          //   } else {
+          //     res.send(errMsg(err));
+          //   }
+          // });
         }
       });
     };
@@ -177,7 +189,7 @@
 
     //Special comment controllers
     app.post(pathWithId+'/comments', auth.requiresLogin, getCreateCommentController(model));
-    app.delete(pathWithId+'/comments', auth.requiresLogin, getDeleteCommentController(model));
+    app.delete(pathWithId+'/comments/:commentId', auth.requiresLogin, getDeleteCommentController(model));
 
     app.get(pathWithId, getReadController(model));
     app.put(pathWithId, articleAuth, getUpdateController(model));

@@ -40,6 +40,8 @@ const Actions = {
   /**
    * @param  {string} id
    */
+  destroyComment: function(id, commentId) {
+    ArticleApi.deleteEntityCommentData(id, commentId);
   }
 
 };

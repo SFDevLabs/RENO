@@ -36,7 +36,7 @@ const Comments = React.createClass({
               <input type="hidden" name="_csrf" value="" />
               <span className="muted">Dec 17, 2015 02:45 am</span>
               <input type="hidden" name="_method" value="DELETE" />
-              <button className="btn btn-danger btn-link error" type="submit">delete</button>
+              <button onClick={this._destroy} className="btn btn-danger btn-link error" type="submit">delete</button>
             </div>
           </div>
           ));
@@ -79,7 +79,21 @@ const Comments = React.createClass({
         comment: ''
       });
     }
+  },
+
+  /**
+   * Event handler called within.
+   * @param  {string} text
+   */
+  _destroy: function() {
+    var commentId = this.props.comments[0]._id
+    var id = this.props.id;
+    if (id){
+      Actions.destroyComment(id, commentId);
+    }
   }
+
+  
 })
 
 module.exports = Comments;
