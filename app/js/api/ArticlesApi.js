@@ -1,3 +1,8 @@
+/**
+ * The MIT License (MIT)
+ * Copyright (c) 2016, Jeff Jenkins.
+*/
+
 const API_URL = '/api/articles';
 const TIMEOUT = 10000;
 

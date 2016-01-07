@@ -1,13 +1,7 @@
-/*
- * Copyright (c) 2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * ArticleStore
- */
+/**
+ * The MIT License (MIT)
+ * Copyright (c) 2016, Jeff Jenkins.
+*/
 
 const AppDispatcher = require('../dispatcher/AppDispatcher');
 const EventEmitter = require('events').EventEmitter;
@@ -193,33 +187,8 @@ AppDispatcher.register(function(action) {
       ArticleStore.emitChange();
       break;
 
-    // case ArticleConstants.ARTICLE_CREATE:
-    //   text = action.text.trim();
-    //   if (text !== '') {
-    //     create(text);
-    //     ArticleStore.emitChange();
-    //   }
-    //   break;
-
-    // case ArticleConstants.TODO_TOGGLE_COMPLETE_ALL:
-    //   if (ArticleStore.areAllComplete()) {
-    //     updateAll({complete: false});
-    //   } else {
-    //     updateAll({complete: true});
-    //   }
-    //   ArticleStore.emitChange();
-    //   break;
-
-
-
-
-    // case ArticleConstants.TODO_DESTROY:
-    //   destroy(action.id);
-    //   ArticleStore.emitChange();
-    //   break;
-
     default:
-      // no op
+      // no operation
   }
 });
 

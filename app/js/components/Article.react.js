@@ -1,17 +1,13 @@
 /**
- * Copyright (c) 2014-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+ * The MIT License (MIT)
+ * Copyright (c) 2016, Jeff Jenkins.
+*/
 
 const React = require('react');
-const ArticleActions = require('../actions/ArticleActions');
+const Actions = require('../actions/ArticleActions');
 const ArticleStore = require('../stores/ArticleStore');
 const Messages = require('./Messages.react');
-const Actions = require('../actions/ArticleActions');
+const Comments = require('./Comments.react');
 
 import { Link } from 'react-router';
 
