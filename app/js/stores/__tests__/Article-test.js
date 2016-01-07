@@ -1,13 +1,7 @@
-/*
- * Copyright (c) 2014-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * TodoStore-test
- */
+/**
+ * The MIT License (MIT)
+ * Copyright (c) 2016, Jeff Jenkins.
+*/
 
 jest.dontMock('../../constants/ArticleConstants');
 jest.dontMock('../ArticleStore');
@@ -17,14 +11,25 @@ describe('Store', function() {
 
   var Constants = require('../../constants/ArticleConstants');
   var AppDispatcher;
-  var TodoStore;
+  var ArticleStore;
   var callback;
 
   // mock actions
-  var actionTodoCreate = {
-    actionType: Constants.TODO_CREATE,
-    text: 'foo'
+  var actionCreate = {
+    actionType: Constants.GET_ALL_ARTICLES_DATA,
+    response:{
+      body: [{
+        title: 'foo',
+        body: 'bar'
+      }]
+    }
   };
+
+  // mock actions
+  var actionPending = {
+    actionType: Constants.PENDING
+  };
+
   var actionTodoDestroy = {
     actionType: Constants.TODO_DESTROY,
     id: 'replace me in test'
@@ -32,7 +37,7 @@ describe('Store', function() {
 
   beforeEach(function() {
     AppDispatcher = require('../../dispatcher/AppDispatcher');
-    TodoStore = require('../ArticleStore');
+    ArticleStore = require('../ArticleStore');
     callback = AppDispatcher.register.mock.calls[0][0];
   });
 
@@ -40,51 +45,36 @@ describe('Store', function() {
     expect(AppDispatcher.register.mock.calls.length).toBe(1);
   });
 
-  it('should initialize with no to-do items', function() {
-    var all = TodoStore.getAll();
+  it('should initialize with no article items', function() {
+    var all = ArticleStore.getAll();
     expect(all).toEqual({});
   });
 
-  it('creates a to-do item', function() {
-    callback(actionTodoCreate);
-    var all = TodoStore.getAll();
+  it('creates a article item', function() {
+    callback(actionCreate);
+    var all = ArticleStore.getAll();
     var keys = Object.keys(all);
     expect(keys.length).toBe(1);
-    expect(all[keys[0]].text).toEqual('foo');
+    expect(all[keys[0]].title).toEqual('foo');
+    expect(all[keys[0]].body).toEqual('bar');
   });
 
-  it('destroys a to-do item', function() {
-    callback(actionTodoCreate);
-    var all = TodoStore.getAll();
-    var keys = Object.keys(all);
-    expect(keys.length).toBe(1);
-    actionTodoDestroy.id = keys[0];
-    callback(actionTodoDestroy);
-    expect(all[keys[0]]).toBeUndefined();
+  it('flips pending status a article item', function() {
+    expect(ArticleStore.getPendingState()).toEqual(false); //Load with pending as false
+    callback(actionPending); // We need to flip the app to pending a request
+    expect(ArticleStore.getPendingState()).toEqual(true); //Flip to pending to true while the request is occuring.
+    callback(actionCreate);
+    expect(ArticleStore.getPendingState()).toEqual(false); //Request is complete pending should now be false
   });
 
-  it('can determine whether all to-do items are complete', function() {
-    var i = 0;
-    for (; i < 3; i++) {
-      callback(actionTodoCreate);
-    }
-    expect(Object.keys(TodoStore.getAll()).length).toBe(3);
-    expect(TodoStore.areAllComplete()).toBe(false);
-
-    var all = TodoStore.getAll();
-    for (key in all) {
-      callback({
-        actionType: Constants.TODO_COMPLETE,
-        id: key
-      });
-    }
-    expect(TodoStore.areAllComplete()).toBe(true);
-
-    callback({
-      actionType: Constants.TODO_UNDO_COMPLETE,
-      id: key
-    });
-    expect(TodoStore.areAllComplete()).toBe(false);
-  });
+  // it('destroys a to-do item', function() {
+  //   callback(actionCreate);
+  //   var all = ArticleStore.getAll();
+  //   var keys = Object.keys(all);
+  //   expect(keys.length).toBe(1);
+  //   actionTodoDestroy.id = keys[0];
+  //   callback(actionTodoDestroy);
+  //   expect(all[keys[0]]).toBeUndefined();
+  // });
 
 });
