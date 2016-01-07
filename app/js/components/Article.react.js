@@ -33,7 +33,7 @@ const ArticleSection = React.createClass({
 
   componentDidMount: function() {
     if (!this.state.article){
-      ArticleActions.getById(this.props.params.id);
+      Actions.getById(this.props.params.id);
     }
     ArticleStore.addChangeListener(this._onChange);
   },
@@ -48,25 +48,7 @@ const ArticleSection = React.createClass({
     if (!this.state.article){return <div>loading</div>}
     const article = this.state.article;
     const dateString = new Date(article.createdAt).toLocaleString();
-    const comments= [];
-    for (var i = article.comments.length - 1; i >= 0; i--) {
-      var comment = article.comments[i];
-      comments.push((
-          <div key={i} className="comment">
-            <p>
-              <a href="">{comment.user.username}</a>
-              :&nbsp;
-              {comment.body}
-            </p>
-            <div role="form" method="post" action="" onsubmit="return confirm('Are you sure?')" className="form-inline">
-              <input type="hidden" name="_csrf" value="" />
-              <span className="muted">Dec 17, 2015 02:45 am</span>
-              <input type="hidden" name="_method" value="DELETE" />
-              <button className="btn btn-danger btn-link error" type="submit">delete</button>
-            </div>
-          </div>
-          ));
-    }
+
     var tags = [];
     for (var i = article.tags.length - 1; i >= 0; i--) {
       tags.push(
@@ -115,16 +97,7 @@ const ArticleSection = React.createClass({
             <input type="hidden" name="_method" value="DELETE" />
             <button className="btn btn-danger" type="submit">Delete</button>
           </form>
-          <br />
-          <h3>Comments</h3>
-          {comments}
-          <div>
-            <input type="hidden" name="_csrf" value="" />
-            <div className="form-group">
-              <textarea onChange={this._onChangeNewComment} value={this.state.comment} rows="6" name="body" placeholder="Add your comment" cols="30" rows="6" className="form-control" />
-            </div>
-            <button onClick={this._save}  className="btn btn-primary" type="submit">Add comment</button>
-          </div>
+          <Comments comments={article.comments} id={article._id} />
 
         </div>
       </section>
@@ -135,30 +108,6 @@ const ArticleSection = React.createClass({
    */
   _onChange: function() {
     this.setState(getState(this.props.params.id));
-  },
-  /**
-   * Event handler for 'change' events coming from the DOM
-   */
-  _onChangeNewComment: function(event) {
-    this.setState({
-        comment: event.target.value
-    });
-  },
-  /**
-   * Event handler called within.
-   * @param  {string} text
-   */
-  //@TODO Move comment posting to it's own react class!
-  _save: function() {
-    var comment = this.state.comment;
-    var article = this.state.article;
-    if (comment && article){
-      Actions.createComment(article._id, {body:comment});
-      //Reset the comments to an empty string
-      this.setState({
-        comment: ''
-      });
-    }
   }
 
 });
