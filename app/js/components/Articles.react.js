@@ -60,7 +60,7 @@ var ArticleSection = React.createClass({
     var articles = [];
 
     for (var key in allArticles) {
-      articles.push(<ArticleItem key={key} article={allArticles[key]} />);
+      articles.unshift(<ArticleItem key={key} article={allArticles[key]} />);
     }
 
     return (
