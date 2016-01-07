@@ -115,7 +115,7 @@ ArticleSchema.methods = {
    */
 
   addComment: function (user, comment, cb) {
-    const notify = require('../mailer');
+    //const notify = require('../mailer');
 
     this.comments.push({
       body: comment.body,
@@ -123,11 +123,11 @@ ArticleSchema.methods = {
     });
 
     if (!this.user.email) this.user.email = 'email@product.com';
-    notify.comment({
-      article: this,
-      currentUser: user,
-      comment: comment.body
-    });
+    // notify.comment({
+    //   article: this,
+    //   currentUser: user,
+    //   comment: comment.body
+    // });
 
     this.save(cb);
   },
@@ -178,6 +178,25 @@ ArticleSchema.statics = {
    */
 
   list: function (options, cb) {
+    const criteria = options.criteria || {};
+
+    this.find(criteria)
+      .populate('user', 'name username')
+      .populate('comments.user')
+      .sort({'createdAt': -1}) // sort by date
+      .limit(options.count)
+      .skip(options.skip)
+      .exec(cb);
+  },
+  /**
+   * List articles
+   *
+   * @param {Object} options
+   * @param {Function} cb
+   * @api private
+   */
+
+  listOld: function (options, cb) {
     const criteria = options.criteria || {};
 
     this.find(criteria)

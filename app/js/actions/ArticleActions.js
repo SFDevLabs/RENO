@@ -37,6 +37,13 @@ const Actions = {
   },
 
   /**
+   * @param  {string} text
+   */
+  createComment: function(id, obj) {
+    ArticleApi.postEntityCommentData(id, obj);
+  },
+
+  /**
    * @param  {string} id The ID of the ToDo item
    * @param  {string} text
    */

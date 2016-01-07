@@ -7,10 +7,11 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-var React = require('react');
-var ArticleActions = require('../actions/ArticleActions');
-var ArticleStore = require('../stores/ArticleStore');
-var Messages = require('./Messages.react');
+const React = require('react');
+const ArticleActions = require('../actions/ArticleActions');
+const ArticleStore = require('../stores/ArticleStore');
+const Messages = require('./Messages.react');
+const Actions = require('../actions/ArticleActions');
 
 import { Link } from 'react-router';
 
@@ -57,12 +58,12 @@ const ArticleSection = React.createClass({
               :&nbsp;
               {comment.body}
             </p>
-            <form role="form" method="post" action="" onsubmit="return confirm('Are you sure?')" className="form-inline">
+            <div role="form" method="post" action="" onsubmit="return confirm('Are you sure?')" className="form-inline">
               <input type="hidden" name="_csrf" value="" />
               <span className="muted">Dec 17, 2015 02:45 am</span>
               <input type="hidden" name="_method" value="DELETE" />
               <button className="btn btn-danger btn-link error" type="submit">delete</button>
-            </form>
+            </div>
           </div>
           ));
     }
@@ -117,13 +118,13 @@ const ArticleSection = React.createClass({
           <br />
           <h3>Comments</h3>
           {comments}
-          <form method="post" action="" role="form">
+          <div>
             <input type="hidden" name="_csrf" value="" />
             <div className="form-group">
-              <textarea rows="6" name="body" placeholder="Add your comment" id="" cols="30" rows="6" className="form-control"></textarea>
+              <textarea onChange={this._onChangeNewComment} value={this.state.comment} rows="6" name="body" placeholder="Add your comment" cols="30" rows="6" className="form-control" />
             </div>
-            <button className="btn btn-primary" type="submit">Add comment</button>
-          </form>
+            <button onClick={this._save}  className="btn btn-primary" type="submit">Add comment</button>
+          </div>
 
         </div>
       </section>
@@ -134,6 +135,25 @@ const ArticleSection = React.createClass({
    */
   _onChange: function() {
     this.setState(getState(this.props.params.id));
+  },
+  /**
+   * Event handler for 'change' events coming from the DOM
+   */
+  _onChangeNewComment: function(event) {
+    this.setState({
+        comment: event.target.value
+    });
+  },
+  /**
+   * Event handler called within.
+   * @param  {string} text
+   */
+  _save: function() {
+    var comment = this.state.comment;
+    var article = this.state.article;
+    if (comment && article){
+      Actions.createComment(article._id, {body:comment});
+    }
   }
 
 });

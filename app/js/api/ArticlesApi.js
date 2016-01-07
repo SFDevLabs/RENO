@@ -1,9 +1,12 @@
-var API_URL = '/api/articles';
-var TIMEOUT = 10000;
+const API_URL = '/api/articles';
+const TIMEOUT = 10000;
 
-var request = require('superagent');
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var Constants = require('../constants/ArticleConstants');
+const request = require('superagent');
+const AppDispatcher = require('../dispatcher/AppDispatcher');
+const Constants = require('../constants/ArticleConstants');
+
+const csrf = document.getElementById('csrf');
+const csrfToken = csrf?csrf.content:'';
 
 var _pendingRequests = {};
 
@@ -54,12 +57,25 @@ function get(url) {
         .timeout(TIMEOUT)
 }
 
-// a get request with an authtoken param
+// a post request with an authtoken param
 function post(url, data) {
     var r = request.post(url)
     for (var key in data) {
        r.field(key, data[key])
     };
+    r.field('_csrf', csrfToken);//adding the csrf token
+
+    return r.timeout(TIMEOUT);
+}
+
+
+// a put request with an authtoken param
+function put(url, data) {
+    var r = request.put(url)
+    for (var key in data) {
+       r.field(key, data[key])
+    };
+    r.field('_csrf', csrfToken);//adding the csrf token
 
     return r.timeout(TIMEOUT);
 }
@@ -91,6 +107,17 @@ var Api = {
     postEntityData: function(data) {
         var url = makeUrl("");
         var key = Constants.POST_ARTICLE_DATA;
+        var params = data;
+        abortPendingRequests(key);
+        dispatch(Constants.PENDING, params);
+        _pendingRequests[key] = post(url, params).end(
+            makeDigestFun(key, params)
+        );
+        
+    },
+    postEntityCommentData: function(id, data) {
+        var url = makeUrl("/"+id+"/comments");
+        var key = Constants.PUT_ARTICLE_DATA;
         var params = data;
         abortPendingRequests(key);
         dispatch(Constants.PENDING, params);

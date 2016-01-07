@@ -61,7 +61,7 @@ exports.indexOld = function (req, res) {
     page: page
   };
 
-  Article.list(options, function (err, articles) {
+  Article.listOld(options, function (err, articles) {
     if (err) return res.render('500');
     Article.count().exec(function (err, count) {
       res.render('articles/index',{

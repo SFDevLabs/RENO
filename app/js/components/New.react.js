@@ -14,9 +14,6 @@ const Actions = require('../actions/ArticleActions');
 import { Link, History } from 'react-router';
 const ArticleStore = require('../stores/ArticleStore');
 
-const csrf = document.getElementById('csrf');
-const csrfToken = csrf?csrf.content:'';
-
 
 /**
  * Retrieve the current ARTICLE data from the ArticleStore
@@ -40,9 +37,7 @@ const NewArticle = React.createClass({
       data = {
           title: '',
           body: '',
-          tags: [],
-          _csrf:csrfToken
-      }
+          tags: []      }
     }    
     return data;
   },
@@ -157,11 +152,7 @@ const NewArticle = React.createClass({
    */
   _save: function() {
     Actions.create(this.state);
-
-    //Actions.update(this.state);
-  },
-
-
+  }
 
 });
 
