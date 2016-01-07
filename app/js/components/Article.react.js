@@ -148,11 +148,16 @@ const ArticleSection = React.createClass({
    * Event handler called within.
    * @param  {string} text
    */
+  //@TODO Move comment posting to it's own react class!
   _save: function() {
     var comment = this.state.comment;
     var article = this.state.article;
     if (comment && article){
       Actions.createComment(article._id, {body:comment});
+      //Reset the comments to an empty string
+      this.setState({
+        comment: ''
+      });
     }
   }
 

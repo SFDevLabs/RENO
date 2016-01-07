@@ -10,6 +10,8 @@
   function errMsg(msg) {
     return {'error': {'message': msg.toString()}};
   }
+  const _ = require('lodash');
+
 
   //------------------------------
   // List
@@ -61,19 +63,13 @@
 
       article.addComment(user, req.body, function (err) {
         if (err) return res.status(500).send(errMsg(err));
-        res.send(article);
-      });
-      //res.send(req.article);
+        
+        var articleObj = article.toObject();//Adding the populated comments from a pure JS object.
+        var comments = articleObj.comments;
+        comments[comments.length-1].user=_.pick(user, ['username', '_id']);
 
-      // var m = new model(req.body);
-      // m.user = req.user;
-      // m.save(function (err) {
-      //   if (!err) {
-      //     res.send(m);
-      //   } else {
-      //     res.send(errMsg(err));
-      //   }
-      // });
+        res.send(articleObj);
+      });
     };
   }
 

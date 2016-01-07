@@ -117,7 +117,7 @@ var Api = {
     },
     postEntityCommentData: function(id, data) {
         var url = makeUrl("/"+id+"/comments");
-        var key = Constants.PUT_ARTICLE_DATA;
+        var key = Constants.POST_ARTICLE_COMMENT_DATA;
         var params = data;
         abortPendingRequests(key);
         dispatch(Constants.PENDING, params);

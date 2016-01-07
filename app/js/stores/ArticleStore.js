@@ -179,6 +179,15 @@ AppDispatcher.register(function(action) {
       }
       break;
 
+    case ArticleConstants.POST_ARTICLE_COMMENT_DATA:
+      _pending = false;
+      var article = action.response.body
+      if (article) {
+        set(article);
+        ArticleStore.emitChange();
+      }
+      break;
+
     case ArticleConstants.PENDING:
       _pending = true;
       ArticleStore.emitChange();
