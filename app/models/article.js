@@ -163,7 +163,7 @@ ArticleSchema.statics = {
    */
 
   load: function (id, cb) {
-    this.findOne({ _id : id })
+    this.findOne({ _id : id }, 'title body tags comments createdAt image _id user')
       .populate('user', 'name email username')
       .populate('comments.user', 'name email username')
       .exec(cb);
@@ -179,8 +179,7 @@ ArticleSchema.statics = {
 
   list: function (options, cb) {
     const criteria = options.criteria || {};
-
-    this.find(criteria)
+    this.find(criteria, 'title body tags comments createdAt image _id user')
       .populate('user', 'name username')
       .populate('comments.user')
       .sort({'createdAt': -1}) // sort by date
@@ -191,7 +190,6 @@ ArticleSchema.statics = {
   //kill me in the future
   listOld: function (options, cb) {
     const criteria = options.criteria || {};
-
     this.find(criteria)
       .populate('user', 'name username')
       .populate('comments.user')

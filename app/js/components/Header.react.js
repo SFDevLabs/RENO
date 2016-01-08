@@ -7,7 +7,7 @@ const React = require('react');
 const Link = require('react-router').Link
 
 
-var Header = React.createClass({
+const Header = React.createClass({
   getInitialState:function(){
     return {
       collapsed: true,
@@ -39,7 +39,7 @@ var Header = React.createClass({
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
             </button>
-            <Link to="/" className="navbar-brand">Node Express Mongoose Demo</ Link>
+            <Link to="/" className="navbar-brand">RENO</ Link>
           </div>
           <div className={navBar} style={styleStuff}>
             <ul className="nav navbar-nav">

@@ -59,13 +59,13 @@ describe('Store', function() {
     expect(all[keys[0]].body).toEqual('bar');
   });
 
-  it('flips pending status a article item', function() {
-    expect(ArticleStore.getPendingState()).toEqual(false); //Load with pending as false
-    callback(actionPending); // We need to flip the app to pending a request
-    expect(ArticleStore.getPendingState()).toEqual(true); //Flip to pending to true while the request is occuring.
-    callback(actionCreate);
-    expect(ArticleStore.getPendingState()).toEqual(false); //Request is complete pending should now be false
-  });
+  // it('flips pending status a article item', function() {
+  //   expect(ArticleStore.getPendingState()).toEqual(false); //Load with pending as false
+  //   callback(actionPending); // We need to flip the app to pending a request
+  //   expect(ArticleStore.getPendingState()).toEqual(true); //Flip to pending to true while the request is occuring.
+  //   callback(actionCreate);
+  //   expect(ArticleStore.getPendingState()).toEqual(false); //Request is complete pending should now be false
+  // });
 
   // it('destroys a to-do item', function() {
   //   callback(actionCreate);

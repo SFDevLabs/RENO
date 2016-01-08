@@ -63,13 +63,14 @@ const ArticleSection = React.createClass({
     for (var key in articlesData) {
       articles.unshift(<ArticleItem key={key} article={articlesData[key]} />);
     }
+    const messages = false? (<Messages messages={[{message:"Some Info"}]} type="success" />) :null;
 
     return (
       <section className="container">
         <div className="page-header">
           <h1>Articles</h1>
         </div>
-        <Messages messages={[{message:"Some Info"}]} type="success" />
+        {messages}
         <div className="content" id="todo-list">{articles}</div>
         <div className="content pagination">
           <a type="button" className="btn btn-primary active" >
