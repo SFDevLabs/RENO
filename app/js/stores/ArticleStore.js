@@ -12,7 +12,6 @@ const CHANGE_EVENT = 'change';
 
 var _articles = {};
 var _didInitalGet = false;
-var _pending = false;
 var _newArticleId;
 
 /**
@@ -20,7 +19,6 @@ var _newArticleId;
  * @param  {string} text The content of the ARTICLES
  */
 function setAll(articles) {
-  _didInitalGet = true
   for (var i = articles.length - 1; i >= 0; i--) {
     var article = articles[i]
     var id = article._id
@@ -43,8 +41,9 @@ function set(article) {
  * @param {object} updates An object literal containing only the data to be
  *     updated.
  */
-function update(id, updates) {
-  _articles[id] = assign({}, _articles[id], updates);
+function update(article) {
+  var id = article._id;
+  _articles[id] = assign({}, _articles[id], article);
 }
 
 /**
@@ -63,6 +62,14 @@ function updateAll(updates) {
  * @param  {string} id
  */
 function destroy(id) {
+  delete _articles[id];
+}
+
+/**
+ * Delete a ARTICLES item.
+ * @param  {string} id
+ */
+function destroyComment(id) {
   delete _articles[id];
 }
 
@@ -112,10 +119,6 @@ var ArticleStore = assign({}, EventEmitter.prototype, {
     return _didInitalGet;
   },
 
-  getPendingState: function() {
-    return _pending;
-  },
-
   getNewArticleId: function() {
     return _newArticleId;
   },
@@ -146,8 +149,8 @@ AppDispatcher.register(function(action) {
   switch(action.actionType) {
 
     case ArticleConstants.GET_ALL_ARTICLES_DATA:
-      _pending = false;
       var articles = action.response.body
+      _didInitalGet = true;
       if (articles) {
         setAll(articles);
         ArticleStore.emitChange();
@@ -155,7 +158,6 @@ AppDispatcher.register(function(action) {
       break;
 
     case ArticleConstants.GET_ARTICLE_DATA:
-      _pending = false;
       var article = action.response.body
       if (article) {
         set(article);
@@ -164,7 +166,6 @@ AppDispatcher.register(function(action) {
       break;
 
     case ArticleConstants.POST_ARTICLE_DATA:
-      _pending = false;
       var article = action.response.body
       if (article) {
         set(article);
@@ -174,17 +175,23 @@ AppDispatcher.register(function(action) {
       break;
 
     case ArticleConstants.POST_ARTICLE_COMMENT_DATA:
-      _pending = false;
       var article = action.response.body
       if (article) {
         set(article);
         ArticleStore.emitChange();
       }
       break;
+      
+    case ArticleConstants.DELETE_ARTICLE_COMMENT_DATA:
+      var article = action.response.body
+      if (article) {
+        update(article);
+        ArticleStore.emitChange();
+      }
+      break;
 
     case ArticleConstants.PENDING:
-      _pending = true;
-      ArticleStore.emitChange();
+      //ArticleStore.emitChange();
       break;
 
     default:

@@ -3,20 +3,20 @@
  * Copyright (c) 2016, Jeff Jenkins.
 */
 
-var React = require('react');
-var ArticleActions = require('../actions/ArticleActions');
-var ArticleStore = require('../stores/ArticleStore');
-var Messages = require('./Messages.react');
+const React = require('react');
+const ArticleActions = require('../actions/ArticleActions');
+const ArticleStore = require('../stores/ArticleStore');
+const Messages = require('./Messages.react');
+const Loader = require('react-loader');
 
-
-var ArticleItem = require('./ArticleItem.react');
+const ArticleItem = require('./ArticleItem.react');
 
 /**
  * Retrieve the current ARTICLE data from the ArticleStore
  */
 function getState() {
   return {
-    allArticles: ArticleStore.getAll(),
+    articles: ArticleStore.getAll(),
     initalGet: ArticleStore.didInitalGet(),
     collapsed: false,
     collapsing: false
@@ -24,15 +24,19 @@ function getState() {
 }
 
 
-var ArticleSection = React.createClass({
+const ArticleSection = React.createClass({
 
   getInitialState: function() {
-    return getState();
+    return {
+      initalGet: ArticleStore.didInitalGet()
+    }
   },
 
   componentDidMount: function() {
     if (!this.state.initalGet){
       ArticleActions.getAll();
+    }else{
+      this.setState(getState());
     }
     ArticleStore.addChangeListener(this._onChange);
   },
@@ -44,6 +48,7 @@ var ArticleSection = React.createClass({
    * @return {object}
    */
   render: function() {
+    if (!this.state.initalGet){return <Loader />}
 
     var alertBox = 'fade alert-info';
     if (this.state.collapsing){
@@ -52,11 +57,11 @@ var ArticleSection = React.createClass({
       alertBox += this.state.collapsed?' ':' in alert';
     }
 
-    var allArticles = this.state.allArticles;
-    var articles = [];
 
-    for (var key in allArticles) {
-      articles.unshift(<ArticleItem key={key} article={allArticles[key]} />);
+    var articles = [];
+    var articlesData = this.state.articles;
+    for (var key in articlesData) {
+      articles.unshift(<ArticleItem key={key} article={articlesData[key]} />);
     }
 
     return (

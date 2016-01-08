@@ -8,6 +8,7 @@ const Actions = require('../actions/ArticleActions');
 const ArticleStore = require('../stores/ArticleStore');
 const Messages = require('./Messages.react');
 const Comments = require('./Comments.react');
+const Loader = require('react-loader');
 
 import { Link } from 'react-router';
 
@@ -41,7 +42,7 @@ const ArticleSection = React.createClass({
    * @return {object}
    */
   render :function() {
-    if (!this.state.article){return <div>loading</div>}
+    if (!this.state.article){return <Loader />}
     const article = this.state.article;
     const dateString = new Date(article.createdAt).toLocaleString();
 

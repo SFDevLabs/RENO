@@ -165,7 +165,7 @@ ArticleSchema.statics = {
   load: function (id, cb) {
     this.findOne({ _id : id })
       .populate('user', 'name email username')
-      .populate('comments.user')
+      .populate('comments.user', 'name email username')
       .exec(cb);
   },
 
@@ -188,14 +188,7 @@ ArticleSchema.statics = {
       .skip(options.skip)
       .exec(cb);
   },
-  /**
-   * List articles
-   *
-   * @param {Object} options
-   * @param {Function} cb
-   * @api private
-   */
-
+  //kill me in the future
   listOld: function (options, cb) {
     const criteria = options.criteria || {};
 

@@ -8,6 +8,10 @@ const mongoose = require('mongoose')
 const Article = mongoose.model('Article');
 const _ = require('lodash');
 
+function errMsg(msg) {
+  return {'error': {'message': msg.toString()}};
+}
+
 /**
  * List
  */
@@ -65,7 +69,8 @@ exports.getReadController = function (req, res) {
  * Update
  */
 exports.getUpdateController = function (req, res) {
-  Article.findById(req.params.id, function (err, result) {
+  Article
+    .findById(req.params.id, function (err, result) {
     var key;
     for (key in req.body) {
       result[key] = req.body[key];
@@ -85,17 +90,18 @@ exports.getUpdateController = function (req, res) {
  */
 exports.getDeleteController = function (req, res) {
   Article
-    .findById(req.params.id)
-    .populate('user', 'name username')
-    .populate('comments.user', 'name username')
-    .exec(function (err, result) {
+    .load(req.params.id, function (err, result) {
       if (err) {
         res.send(errMsg(err));
       } else {
         result.remove();
         result.save(function (err) {
           if (!err) {
-            res.send({});
+            
+          setTimeout(function(){
+           res.send(result);
+          },500)
+            
           } else {
             res.send(errMsg(err));
           }
@@ -123,10 +129,9 @@ exports.getCreateCommentController = function (req, res) {
       var comments = articleObj.comments;
       comments[comments.length-1].user=_.pick(user, ['username', '_id']);
 
-      
-       setTimeout(function(){
-          res.send(articleObj);
-        },500)
+      setTimeout(function(){
+       res.send(articleObj);
+      },500)
     });
   });
 }
