@@ -106,7 +106,21 @@ module.exports = function (app, passport) {
 
   // home route
   app.get('/', articles.index);
-  articleCrud.initRoutesForModel({ 'app': app, 'model': Article, path: '/api/articles', auth:auth });
+
+  // API Routes
+  const path = '/api/articles'
+  const pathWithId = path + '/:id';
+
+  app.get(path, articleCrud.getListController);
+  app.post(path, auth.requiresLogin, articleCrud.getCreateController);
+
+  app.post(pathWithId+'/comments', auth.requiresLogin, articleCrud.getCreateCommentController);
+  app.delete(pathWithId+'/comments/:commentId', auth.requiresLogin, articleCrud.getDeleteCommentController);
+
+  app.get(pathWithId, articleCrud.getReadController);
+  app.put(pathWithId, articleAuth, articleCrud.getUpdateController);
+  app.delete(pathWithId, articleAuth, articleCrud.getDeleteController); 
+
 
   // comment routes
   app.param('commentId', comments.load);
