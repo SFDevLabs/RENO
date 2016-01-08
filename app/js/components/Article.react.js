@@ -10,7 +10,7 @@ const Messages = require('./Messages.react');
 const Comments = require('./Comments.react');
 const Loader = require('react-loader');
 
-import { Link } from 'react-router';
+import { Link, History } from 'react-router';
 
 
 /**
@@ -21,8 +21,8 @@ function getState(id) {
     article: ArticleStore.getById(id)
   };
 }
-
 const ArticleSection = React.createClass({
+  mixins: [ History ],
 
   getInitialState: function() {
     return getState(this.props.params.id);
@@ -45,6 +45,7 @@ const ArticleSection = React.createClass({
     if (!this.state.article){return <Loader />}
     const article = this.state.article;
     const dateString = new Date(article.createdAt).toLocaleString();
+    const messages = false? (<Messages messages={[{message:"Some Info"}]} type="success" />) : null;
 
     var tags = [];
     for (var i = article.tags.length - 1; i >= 0; i--) {
@@ -61,8 +62,7 @@ const ArticleSection = React.createClass({
         <div className="page-header">
           <h1>{article.title}</h1>
         </div>
-        <Messages messages={[{message:"Successfully created article!"}]} type="success" />
-        
+        {messages}        
         <div className="content">
           <div className="row">
             <div className="col-md-8">
@@ -84,7 +84,7 @@ const ArticleSection = React.createClass({
                 <img src="/img/twitter.png" alt="" />
             </div>
           </div>
-          <form action="" method="post" onsubmit="return confirm('Are you sure?')">
+          <div>
             <br />
             <input type="hidden" name="_csrf" value="" />
             <Link  to={'/articles/'+article._id+'/edit'} title="edit" className="btn btn-default">
@@ -92,10 +92,9 @@ const ArticleSection = React.createClass({
             </Link>
             &nbsp;&nbsp;
             <input type="hidden" name="_method" value="DELETE" />
-            <button className="btn btn-danger" type="submit">Delete</button>
-          </form>
+            <button onClick={this._delete} className="btn btn-danger" type="submit">Delete</button>
+          </div>
           <Comments comments={article.comments} id={article._id} />
-
         </div>
       </section>
     )
@@ -104,8 +103,20 @@ const ArticleSection = React.createClass({
    * Event handler for 'change' events coming from the ArticleStore
    */
   _onChange: function() {
-    this.setState(getState(this.props.params.id));
-  }
+    var state = getState(this.props.params.id)
+    if (!state.article){
+      this.history.pushState(null, '/');
+    }else{
+      this.setState(state);
+    }
+  },
+  /**
+   * Event handler for 'change' events coming from the ArticleStore
+   */
+  _delete: function() {
+    Actions.destroy(this.state.article._id);
+  },
+
 
 });
 

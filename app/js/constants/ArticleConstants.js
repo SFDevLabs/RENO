@@ -14,5 +14,6 @@ module.exports = keyMirror({
   POST_ARTICLE_DATA: null,
   POST_ARTICLE_COMMENT_DATA: null,
   DELETE_ARTICLE_COMMENT_DATA: null,
-  GET_ARTICLE_DATA: null
+  GET_ARTICLE_DATA: null,
+  DELETE_ARTICLE: null
 });

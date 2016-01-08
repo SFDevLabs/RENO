@@ -9,38 +9,47 @@ const TagsInput = require('react-tagsinput');
 const Actions = require('../actions/ArticleActions');
 import { Link, History } from 'react-router';
 const ArticleStore = require('../stores/ArticleStore');
+const Loader = require('react-loader');
 
 
 /**
  * Retrieve the current ARTICLE data from the ArticleStore
  */
 function getState(id) {
-  return {
-    article: ArticleStore.getById(id)
-  };
+  var data = ArticleStore.getById(id)
+  if (data){
+    data.loading=false; //we are not loading since we have the data;
+  } else if(id){
+    data =  {
+      loading : true
+    }
+  } else {
+    data = {
+      title: '',
+      body: '',
+      tags: [],
+      isNew : true
+    }
+  }
+  delete data.comments
+  delete data.image
+  delete data.createdAt
+  delete data.user
+
+  return data
 }
 
 
 const NewArticle = React.createClass({
- mixins: [ History ],
- getInitialState: function() {
-
+  mixins: [ History ],
+  getInitialState: function() {
     var id = this.props.params.id;
-    var data;
-    if (id){
-      data =  ArticleStore.getById(id)
-    } else {
-      data = {
-          title: '',
-          body: '',
-          tags: []      }
-    }    
-    return data;
+    return getState(id);
   },
   componentDidMount: function() {
-    var id = this.props.params.id;
-    if(id){
-      ArticleStore.getById(id)
+    if(this.state.loading){
+      var id = this.props.params.id;
+      Actions.getById(id);
     }
     ArticleStore.addChangeListener(this._onChange);
   },
@@ -53,6 +62,8 @@ const NewArticle = React.createClass({
    * @return {object}
    */
   render: function() {
+    if (this.state.loading){return <Loader />}
+
     return (
       <section className="container">
         <div className="page-header">
@@ -109,12 +120,12 @@ const NewArticle = React.createClass({
    * Event handler for 'change' events coming from store
    */
   _onChange: function() {
-    var pending = ArticleStore.getPendingState();
     var newArticleId = ArticleStore.getNewArticleId();
-    if (!pending && newArticleId){
+    if (newArticleId){
       this.history.pushState(null, '/articles/'+newArticleId);
     }else{
-      this.setState({pending:pending});
+      var id = this.props.params.id;
+      this.setState(getState(id));
     }
   },
   /**
@@ -147,7 +158,12 @@ const NewArticle = React.createClass({
    * @param  {string} text
    */
   _save: function() {
-    Actions.create(this.state);
+    if (this.state.isNew){
+      Actions.create(this.state);
+    } else{
+      Actions.update(this.state);
+    }
+    
   }
 
 });

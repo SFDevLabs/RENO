@@ -31,6 +31,20 @@ const Actions = {
   },
 
   /**
+   * @param  {object} update
+   */
+  update: function(obj) {
+    ArticleApi.putEntityData(obj);
+  },
+
+  /**
+   * @param  {object} update
+   */
+  destroy: function(id) {
+    ArticleApi.deleteEntityData(id);
+  },
+
+  /**
    * @param  {string} text
    */
   createComment: function(id, obj) {

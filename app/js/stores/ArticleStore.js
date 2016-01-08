@@ -165,11 +165,19 @@ AppDispatcher.register(function(action) {
       }
       break;
 
+    case ArticleConstants.DELETE_ARTICLE:
+      var article = action.response.body
+      if (article) {
+        destroy(article._id);
+        ArticleStore.emitChange();
+      }
+      break;
+
     case ArticleConstants.POST_ARTICLE_DATA:
       var article = action.response.body
       if (article) {
-        set(article);
         _newArticleId = article._id;
+        set(article);
         ArticleStore.emitChange();
       }
       break;

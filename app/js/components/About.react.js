@@ -3,7 +3,7 @@
  * Copyright (c) 2016, Jeff Jenkins.
 */
 
-var React = require('react');
+const React = require('react');
 
 ///Move Mee to another file
 const About = React.createClass({

@@ -128,6 +128,28 @@ var Api = {
         );
         
     },
+    deleteEntityData: function(id) {
+        var url = makeUrl("/"+id);
+        var key = Constants.DELETE_ARTICLE;
+        var params = {};
+        abortPendingRequests(key);
+        dispatch(Constants.PENDING, params);
+        _pendingRequests[key] = del(url, params).end(
+            makeDigestFun(key, params)
+        );
+        
+    },
+    putEntityData: function(data) {
+        var url = makeUrl('/'+data._id);
+        var key = Constants.POST_ARTICLE_DATA;
+        var params = data;
+        abortPendingRequests(key);
+        dispatch(Constants.PENDING, params);
+        _pendingRequests[key] = put(url, params).end(
+            makeDigestFun(key, params)
+        );
+        
+    },
     postEntityCommentData: function(id, data) {
         var url = makeUrl('/'+id+'/comments');
         var key = Constants.POST_ARTICLE_COMMENT_DATA;
