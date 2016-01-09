@@ -16,12 +16,6 @@ const ArticleItem = React.createClass({
    article: React.PropTypes.object.isRequired,
   },
 
-  getInitialState: function() {
-    return {
-      isEditing: false
-    };
-  },
-
   /**
    * @return {object}
    */
@@ -42,16 +36,6 @@ const ArticleItem = React.createClass({
         <span className="muted">{dateString}</span>
       </div>
     );
-  },
-
-  /**
-   * Event handler called within TodoTextInput.
-   * Defining this here allows TodoTextInput to be used in multiple places
-   * in different ways.
-   * @param  {string} text
-   */
-  _onClick: function(text) {
-
   }
 
 });

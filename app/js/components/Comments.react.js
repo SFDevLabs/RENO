@@ -21,8 +21,9 @@ const Comments = React.createClass({
     }
   },
   componentWillReceiveProps: function(nextProps) {
+    //When we recieve props the react commponent has reloaded.  This means the save is done. 
     this.setState({
-      loading:false
+      saving:false
     });
   },
 
@@ -35,8 +36,8 @@ const Comments = React.createClass({
       var comment = commentsData[i];
       comments.push(<CommentItem  key={i} comment={comment} articleId={this.props.id} />);
     }
-    const opacity = this.state.loading?.2:1;
-    const loader = this.state.loading?<Loader options={{top:'40%'}} />:null;
+    const opacity = this.state.saving?.2:1;
+    const loader = this.state.saving?<Loader options={{top:'40%'}} />:null;
     return (
       <div>
           <h3>Comments</h3>
@@ -74,7 +75,7 @@ const Comments = React.createClass({
       //Reset the comments to an empty string
       this.setState({
         comment: '',
-        loading:true
+        saving:true
       });
     }
   }

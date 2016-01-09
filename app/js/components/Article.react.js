@@ -6,7 +6,6 @@
 const React = require('react');
 const Actions = require('../actions/ArticleActions');
 const ArticleStore = require('../stores/ArticleStore');
-const Messages = require('./Messages.react');
 const Comments = require('./Comments.react');
 const Loader = require('react-loader');
 
@@ -14,7 +13,7 @@ import { Link, History } from 'react-router';
 
 
 /**
- * Retrieve the current ARTICLE data from the ArticleStore
+ * Retrieve the current ARTICLES data from the ArticleStore
  */
 function getState(id) {
   return {
@@ -45,7 +44,6 @@ const ArticleSection = React.createClass({
     if (!this.state.article){return <Loader />}
     const article = this.state.article;
     const dateString = new Date(article.createdAt).toLocaleString();
-    const messages = false? (<Messages messages={[{message:"Some Info"}]} type="success" />) : null;
 
     var tags = [];
     for (var i = article.tags.length - 1; i >= 0; i--) {
@@ -62,7 +60,6 @@ const ArticleSection = React.createClass({
         <div className="page-header">
           <h1>{article.title}</h1>
         </div>
-        {messages}        
         <div className="content">
           <div className="row">
             <div className="col-md-8">
@@ -114,6 +111,7 @@ const ArticleSection = React.createClass({
    * Event handler for 'change' events coming from the ArticleStore
    */
   _delete: function() {
+    this.setState(getState(null));//Set page to loading
     Actions.destroy(this.state.article._id);
   },
 

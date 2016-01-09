@@ -15,18 +15,19 @@ const CommentItem = React.createClass({
   },
   getInitialState: function() {
     return {
-      loading: false
+      saving: false
     }
   },
   componentWillReceiveProps: function(nextProps) {
+    //When we recieve props the react commponent has reloaded.  This means the save is done. 
     this.setState({
-      loading:false
+      saving : false
     })
   },
   render :function() {
     const comment = this.props.comment
-    const opacity = this.state.loading?.2:1;
-    const loader = this.state.loading?<Loader options={{top:'40%'}} />:null;
+    const opacity = this.state.saving?.2:1;
+    const loader = this.state.saving?<Loader options={{top:'40%'}} />:null;
     const dateString = new Date(comment.createdAt).toLocaleString();
 
     return (
@@ -57,7 +58,7 @@ const CommentItem = React.createClass({
     if (id){
       Actions.destroyComment(id, commentId);
       this.setState({
-          loading: true
+          saving: true
       });
     }
   }

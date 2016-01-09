@@ -27,6 +27,32 @@ function setAll(articles) {
 }
 
 /**
+ * Set total count
+ * @param  {number} the total number of articles
+ */
+function setTotal(num) {
+  _total = num;
+}
+
+/**
+ * decrementTotal
+ * @param  {number} the total number of articles
+ */
+function decrementTotal() {
+  _total = --_total;
+}
+
+/**
+ * incrementTotal
+ * @param  {number} the total number of articles
+ */
+function incrementTotal() {
+  _total = ++_total;
+}
+
+
+
+/**
  * Set one ARTICLE item.
  * @param  {string} text The content of the ARTICLES
  */
@@ -98,6 +124,7 @@ var ArticleStore = assign({}, EventEmitter.prototype, {
     }
     return true;
   },
+var ArticleStore = assign({}, EventEmitter.prototype, {
 
   /**
    * Get the entire collection of ARTICLEs.

@@ -23,7 +23,7 @@ const Header = React.createClass({
     var styleStuff = {};
     if (this.state.collapsing){
       navBar += ' collapsing';
-      styleStuff.height = this.state.collapsed?'0px':' 184px';
+      styleStuff.height = this.state.collapsed?'0px':' 223px';
     }else{
       navBar += this.state.collapsed?' collapse':' in';
       styleStuff.height = 'auto';
@@ -48,7 +48,7 @@ const Header = React.createClass({
                 </li>
 
                 <li className="{% if (isActive('/users/' + req.user.id )) %}active{% endif %}">
-                  <Link to="/users/5671cfb78705fe7e4d9e954a">User</ Link>
+                  <Link to="/users/5671cfb78705fe7e4d9e954a">Profile</ Link>
                 </li>
                 <li>
                   <a href="/logout" title="logout">Logout</a>
@@ -57,12 +57,11 @@ const Header = React.createClass({
                 <li className="{% if (isActive('/login')) %}active{% endif %}">
                   <a href="/login" title="Login">Login</a>
                 </li>
-
             </ul>
 
             <ul className="nav navbar-nav navbar-right">
               <li>
-                <a href="#">Home</a>
+                <a href="#">USERNAME GOES HERE</a>
               </li>
             </ul>
           </div>
@@ -75,6 +74,7 @@ const Header = React.createClass({
    * @return {[type]} [description]
    */
   _onClick:function(){
+    // Simple logic to flip classes for the bootrap animation on the collapse navbar.
     var that = this;
     this.setState({
       collapsing: true,
