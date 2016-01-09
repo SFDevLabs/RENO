@@ -32,24 +32,6 @@ exports.index = function (req, res) {
   res.render('index',{
     title: 'Home'
   })
-  // const page = (req.query.page > 0 ? req.query.page : 1) - 1;
-  // const perPage = 30;
-  // const options = {
-  //   perPage: perPage,
-  //   page: page
-  // };
-
-  // Article.list(options, function (err, articles) {
-  //   if (err) return res.render('500');
-  //   Article.count().exec(function (err, count) {
-  //     res.json({
-  //       title: 'Articles',
-  //       articles: articles,
-  //       page: page + 1,
-  //       pages: Math.ceil(count / perPage)
-  //     });
-  //   });
-  // });
 };
 
 exports.indexOld = function (req, res) {
