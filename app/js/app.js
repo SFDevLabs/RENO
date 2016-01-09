@@ -5,9 +5,9 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-const Route = require('./components/Route.react');
+const Main = require('./components/Main.react');
 
 
-ReactDOM.render(<Route />,
+ReactDOM.render(<Main />,
   document.getElementById('app')
 );
