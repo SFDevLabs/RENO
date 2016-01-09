@@ -1,6 +1,6 @@
 /**
  * The MIT License (MIT)
- * Copyright (c) 2016, Jeff Jenkins.
+ * Copyright (c) 2016, Jeff Jenkins @jeffj.
 */
 
 const React = require('react');
@@ -71,7 +71,8 @@ const ArticleSection = React.createClass({
       .value();
 
     return (
-      <section className="container">
+      <section className="con
+      iner">
         <div className="page-header">
           <h1>Articles</h1>
         </div>

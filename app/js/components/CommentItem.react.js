@@ -1,6 +1,7 @@
+
 /**
  * The MIT License (MIT)
- * Copyright (c) 2016, Jeff Jenkins.
+ * Copyright (c) 2016, Jeff Jenkins @jeffj.
 */
 
 const React = require('react');

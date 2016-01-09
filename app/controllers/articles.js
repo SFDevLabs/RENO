@@ -74,13 +74,12 @@ exports.new = function (req, res){
  */
 
 exports.create = function (req, res) {
+  console.log(req.body);
   const article = new Article(req.body);
   const images = req.files.image
     ? [req.files.image]
     : undefined;
-  
-  console.log(req.user);
-  
+    
   article.user = req.user;
   article.uploadAndSave(images, function (err) {
     if (!err) {

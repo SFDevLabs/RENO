@@ -26,7 +26,13 @@ const getTags = function (tags) {
  */
 
 const setTags = function (tags) {
-  return tags.split(',');
+  var array;
+  if (tags.length>0){
+    array = tags.split(',');
+  }else {
+    array = []
+  }
+  return array;
 };
 
 /**
@@ -178,7 +184,8 @@ ArticleSchema.statics = {
    */
 
   list: function (options, cb) {
-    const criteria = options.criteria || {};
+    const criteria = options.
+     || {};
     this.find(criteria, 'title body tags comments createdAt image _id user')
       .populate('user', 'name username')
       .populate('comments.user')

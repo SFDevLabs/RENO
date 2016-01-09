@@ -2,10 +2,11 @@
 
 /**
  * The MIT License (MIT)
- * Copyright (c) 2016, Jeff Jenkins.
+ * Copyright (c) 2016, Jeff Jenkins @jeffj.
 */
 const mongoose = require('mongoose')
 const Article = mongoose.model('Article');
+const utils = require('../../lib/utils')
 const _ = require('lodash');
 
 function errMsg(msg) {
@@ -24,8 +25,9 @@ exports.getListController = function (req, res) {
     count: count,
     skip: skip
   };
+  options.criteria=-55
   Article.list(options, function (err, result) {
-    Article.count().exec(function (err, count) {
+    Article.count().exec(function (errCount, count) {
       if (!err) {
           setTimeout(function(){
             res.send({
@@ -34,7 +36,7 @@ exports.getListController = function (req, res) {
             });
           },500)
       } else {
-        res.send(errMsg(err));
+        res.send(utils.error(err));
       }
     });
   });
@@ -44,6 +46,7 @@ exports.getListController = function (req, res) {
  * Create
  */
 exports.getCreateController = function (req, res) {
+    console.log(req.body);
     var m = new Article(req.body);
     m.user = req.user;
     m.uploadAndSave([],function (err) {

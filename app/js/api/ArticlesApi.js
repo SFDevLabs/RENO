@@ -37,7 +37,9 @@ function dispatch(key, response, params) {
     if (params) {
         payload.queryParams = params;
     }
-    AppDispatcher.dispatch(payload);
+    AppDispatcher.
+    w
+    (payload);
 }
 
 // return successful response, else return request Constants
@@ -93,7 +95,7 @@ function del(url) {
 
     return r.timeout(TIMEOUT);
 }
-
+//API calls
 var Api = {
     getEntityData: function(count, skip) {
         var url = makeUrl('');

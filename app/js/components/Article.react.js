@@ -1,6 +1,6 @@
 /**
  * The MIT License (MIT)
- * Copyright (c) 2016, Jeff Jenkins.
+ * Copyright (c) 2016, Jeff Jenkins @jeffj.
 */
 
 const React = require('react');
@@ -8,6 +8,7 @@ const Actions = require('../actions/ArticleActions');
 const ArticleStore = require('../stores/ArticleStore');
 const Comments = require('./Comments.react');
 const Loader = require('react-loader');
+const _ = require('lodash');
 
 import { Link, History } from 'react-router';
 
@@ -45,16 +46,15 @@ const ArticleSection = React.createClass({
     const article = this.state.article;
     const dateString = new Date(article.createdAt).toLocaleString();
 
-    var tags = [];
-    for (var i = article.tags.length - 1; i >= 0; i--) {
-      tags.push(
-        (<span key={i}>
+    const tags = _.map(article.tags, function(val, key){
+      return (
+          <span key={key}>
             <i className="muted fa fa-tag"></i>&nbsp;
-            <a className="tag"> {article.tags[i]} </a>
-         </span>)
-      )
-    };
-
+            <a className="tag"> {val} </a>
+         </span>
+         )
+    });
+    
     return (
       <section className="container">
         <div className="page-header">
