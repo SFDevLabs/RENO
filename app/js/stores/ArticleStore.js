@@ -11,6 +11,7 @@ const assign = require('object-assign');
 const CHANGE_EVENT = 'change';
 
 var _articles = {};
+var _total = null;
 var _didInitalGet = false;
 var _newArticleId;
 
@@ -92,6 +93,14 @@ function destroy(id) {
 }
 
 /**
+ * Delete all ARTICLES items.
+ * @param  {string} id
+ */
+function destroyAll(id) {
+  _articles={};
+}
+
+/**
  * Delete a ARTICLES item.
  * @param  {string} id
  */
@@ -99,31 +108,7 @@ function destroyComment(id) {
   delete _articles[id];
 }
 
-/**
- * Delete all the completed ARTICLES items.
- */
-function destroyCompleted() {
-  for (var id in _articles) {
-    if (_articles[id].complete) {
-      destroy(id);
-    }
-  }
-}
 
-var ArticleStore = assign({}, EventEmitter.prototype, {
-
-  /**
-   * Tests whether all the remaining ARTICLES items are marked as completed.
-   * @return {boolean}
-   */
-  areAllComplete: function() {
-    for (var id in _articles) {
-      if (!_articles[id].complete) {
-        return false;
-      }
-    }
-    return true;
-  },
 var ArticleStore = assign({}, EventEmitter.prototype, {
 
   /**
@@ -133,6 +118,15 @@ var ArticleStore = assign({}, EventEmitter.prototype, {
   getAll: function() {
     return _articles;
   },
+
+  /**
+   * Get total number of ARTICLEs.
+   * @return {number}
+   */
+  getTotal: function() {
+    return _total;
+  },
+  
 
   /**
    * Get the article by id
@@ -176,12 +170,19 @@ AppDispatcher.register(function(action) {
   switch(action.actionType) {
 
     case ArticleConstants.GET_ALL_ARTICLES_DATA:
-      var articles = action.response.body
+      const articles = action.response.body.articles
+      const total = action.response.body.total
       _didInitalGet = true;
       if (articles) {
         setAll(articles);
+        setTotal(total);
         ArticleStore.emitChange();
       }
+      break;
+
+    case ArticleConstants.CLEAR_ALL_ARTICLES_DATA:
+      destroyAll(articles);
+      ArticleStore.emitChange();
       break;
 
     case ArticleConstants.GET_ARTICLE_DATA:
@@ -193,9 +194,10 @@ AppDispatcher.register(function(action) {
       break;
 
     case ArticleConstants.DELETE_ARTICLE:
-      var article = action.response.body
+      var article = action.response.body;
       if (article) {
         destroy(article._id);
+        decrementTotal();
         ArticleStore.emitChange();
       }
       break;
@@ -205,6 +207,7 @@ AppDispatcher.register(function(action) {
       if (article) {
         _newArticleId = article._id;
         set(article);
+        incrementTotal();
         ArticleStore.emitChange();
       }
       break;

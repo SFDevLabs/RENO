@@ -11,6 +11,7 @@ module.exports = keyMirror({
   ERROR: null,
   TIMEOUT: null,
   GET_ALL_ARTICLES_DATA: null,
+  CLEAR_ALL_ARTICLES_DATA: null,
   POST_ARTICLE_DATA: null,
   POST_ARTICLE_COMMENT_DATA: null,
   DELETE_ARTICLE_COMMENT_DATA: null,
