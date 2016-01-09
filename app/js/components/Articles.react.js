@@ -4,22 +4,22 @@
 */
 
 const React = require('react');
-const ArticleActions = require('../actions/ArticleActions');
+const _ = require('lodash');
+const Actions = require('../actions/ArticleActions');
 const ArticleStore = require('../stores/ArticleStore');
-const Messages = require('./Messages.react');
 const Loader = require('react-loader');
 
 const ArticleItem = require('./ArticleItem.react');
-
+const take = 5
 /**
  * Retrieve the current ARTICLE data from the ArticleStore
  */
 function getState() {
   return {
     articles: ArticleStore.getAll(),
+    total: ArticleStore.getTotal(),
     initalGet: ArticleStore.didInitalGet(),
-    collapsed: false,
-    collapsing: false
+    loading:false
   };
 }
 
@@ -27,14 +27,14 @@ function getState() {
 const ArticleSection = React.createClass({
 
   getInitialState: function() {
-    return {
-      initalGet: ArticleStore.didInitalGet()
-    }
+    return getState()
   },
 
   componentDidMount: function() {
-    if (!this.state.initalGet){
-      ArticleActions.getAll();
+    if (!this.state.initalGet){ //This flag tells of if we have loaded the most recent articles.
+      const skip = 0;
+      const clearStore = true //We will clear the store so we are sure we load the most recent articles.
+      Actions.getList(take, skip, clearStore);
     }else{
       this.setState(getState());
     }
@@ -50,32 +50,37 @@ const ArticleSection = React.createClass({
   render: function() {
     if (!this.state.initalGet){return <Loader />}
 
-    var alertBox = 'fade alert-info';
-    if (this.state.collapsing){
-      alertBox += '  alert';
-    }else{
-      alertBox += this.state.collapsed?' ':' in alert';
-    }
+    const articlesData = this.state.articles;
+    const count = Object.keys(articlesData).length //Number of articles we will render.
+    
+    const opacity = this.state.loading?.2:1; //The opacity for the items behind the loader.
+    const loader = this.state.loading?<Loader />:null; //The loader itself.
 
 
-    var articles = [];
-    var articlesData = this.state.articles;
-    for (var key in articlesData) {
-      articles.unshift(<ArticleItem key={key} article={articlesData[key]} />);
-    }
-    const messages = false? (<Messages messages={[{message:"Some Info"}]} type="success" />) :null;
+    const moreButton = count < this.state.total ? (
+          <a style={{opacity:opacity}} onClick={this._onClickMore} type="button" className="btn btn-primary active" >
+            Load More    
+          </a>
+          ):null;
+
+    const articles = _.chain(articlesData)//Lodash functions to sort and map our article items
+      .sortBy(function(n){return -new Date(n.createdAt);}) //reverse cronological by creation
+      .map(function(val, key){
+        return <ArticleItem key={key} article={val} />
+      })
+      .value();
 
     return (
       <section className="container">
         <div className="page-header">
           <h1>Articles</h1>
         </div>
-        {messages}
         <div className="content" id="todo-list">{articles}</div>
-        <div className="content pagination">
-          <a type="button" className="btn btn-primary active" >
-            More        
-          </a>
+        <div className="row" styl style={{position:'relative', margin:'15px 0px'}} >
+          {loader}
+          {moreButton}
+          &nbsp;
+          <div style={{opacity:opacity}} className="badge pull-right">Showing {count} of {this.state.total}</div>
         </div>
       </section>
     );
@@ -86,22 +91,12 @@ const ArticleSection = React.createClass({
   _onChange: function() {
     this.setState(getState());
   },
-  _onClick:function(){
-    var that = this;
+  _onClickMore:function(){
+    const skip = Object.keys(this.state.articles).length
+    Actions.getList(take, skip);
     this.setState({
-      collapsing: true,
+      loading:true
     });
-
-    setTimeout(function(){ 
-      that.setState({
-        collapsed: !that.state.collapsed
-      });
-     }, 10);
-    setTimeout(function(){ 
-      that.setState({
-        collapsing: false
-      });
-     }, 500);
   }
 
 });

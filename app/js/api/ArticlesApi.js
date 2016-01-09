@@ -45,10 +45,10 @@ function makeDigestFun(key, params) {
     return function (err, res) {
         if (err && err.timeout === TIMEOUT) {
             dispatch(Constants.TIMEOUT, params);
+        } else if (err) {
+            dispatch(Constants.ERROR, params);
         } else if (res.status === 400) {
             UserActions.logout();
-        } else if (!res.ok) {
-            dispatch(Constants.ERROR, params);
         } else {
             dispatch(key, res, params);
         }
@@ -56,9 +56,10 @@ function makeDigestFun(key, params) {
 }
 
 // a get request with an authtoken param
-function get(url) {
+function get(url, params) {
     return request
         .get(url)
+        .query(params)
         .timeout(TIMEOUT)
 }
 
@@ -94,13 +95,13 @@ function del(url) {
 }
 
 var Api = {
-    getEntityData: function() {
+    getEntityData: function(count, skip) {
         var url = makeUrl('');
         var key = Constants.GET_ALL_ARTICLES_DATA;
-        var params = {};
+        var params = {count: count, skip:skip};
         abortPendingRequests(key);
         dispatch(Constants.PENDING, params);
-        _pendingRequests[key] = get(url).end(
+        _pendingRequests[key] = get(url, params).end(
             makeDigestFun(key, params)
         );
     },
@@ -139,8 +140,8 @@ var Api = {
         );
         
     },
-    putEntityData: function(data) {
-        var url = makeUrl('/'+data._id);
+    putEntityData: function(id, data) {
+        var url = makeUrl('/'+id);
         var key = Constants.POST_ARTICLE_DATA;
         var params = data;
         abortPendingRequests(key);

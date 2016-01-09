@@ -11,30 +11,42 @@ const ArticleApi = require('../api/ArticlesApi');
 const Actions = {
 
   /**
-   * @param  {string} text
+   * @param  {number} start
+   * @param  {number} skip
    */
-  getAll: function() {
-    ArticleApi.getEntityData();
+  getList: function(start, skip, clearStore) {
+    ArticleApi.getEntityData(start, skip);
+    if (clearStore){
+      AppDispatcher.dispatch({actionType: ArticleConstants.CLEAR_ALL_ARTICLES_DATA})
+    }
   },
+
   /**
-   * @param  {string} text
+   *
+   */
+  clearList: function() {
+  },
+
+  /**
+   * @param  {string} id
    */
   getById: function(id) {
     ArticleApi.getEntityDataById(id);
   },
 
   /**
-   * @param  {string} text
+   * @param  {obj} article data
    */
   create: function(obj) {
     ArticleApi.postEntityData(obj);
   },
 
   /**
-   * @param  {object} update
+   * @param  {string} id
+   * @param  {obj} article data
    */
-  update: function(obj) {
-    ArticleApi.putEntityData(obj);
+  update: function(id, obj) {
+    ArticleApi.putEntityData(id, obj);
   },
 
   /**
@@ -45,17 +57,19 @@ const Actions = {
   },
 
   /**
-   * @param  {string} text
+   * @param  {string} articleId
+   * @param  {obj} comment data
    */
-  createComment: function(id, obj) {
-    ArticleApi.postEntityCommentData(id, obj);
+  createComment: function(articleId, obj) {
+    ArticleApi.postEntityCommentData(articleId, obj);
   },
 
   /**
-   * @param  {string} id
+   * @param  {string} articleId
+   * @param  {obj} commentId
    */
-  destroyComment: function(id, commentId) {
-    ArticleApi.deleteEntityCommentData(id, commentId);
+  destroyComment: function(articleId, commentId) {
+    ArticleApi.deleteEntityCommentData(articleId, commentId);
   }
 
 };
