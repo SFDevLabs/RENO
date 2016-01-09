@@ -4,11 +4,11 @@
 */
 const React = require('react');
 
-const Header = React.createClass({
+const Messages = React.createClass({
   
   props:{
   	messages: React.PropTypes.func.isRequired,
-  	type: React.PropTypes.string.isRequired//warning, danger, info, success
+  	type: React.PropTypes.string.isRequired//Possible values: warning, danger, info, success
   },
 
   getInitialState:function(){
@@ -49,6 +49,7 @@ const Header = React.createClass({
     );
   },
   _onClick:function(){
+    //Simple logic for fade out of message.
     var that = this;
     this.setState({
       collapsing: true,
@@ -67,4 +68,4 @@ const Header = React.createClass({
 
 });
 
-module.exports = Header;
+module.exports = Messages;
