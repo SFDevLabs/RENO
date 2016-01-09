@@ -16,24 +16,29 @@ function errMsg(msg) {
  * List
  */
 exports.getListController = function (req, res) {
-  const skip = req.query.skip ? req.query.skip : 0;
-  const count = req.query.count ? req.query.page : 30;
+  var skip = Number(req.query.skip)
+  var count = Number(req.query.count)
+  skip =  !isNaN(skip) ? skip : 0;
+  count =  !isNaN(count) ? count : 30;
   const options = {
     count: count,
     skip: skip
   };
-
   Article.list(options, function (err, result) {
-    if (!err) {
-        setTimeout(function(){
-          res.send(result);
-        },500)
-    } else {
-      res.send(errMsg(err));
-    }
+    Article.count().exec(function (err, count) {
+      if (!err) {
+          setTimeout(function(){
+            res.send({
+              articles:result,
+              total: count
+            });
+          },500)
+      } else {
+        res.send(errMsg(err));
+      }
+    });
   });
 };
-
 
 /**
  * Create
@@ -43,7 +48,9 @@ exports.getCreateController = function (req, res) {
     m.user = req.user;
     m.uploadAndSave([],function (err) {
       if (!err) {
-        res.send(m);
+        setTimeout(function(){
+         res.send(m);
+        },500)
       } else {
         res.send(errMsg(err));
       }
@@ -70,18 +77,20 @@ exports.getReadController = function (req, res) {
  */
 exports.getUpdateController = function (req, res) {
   Article
-    .findById(req.params.id, function (err, result) {
-    var key;
-    for (key in req.body) {
-      result[key] = req.body[key];
-    }
-    result.save(function (err) {
-      if (!err) {
-        res.send(result);
-      } else {
-        res.send(errMsg(err));
+    .load(req.params.id, function (err, result) {
+      var key;
+      for (key in req.body) {
+        result[key] = req.body[key];
       }
-    });
+      result.uploadAndSave([], function (err) {
+        if (!err) {
+          setTimeout(function(){
+           res.send(result);
+          },500)
+        } else {
+          res.send(errMsg(err));
+        }
+      });
   });
 };
 
@@ -97,7 +106,7 @@ exports.getDeleteController = function (req, res) {
         result.remove();
         result.save(function (err) {
           if (!err) {
-            
+
           setTimeout(function(){
            res.send(result);
           },500)
