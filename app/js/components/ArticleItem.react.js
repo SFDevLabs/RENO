@@ -25,7 +25,7 @@ const ArticleItem = React.createClass({
       return (
           <span key={key}>
             <i className="muted fa fa-tag"></i>&nbsp;
-            <span className="tag"> {val} </span>
+            <Link to={"/tags/"+encodeURIComponent(val)} className="tag"> {val} </Link>
          </span>
          )
     });
@@ -53,7 +53,7 @@ const ArticleItem = React.createClass({
         -
         &nbsp;
         <span>Author:</span>
-        <Link to={"/users/dd"}> {article.user.username} </Link>
+        <Link to={"/users/"+article.user._id} > {article.user.username} </Link>
         {tagTitle}
         {tags}
       </div>

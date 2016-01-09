@@ -10,7 +10,6 @@ import { Router, Route, Link, IndexRoute } from 'react-router';
 const Header = require('./Header.react');
 const Articles = require('./Articles.react');
 const Article = require('./Article.react');
-const About = require('./About.react');
 const PostNew = require('./PostNew.react');
 const PostUpdate = require('./PostUpdate.react');
 const User = require('./User.react');
@@ -41,7 +40,6 @@ const Root = React.createClass({
           <Route path="articles/:id" component={Article}/>
           <Route path="articles/:id/edit" component={PostUpdate}/>
           <Route path="users/:id" component={User}/>
-          <Route path="about" component={About} />
         </Route>
       </Router>
     </div>

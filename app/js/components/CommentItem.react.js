@@ -10,17 +10,20 @@ const Actions = require('../actions/ArticleActions');
 const Loader = require('react-loader');
 
 const CommentItem = React.createClass({
+  
   props:{
     comment: React.PropTypes.object.isRequired,
     articleId: React.PropTypes.string.isRequired,
   },
+
   getInitialState: function() {
     return {
       saving: false
     }
   },
+
   componentWillReceiveProps: function(nextProps) {
-    //When we recieve props the react commponent has reloaded.  This means the save is done. 
+    //When we recieve props the react commponent has reloaded.  This means the API post is done. 
     this.setState({
       saving : false
     })
