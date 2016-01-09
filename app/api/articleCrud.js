@@ -6,12 +6,9 @@
 */
 const mongoose = require('mongoose')
 const Article = mongoose.model('Article');
-const utils = require('../../lib/utils')
 const _ = require('lodash');
+const utils = require('../../lib/utils');
 
-function errMsg(msg) {
-  return {'error': {'message': msg.toString()}};
-}
 
 /**
  * List
@@ -25,7 +22,6 @@ exports.getListController = function (req, res) {
     count: count,
     skip: skip
   };
-  options.criteria=-55
   Article.list(options, function (err, result) {
     Article.count().exec(function (errCount, count) {
       if (!err) {
@@ -36,7 +32,7 @@ exports.getListController = function (req, res) {
             });
           },500)
       } else {
-        res.send(utils.error(err));
+        res.status(500).send(utils.errors(err.errors || err));
       }
     });
   });
@@ -55,7 +51,7 @@ exports.getCreateController = function (req, res) {
          res.send(m);
         },500)
       } else {
-        res.send(errMsg(err));
+        res.status(500).send(utils.errors(err.errors || err));
       }
     });
 };
@@ -70,7 +66,7 @@ exports.getReadController = function (req, res) {
           res.send(result);
         },500)
     } else {
-      res.send(errMsg(err));
+      res.status(500).send(utils.errors(err.errors || err));
     }
   });
 };
@@ -91,7 +87,7 @@ exports.getUpdateController = function (req, res) {
            res.send(result);
           },500)
         } else {
-          res.send(errMsg(err));
+          res.send(utils.errors(err.errors || err));
         }
       });
   });
@@ -104,7 +100,7 @@ exports.getDeleteController = function (req, res) {
   Article
     .load(req.params.id, function (err, result) {
       if (err) {
-        res.send(errMsg(err));
+        res.send(utils.errors(err.errors || err));
       } else {
         result.remove();
         result.save(function (err) {
@@ -113,9 +109,8 @@ exports.getDeleteController = function (req, res) {
           setTimeout(function(){
            res.send(result);
           },500)
-            
           } else {
-            res.send(errMsg(err));
+            res.send(utils.errors(err.errors || err));
           }
         });
       }
@@ -128,24 +123,24 @@ exports.getDeleteController = function (req, res) {
 exports.getCreateCommentController = function (req, res) {
   Article
     .load(req.params.id, function (err, result) {
-    if (err || !result) return res.status(500).send(errMsg('There was an error in your request.'));
+      if (err || !result) return res.status(500).send(errMsg('There was an error in your request.'));
 
-    const article = result;
-    const user = req.user;
-    if (!req.body.body) return res.status(500).send(errMsg('Requires a comment body.'));
+      const article = result;
+      const user = req.user;
+      if (!req.body.body) return res.status(500).send(errMsg('Requires a comment body.'));
 
-    article.addComment(user, req.body, function (err) {
-      if (err) return res.status(500).send(errMsg(err));
-      
-      var articleObj = article.toObject();//Adding the populated comments from a pure JS object.
-      var comments = articleObj.comments;
-      comments[comments.length-1].user=_.pick(user, ['username', '_id']);
+      article.addComment(user, req.body, function (err) {
+        if (err) return res.status(500).send(errMsg(err));
+        
+        var articleObj = article.toObject();//Adding the populated comments from a pure JS object.
+        var comments = articleObj.comments;
+        comments[comments.length-1].user=_.pick(user, ['username', '_id', 'name']); //For security we only send id and username.
 
-      setTimeout(function(){
-       res.send(articleObj);
-      },500)
+        setTimeout(function(){
+         res.send(articleObj);
+        },500)
+      });
     });
-  });
 }
   
 
@@ -155,15 +150,15 @@ exports.getCreateCommentController = function (req, res) {
 exports.getDeleteCommentController = function (req, res) {
   Article.load(req.params.id, function (err, result) {
     if (err) {
-      res.send(errMsg(err));
+      res.send(utils.errors(err.errors || err));
     } else if (!result){
-      res.send(errMsg('There was an error in your request.'));
+      res.send(utils.errors('There was an error in your request.'));
     }else {
       var article = result;
       var commentId = req.params.commentId;
       article.removeComment(commentId, function (err) {
         if (err) {
-          res.send(errMsg('Oops! The comment was not found'));
+          res.send(utils.errors('Oops! The comment was not found'));
         }
         setTimeout(function(){
           res.send(article);
