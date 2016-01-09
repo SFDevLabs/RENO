@@ -184,8 +184,7 @@ ArticleSchema.statics = {
    */
 
   list: function (options, cb) {
-    const criteria = options.
-     || {};
+    const criteria = options.criteria || {};
     this.find(criteria, 'title body tags comments createdAt image _id user')
       .populate('user', 'name username')
       .populate('comments.user')

@@ -37,9 +37,7 @@ function dispatch(key, response, params) {
     if (params) {
         payload.queryParams = params;
     }
-    AppDispatcher.
-    w
-    (payload);
+    AppDispatcher.dispatch(payload);
 }
 
 // return successful response, else return request Constants
