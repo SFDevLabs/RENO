@@ -71,8 +71,7 @@ const ArticleSection = React.createClass({
       .value();
 
     return (
-      <section className="con
-      iner">
+      <section className="container">
         <div className="page-header">
           <h1>Articles</h1>
         </div>

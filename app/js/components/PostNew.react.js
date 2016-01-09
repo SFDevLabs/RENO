@@ -83,7 +83,7 @@ const Update = React.createClass({
   _save: function() {
     const article = this.state;
     if (article.title.length>0 && article.body.length>0){ //The title and body must be filled.
-      Actions.create(_.pick(article, ['title', 'body', 'tags']));
+      Actions.create(article);
       this.setState({
         _saving:true
       });
