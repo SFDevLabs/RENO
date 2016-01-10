@@ -12,6 +12,8 @@ const Articles = require('./Articles.react');
 const Article = require('./Article.react');
 const PostNew = require('./PostNew.react');
 const PostUpdate = require('./PostUpdate.react');
+const NotFound = require('./NotFound.react');
+
 const User = require('./User.react');
 
 const Main = React.createClass({
@@ -40,6 +42,7 @@ const Root = React.createClass({
           <Route path="articles/:id" component={Article}/>
           <Route path="articles/:id/edit" component={PostUpdate}/>
           <Route path="users/:id" component={User}/>
+          <Route path="*" component={NotFound}  />
         </Route>
       </Router>
     </div>

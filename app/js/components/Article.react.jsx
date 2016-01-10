@@ -55,8 +55,7 @@ const ArticleSection = React.createClass({
          )
     });
     
-    return (
-      <section className="container">
+    return <section className="container">
         <div className="page-header">
           <h1>{article.title}</h1>
         </div>
@@ -93,8 +92,7 @@ const ArticleSection = React.createClass({
           </div>
           <Comments comments={article.comments} id={article._id} />
         </div>
-      </section>
-    )
+      </section>;
   },
   /**
    * Event handler for 'change' events coming from the ArticleStore

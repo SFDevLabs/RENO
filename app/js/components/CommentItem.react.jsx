@@ -34,8 +34,7 @@ const CommentItem = React.createClass({
     const loader = this.state.saving?<Loader options={{top:'40%'}} />:null;
     const dateString = new Date(comment.createdAt).toLocaleString();
 
-    return (
-      <div style={{position:'relative'}} className="comment">
+    return <div style={{position:'relative'}} className="comment">
         {loader}
         <p style={{opacity: opacity}}>
           <a href="">{comment.user.username}</a>
@@ -48,8 +47,7 @@ const CommentItem = React.createClass({
           <input type="hidden" name="_method" value="DELETE" />
           <button onClick={this._destroy} className="btn btn-danger btn-link error" type="submit">delete</button>
         </div>
-      </div>
-    )
+      </div>;
   },
 
   /**

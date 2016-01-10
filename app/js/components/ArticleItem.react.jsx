@@ -22,25 +22,21 @@ const ArticleItem = React.createClass({
   render: function() {
     const article = this.props.article;
     const tags = _.map(article.tags, function(val, key){
-      return (
-          <span key={key}>
+      return <span key={key}>
             <i className="muted fa fa-tag"></i>&nbsp;
             <Link to={"/tags/"+encodeURIComponent(val)} className="tag"> {val} </Link>
-         </span>
-         )
+         </span>;
     });
-    const tagTitle = article.tags.length>0? (
-        <span>
-          &nbsp;
-          -
-          &nbsp;
-          Tags:
-        </span>
-      ):null;
+    const tagTitle = article.tags.length > 0 ?//Spacer and tag title if we have 1 or more tags
+      <span>
+        &nbsp;
+        -
+        &nbsp;
+        Tags:
+      </span>
+    :null;
     const dateString = new Date(article.createdAt).toLocaleString();
-    return (
-
-      <div className="article">
+    return <div className="article">
         <h3>
           <Link to={"/articles/"+article._id} title={ article.title }>
             {article.title}
@@ -56,8 +52,7 @@ const ArticleItem = React.createClass({
         <Link to={"/users/"+article.user._id} > {article.user.username} </Link>
         {tagTitle}
         {tags}
-      </div>
-    );
+      </div>;
   }
 
 });

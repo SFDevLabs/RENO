@@ -70,8 +70,7 @@ const ArticleSection = React.createClass({
       })
       .value();
 
-    return (
-      <section className="container">
+    return <section className="container">
         <div className="page-header">
           <h1>Articles</h1>
         </div>
@@ -82,8 +81,7 @@ const ArticleSection = React.createClass({
           &nbsp;
           <div style={{opacity:opacity}} className="badge pull-right">Showing {count} of {this.state.total}</div>
         </div>
-      </section>
-    );
+      </section>;
   },
   /**
    * Event handler for 'change' events coming from the ArticleStore
