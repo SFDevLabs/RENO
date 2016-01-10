@@ -37,22 +37,24 @@ const ArticleItem = React.createClass({
     :null;
     const dateString = new Date(article.createdAt).toLocaleString();
     return <div className="article">
-        <h3>
-          <Link to={"/articles/"+article._id} title={ article.title }>
-            {article.title}
-          </Link>
-        </h3>
-        <p>{article.body}</p>
+      <h3>
+        <Link to={"/articles/"+article._id}>
+          {article.title}
+        </Link>
+      </h3>
+      <p>{article.body}</p>
 
-        <span className="muted">{dateString}</span>
-        &nbsp;
-        -
-        &nbsp;
-        <span>Author:</span>
-        <Link to={"/users/"+article.user._id} > {article.user.username} </Link>
-        {tagTitle}
-        {tags}
-      </div>;
+      <span className="muted">{dateString}</span>
+      &nbsp;
+      -
+      &nbsp;
+      <span>Author:</span>
+      <Link to={"/users/"+article.user._id}> 
+        {article.user.username} 
+      </Link>
+      {tagTitle}
+      {tags}
+    </div>;
   }
 
 });

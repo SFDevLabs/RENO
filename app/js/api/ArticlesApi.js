@@ -8,7 +8,7 @@ const TIMEOUT = 10000;
 
 const request = require('superagent');
 const AppDispatcher = require('../dispatcher/AppDispatcher');
-const Constants = require('../constants/ArticleConstants');
+const Constants = require('../constants/Constants');
 
 const csrf = document.getElementById('csrf');
 const csrfToken = csrf?csrf.content:'';
@@ -45,10 +45,10 @@ function makeDigestFun(key, params) {
     return function (err, res) {
         if (err && err.timeout === TIMEOUT) {
             dispatch(Constants.TIMEOUT, params);
+        } else if (err && res.status === 404) {
+            dispatch(Constants.ERROR_NOT_FOUND, params);
         } else if (err) {
             dispatch(Constants.ERROR, params);
-        } else if (res.status === 400) {
-            UserActions.logout();
         } else {
             dispatch(key, res, params);
         }

@@ -8,15 +8,12 @@ const Link = require('react-router').Link
 
 const User = React.createClass({
   render :function() {
-    return (
-      <section className="container">
-        <div className="page-header">
-          <h1>title</h1>
-        </div>
-        <h2>User</h2>
-        <Link to="/">Home</Link>
-      </ section >
-    )
+    return <section className="container">
+      <div className="page-header">
+        <h1>title</h1>
+      </div>
+      <Link to="/">Home</Link>
+    </section>;
   }
 })
 

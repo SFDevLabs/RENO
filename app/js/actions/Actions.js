@@ -4,7 +4,7 @@
 */
 
 const AppDispatcher = require('../dispatcher/AppDispatcher');
-const ArticleConstants = require('../constants/ArticleConstants');
+const ArticleConstants = require('../constants/Constants');
 const ArticleApi = require('../api/ArticlesApi');
 
 

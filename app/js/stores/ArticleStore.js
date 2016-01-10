@@ -5,7 +5,7 @@
 
 const AppDispatcher = require('../dispatcher/AppDispatcher');
 const EventEmitter = require('events').EventEmitter;
-const ArticleConstants = require('../constants/ArticleConstants');
+const ArticleConstants = require('../constants/Constants');
 const assign = require('object-assign');
 
 const CHANGE_EVENT = 'change';
@@ -228,8 +228,8 @@ AppDispatcher.register(function(action) {
       }
       break;
 
-    case ArticleConstants.PENDING:
-      //ArticleStore.emitChange();
+    case ArticleConstants.ERROR_NOT_FOUND:
+      ArticleStore.emitChange();
       break;
 
     default:

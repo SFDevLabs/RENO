@@ -49,15 +49,13 @@ const Update = React.createClass({
     const article = this.state;
     const blankMessage = this.state._messages? (<Messages messages={this.state._messages} type="danger" />) : null;
 
-    return (
-      <section className="container">
+    return <section className="container">
         <div className="page-header">
           <h1>Edit</h1>
         </div>
         {blankMessage}
         <Post article={this.state} handleChange={this._handleChange} save={this._save} saving={this.state._saving} />
-      </section>
-    );
+    </section>;
   },
   /**
    * Event handler for 'change' events coming from store

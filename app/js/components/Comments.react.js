@@ -38,20 +38,18 @@ const Comments = React.createClass({
     }
     const opacity = this.state.saving?.2:1;
     const loader = this.state.saving?<Loader options={{top:'40%'}} />:null;
-    return (
-      <div>
-          <h3>Comments</h3>
-          {comments}
-          <div style={{position:'relative'}}>
-            {loader}
-            <div style={{opacity: opacity}} className="form-group">
-              <textarea onChange={this._onChangeNewComment} value={this.state.comment} rows="6" name="body" placeholder="Add your comment" cols="30" rows="6" className="form-control" />
-              <br />
-              <button onClick={this._save}  className="btn btn-primary" type="submit">Add comment</button>
-            </div>
-          </div>
+    return <div>
+      <h3>Comments</h3>
+      {comments}
+      <div style={{position:'relative'}}>
+        {loader}
+        <div style={{opacity: opacity}} className="form-group">
+          <textarea onChange={this._onChangeNewComment} value={this.state.comment} rows="6" name="body" placeholder="Add your comment" cols="30" rows="6" className="form-control" />
+          <br />
+          <button onClick={this._save}  className="btn btn-primary" type="submit">Add comment</button>
+        </div>
       </div>
-    )
+    </div>;
   },
 
   /**

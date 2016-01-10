@@ -11,10 +11,14 @@ import { Link } from 'react-router';
 const About = React.createClass({
   render :function() {
     return <section className="container">
-        <h2>About</h2>
-        <Link to="/">Home</Link>
-    </section>
-    
+        <div className="page-header">
+          <h1>404</h1>
+        </div>
+        <div className="content" >
+        	<p>We could not find that page.</p>
+			<Link to="/">Return Home</Link>
+        </div>
+    </section>;
   }
 })
 

@@ -50,15 +50,17 @@ const Update = React.createClass({
       <Messages messages={this.state._messages} type="danger" />
       ) : null; //Rendering a warning message.
 
-    return (
-      <section className="container">
-        <div className="page-header">
-          <h1>New</h1>
-        </div>
-        {blankMessage}
-        <Post article={this.state} handleChange={this._handleChange} save={this._save} saving={this.state._saving} />
-      </section>
-    );
+    return <section className="container">
+      <div className="page-header">
+        <h1>New</h1>
+      </div>
+      {blankMessage}
+      <Post
+        article={this.state}
+        handleChange={this._handleChange}
+        save={this._save}
+        saving={this.state._saving} />
+    </section>;
   },
   /**
    * Event handler for 'change' events coming from store

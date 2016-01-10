@@ -35,19 +35,19 @@ const CommentItem = React.createClass({
     const dateString = new Date(comment.createdAt).toLocaleString();
 
     return <div style={{position:'relative'}} className="comment">
-        {loader}
-        <p style={{opacity: opacity}}>
-          <a href="">{comment.user.username}</a>
-          :&nbsp;
-          {comment.body}
-        </p>
-        <div style={{opacity: opacity}} className="form-inline">
-          <input type="hidden" name="_csrf" value="" />
-          <span className="muted">{dateString}</span>
-          <input type="hidden" name="_method" value="DELETE" />
-          <button onClick={this._destroy} className="btn btn-danger btn-link error" type="submit">delete</button>
-        </div>
-      </div>;
+      {loader}
+      <p style={{opacity: opacity}}>
+        <a href="">{comment.user.username}</a>
+        :&nbsp;
+        {comment.body}
+      </p>
+      <div style={{opacity: opacity}} className="form-inline">
+        <input type="hidden" name="_csrf" value="" />
+        <span className="muted">{dateString}</span>
+        <input type="hidden" name="_method" value="DELETE" />
+        <button onClick={this._destroy} className="btn btn-danger btn-link error" type="submit">delete</button>
+      </div>
+    </div>;
   },
 
   /**

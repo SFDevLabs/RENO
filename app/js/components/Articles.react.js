@@ -71,17 +71,17 @@ const ArticleSection = React.createClass({
       .value();
 
     return <section className="container">
-        <div className="page-header">
-          <h1>Articles</h1>
-        </div>
-        <div className="content" id="todo-list">{articles}</div>
-        <div className="row" styl style={{position:'relative', margin:'15px 0px'}} >
-          {loader}
-          {moreButton}
-          &nbsp;
-          <div style={{opacity:opacity}} className="badge pull-right">Showing {count} of {this.state.total}</div>
-        </div>
-      </section>;
+      <div className="page-header">
+        <h1>Articles</h1>
+      </div>
+      <div className="content" >{articles}</div>
+      <div className="row" styl style={{position:'relative', margin:'15px 0px'}} >
+        {loader}
+        {moreButton}
+        &nbsp;
+        <div style={{opacity:opacity}} className="badge pull-right">Showing {count} of {this.state.total}</div>
+      </div>
+    </section>;
   },
   /**
    * Event handler for 'change' events coming from the ArticleStore
