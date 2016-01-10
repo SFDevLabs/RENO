@@ -5,7 +5,7 @@
 
 const React = require('react');
 const ReactPropTypes = React.PropTypes;
-const ArticleActions = require('../actions/ArticleActions');
+const ArticleActions = require('../actions/Actions');
 import { Link } from 'react-router';
 
 const classNames = require('classnames');

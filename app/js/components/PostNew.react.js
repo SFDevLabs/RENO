@@ -4,7 +4,7 @@
 */
 
 const React = require('react');
-const Actions = require('../actions/ArticleActions');
+const Actions = require('../actions/Actions');
 const ArticleStore = require('../stores/ArticleStore');
 const Loader = require('react-loader');
 const Post = require('./Post.react');

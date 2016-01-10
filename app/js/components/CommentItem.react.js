@@ -6,7 +6,7 @@
 
 const React = require('react');
 const Link = require('react-router').Link
-const Actions = require('../actions/ArticleActions');
+const Actions = require('../actions/Actions');
 const Loader = require('react-loader');
 
 const CommentItem = React.createClass({

@@ -4,9 +4,9 @@
 */
 
 const React = require('react');
-const ArticleActions = require('../actions/ArticleActions');
+const ArticleActions = require('../actions/Actions');
 const TagsInput = require('react-tagsinput');
-const Actions = require('../actions/ArticleActions');
+const Actions = require('../actions/Actions');
 import { Link, History } from 'react-router';
 const ArticleStore = require('../stores/ArticleStore');
 const Loader = require('react-loader');

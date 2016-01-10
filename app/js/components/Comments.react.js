@@ -4,7 +4,7 @@
 */
 
 const React = require('react');
-const Actions = require('../actions/ArticleActions');
+const Actions = require('../actions/Actions');
 const CommentItem = require('./CommentItem.react');
 const Loader = require('react-loader');
 

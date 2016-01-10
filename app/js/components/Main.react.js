@@ -33,8 +33,7 @@ const Root = React.createClass({
    */
   render: function() {
     //Our React Router table
-    return (
-    <div>
+    return <div>
       <Router>
         <Route path="/" component={Main} >
           <IndexRoute component={Articles} />
@@ -45,8 +44,7 @@ const Root = React.createClass({
           <Route path="*" component={NotFound}  />
         </Route>
       </Router>
-    </div>
-    );
+    </div>;
   }
 
 });
