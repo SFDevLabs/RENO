@@ -22,12 +22,6 @@ const Actions = {
   },
 
   /**
-   *
-   */
-  clearList: function() {
-  },
-
-  /**
    * @param  {string} id
    */
   getById: function(id) {
