@@ -5,7 +5,7 @@
 
 const AppDispatcher = require('../dispatcher/AppDispatcher');
 const EventEmitter = require('events').EventEmitter;
-const ArticleConstants = require('../constants/Constants');
+const Constants = require('../constants/Constants');
 const assign = require('object-assign');
 
 const CHANGE_EVENT = 'change';
@@ -127,7 +127,6 @@ var ArticleStore = assign({}, EventEmitter.prototype, {
     return _total;
   },
   
-
   /**
    * Get the article by id
    * @return {object}
@@ -169,7 +168,7 @@ AppDispatcher.register(function(action) {
 
   switch(action.actionType) {
 
-    case ArticleConstants.GET_ALL_ARTICLES_DATA:
+    case Constants.GET_ALL_ARTICLES_DATA:
       const articles = action.response.body.articles
       const total = action.response.body.total
       _didInitalGet = true;
@@ -180,12 +179,12 @@ AppDispatcher.register(function(action) {
       }
       break;
 
-    case ArticleConstants.CLEAR_ALL_ARTICLES_DATA:
+    case Constants.CLEAR_ALL_ARTICLES_DATA:
       destroyAll(articles);
       ArticleStore.emitChange();
       break;
 
-    case ArticleConstants.GET_ARTICLE_DATA:
+    case Constants.GET_ARTICLE_DATA:
       var article = action.response.body
       if (article) {
         set(article);
@@ -193,7 +192,7 @@ AppDispatcher.register(function(action) {
       }
       break;
 
-    case ArticleConstants.DELETE_ARTICLE:
+    case Constants.DELETE_ARTICLE:
       var article = action.response.body;
       if (article) {
         destroy(article._id);
@@ -202,7 +201,7 @@ AppDispatcher.register(function(action) {
       }
       break;
 
-    case ArticleConstants.POST_ARTICLE_DATA:
+    case Constants.POST_ARTICLE_DATA:
       var article = action.response.body
       if (article) {
         _newArticleId = article._id;
@@ -212,7 +211,7 @@ AppDispatcher.register(function(action) {
       }
       break;
 
-    case ArticleConstants.POST_ARTICLE_COMMENT_DATA:
+    case Constants.POST_ARTICLE_COMMENT_DATA:
       var article = action.response.body
       if (article) {
         set(article);
@@ -220,7 +219,7 @@ AppDispatcher.register(function(action) {
       }
       break;
       
-    case ArticleConstants.DELETE_ARTICLE_COMMENT_DATA:
+    case Constants.DELETE_ARTICLE_COMMENT_DATA:
       var article = action.response.body
       if (article) {
         update(article);
@@ -228,7 +227,7 @@ AppDispatcher.register(function(action) {
       }
       break;
 
-    case ArticleConstants.ERROR_NOT_FOUND:
+    case Constants.ERROR_NOT_FOUND:
       ArticleStore.emitChange();
       break;
 

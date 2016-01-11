@@ -4,7 +4,7 @@
 */
 
 const React = require('react');
-const Actions = require('../actions/Actions');
+const Actions = require('../actions/ArticleActions');
 const ArticleStore = require('../stores/ArticleStore');
 const Comments = require('./Comments.react');
 const NotFound = require('./NotFound.react');
@@ -13,7 +13,6 @@ const Loader = require('react-loader');
 const _ = require('lodash');
 
 import { Link, History } from 'react-router';
-
 
 /**
  * Retrieve the current ARTICLES data from the ArticleStore
