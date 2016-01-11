@@ -3,13 +3,13 @@
  * Copyright (c) 2016, Jeff Jenkins.
 */
 
-jest.dontMock('../../constants/ArticleConstants');
+jest.dontMock('../../constants/Constants');
 jest.dontMock('../ArticleStore');
 jest.dontMock('object-assign');
 
 describe('Store', function() {
 
-  var Constants = require('../../constants/ArticleConstants');
+  var Constants = require('../../constants/Constants');
   var AppDispatcher;
   var ArticleStore;
   var callback;
@@ -18,21 +18,26 @@ describe('Store', function() {
   var actionCreate = {
     actionType: Constants.GET_ALL_ARTICLES_DATA,
     response:{
-      body: [{
-        title: 'foo',
-        body: 'bar'
-      }]
+      body: {
+        total:2,
+        articles:[{
+          title: 'foo',
+          body: 'bar',
+          _id:1
+        }]
+      }
     }
   };
 
-  // mock actions
-  var actionPending = {
-    actionType: Constants.PENDING
-  };
-
-  var actionTodoDestroy = {
-    actionType: Constants.TODO_DESTROY,
-    id: 'replace me in test'
+  var actionDestroy = {
+    actionType: Constants.DELETE_ARTICLE,
+    response:{
+      body: {
+          title: 'foo',
+          body: 'bar',
+          _id:1
+      }
+    }
   };
 
   beforeEach(function() {
@@ -53,28 +58,27 @@ describe('Store', function() {
   it('creates a article item', function() {
     callback(actionCreate);
     var all = ArticleStore.getAll();
+    var total = ArticleStore.getTotal();
     var keys = Object.keys(all);
     expect(keys.length).toBe(1);
+    expect(total).toBe(2);
     expect(all[keys[0]].title).toEqual('foo');
     expect(all[keys[0]].body).toEqual('bar');
   });
 
-  // it('flips pending status a article item', function() {
-  //   expect(ArticleStore.getPendingState()).toEqual(false); //Load with pending as false
-  //   callback(actionPending); // We need to flip the app to pending a request
-  //   expect(ArticleStore.getPendingState()).toEqual(true); //Flip to pending to true while the request is occuring.
-  //   callback(actionCreate);
-  //   expect(ArticleStore.getPendingState()).toEqual(false); //Request is complete pending should now be false
-  // });
 
-  // it('destroys a to-do item', function() {
-  //   callback(actionCreate);
-  //   var all = ArticleStore.getAll();
-  //   var keys = Object.keys(all);
-  //   expect(keys.length).toBe(1);
-  //   actionTodoDestroy.id = keys[0];
-  //   callback(actionTodoDestroy);
-  //   expect(all[keys[0]]).toBeUndefined();
-  // });
+  it('destroys an article item', function() {
+    //Make an Article
+    callback(actionCreate);
+    var all = ArticleStore.getAll();
+    var keys = Object.keys(all);
+
+    //Then Destroy It
+    callback(actionDestroy);
+    var totalAfter = ArticleStore.getTotal();
+    expect(all[keys[0]]).toBeUndefined();
+    expect(totalAfter).toBe(1);// This test that the toal was decimented
+
+  });
 
 });
