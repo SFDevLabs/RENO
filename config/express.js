@@ -1,5 +1,11 @@
 'use strict';
 
+/*
+ * From nodejs-express-mongoose-demo
+ * Copyright(c) 2013 Madhusudhan Srinivasa <madhums8@gmail.com>
+ * MIT Licensed
+ */
+
 /**
  * Module dependencies.
  */
@@ -114,11 +120,11 @@ module.exports = function (app, passport) {
 
   // adds CSRF support
   if (process.env.NODE_ENV !== 'test') {
-    app.use(csrf());
+    //app.use(csrf());
 
     // This could be moved to view-helpers :-)
     app.use(function (req, res, next) {
-      res.locals.csrf_token = req.csrfToken();
+      //res.locals.csrf_token = req.csrfToken();
       res.locals.bundle_js = (env==='development')?'http://localhost:8090/app/js/bundle.js':'/js/bundle.js';
       next();
     });

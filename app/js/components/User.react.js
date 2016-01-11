@@ -62,7 +62,6 @@ const User = React.createClass({
           </div>
         </div>
       </div>
-      
     </section>;
   },
 
