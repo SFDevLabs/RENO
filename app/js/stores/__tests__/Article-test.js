@@ -77,7 +77,7 @@ describe('Store', function() {
     callback(actionDestroy);
     var totalAfter = ArticleStore.getTotal();
     expect(all[keys[0]]).toBeUndefined();
-    expect(totalAfter).toBe(1);// This test that the toal was decimented
+    expect(totalAfter).toBe(1);// This test that the toal was decimented from 2 to 1.
 
   });
 
