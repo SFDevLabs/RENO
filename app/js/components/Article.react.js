@@ -47,11 +47,7 @@ const ArticleSection = React.createClass({
     else if (!this.state.article){return <Loader />}
 
     const article = this.state.article;
-    const dateString = new Date(article.createdAt).toLocaleString();
-    const username = article.user? article.user.username:null;
-    const comments =  article.comments?<Comments comments={article.comments} id={article._id} />:null;
-             
-
+    const dateString = new Date(article.createdAt).toLocaleString();             
 
     const tags = _.map(article.tags, function(val, key){
       return (
@@ -72,9 +68,9 @@ const ArticleSection = React.createClass({
             <p>{ article.body }</p>
             <div className="meta">
                 Author: &nbsp;
-                <a href="#">
-                  {username}
-                </a>
+                <Link to={"/users/"+article.user._id}>
+                  {article.user.username}
+                </Link>
                 <p>
                   Tags: &nbsp;
                     {tags}
@@ -90,17 +86,18 @@ const ArticleSection = React.createClass({
         <div>
           <br />
           <input type="hidden" name="_csrf" value="" />
-          <Link  to={'/articles/'+article._id+'/edit'} title="edit" className="btn btn-default">
+          <Link  to={"/articles/"+article._id+"/edit"} title="edit" className="btn btn-default">
             Edit
           </Link>
           &nbsp;&nbsp;
           <input type="hidden" name="_method" value="DELETE" />
           <button onClick={this._delete} className="btn btn-danger" type="submit">Delete</button>
         </div>
-        {comments}
+        <Comments comments={article.comments} id={article._id} />
       </div>
     </section>;
   },
+
   /**
    * Event handler for 'change' events coming from the ArticleStore
    */
