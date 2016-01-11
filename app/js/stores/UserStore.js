@@ -5,7 +5,7 @@
 
 const AppDispatcher = require('../dispatcher/AppDispatcher');
 const EventEmitter = require('events').EventEmitter;
-const ArticleConstants = require('../constants/Constants');
+const Constants = require('../constants/Constants');
 const assign = require('object-assign');
 
 const CHANGE_EVENT = 'change';
@@ -16,18 +16,8 @@ var _users = {};
  * Set one USER item.
  * @param  {string} text The content of the ARTICLES
  */
-function set(article) {
-  _articles[article._id] = article;
-}
-
-/**
- * Update a USER item.
- * @param  {string} id
- * @param {object} updates An object literal containing only the data to be updated.
- */
-function update(article) {
-  var id = article._id;
-  _articles[id] = assign({}, _articles[id], article);
+function set(user) {
+  _users[user._id] = user;
 }
 
 var UserStore = assign({}, EventEmitter.prototype, {
@@ -37,7 +27,7 @@ var UserStore = assign({}, EventEmitter.prototype, {
    * @return {object}
    */
   getById: function(id) {
-    return _articles[id];
+    return _users[id];
   },
 
   emitChange: function() {
@@ -65,14 +55,17 @@ AppDispatcher.register(function(action) {
 
   switch(action.actionType) {
 
-    case ArticleConstants.GET_USER_DATA:
+    case Constants.GET_USER_DATA:
       const user = action.response.body
       if (user) {
         set(user);
         UserStore.emitChange();
       }
       break;
-
+    case Constants.ERROR_NOT_FOUND:
+      UserStore.emitChange();
+      break;
+      
     default:
       // no operation
   }

@@ -15,6 +15,7 @@ const tags = require('../app/controllers/tags');
 const mongoose = require('mongoose')
 const Article = mongoose.model('Article');
 const articleCrud = require('../app/api/articleCrud');
+const userCrud = require('../app/api/userCrud');
 
 
 const auth = require('./middlewares/authorization');
@@ -131,6 +132,11 @@ module.exports = function (app, passport) {
   // tag routes
   app.get('/tags/:tag', tags.index);
 
+  // API User
+  const userPath = '/api/users'
+  const userPathWithId = userPath + '/:idUser';
+
+  app.get(userPathWithId, userCrud.getReadController);
 
   /**
    * Error handling

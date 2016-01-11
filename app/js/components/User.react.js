@@ -5,7 +5,10 @@
 
 const React = require('react');
 const Link = require('react-router').Link
-const UserStore = require('../stores/ArticleStore');
+const UserStore = require('../stores/UserStore');
+const Actions = require('../actions/UserActions');
+const Loader = require('react-loader');
+const NotFound = require('./NotFound.react');
 
 /**
  * Retrieve the current USER data from the UserStore
@@ -22,15 +25,61 @@ const User = React.createClass({
     return getState(this.props.params.id);
   },
 
+  componentDidMount: function() {
+    if (!this.state.article){
+      Actions.getById(this.props.params.id);
+    }
+    UserStore.addChangeListener(this._onChange);
+  },
+
+  componentWillUnmount: function() {
+    UserStore.removeChangeListener(this._onChange);
+  },
+
   render :function() {
+    if (this.state.articleNotFound){return <NotFound />} 
+    else if (!this.state.user){return <Loader />}
+
     return <section className="container">
       <div className="page-header">
-        <h1>title</h1>
+        <h1>Profile</h1>
       </div>
-      {this.state.user}
-      <Link to="/">Home</Link>
+      <div className="content">
+        <div className="row">
+          <div className="col-md-8">
+            <div className="meta">
+                Username: &nbsp;
+                <span>
+                  {this.state.user.username}
+                </span>
+            </div>
+            <div className="meta">
+                Full Name: &nbsp;
+                <span>
+                  {this.state.user.name}
+                </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
     </section>;
-  }
+  },
+
+  /**
+   * Event handler for 'change' events coming from the UserStore
+   */
+  _onChange: function() {
+    var state = getState(this.props.params.id)
+    if (!state.user){
+      this.setState({
+        userNotFound: true
+      });
+    }else{
+      this.setState(state);
+    }
+  },
+
 })
 
 module.exports = User;
