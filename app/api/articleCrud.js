@@ -42,18 +42,17 @@ exports.getListController = function (req, res) {
  * Create
  */
 exports.getCreateController = function (req, res) {
-    console.log(req.body);
-    var m = new Article(req.body);
-    m.user = req.user;
-    m.uploadAndSave([],function (err) {
-      if (!err) {
-        setTimeout(function(){
-         res.send(m);
-        },500)
-      } else {
-        res.status(500).send(utils.errors(err.errors || err));
-      }
-    });
+  var m = new Article(req.body);
+  m.user = req.user;
+  m.uploadAndSave([],function (err) {
+    if (!err) {
+      setTimeout(function(){
+       res.send(m);
+      },500)
+    } else {
+      res.status(500).send(utils.errors(err.errors || err));
+    }
+  });
 };
 
 /**
@@ -75,21 +74,20 @@ exports.getReadController = function (req, res) {
  * Update
  */
 exports.getUpdateController = function (req, res) {
-  Article
-    .load(req.params.id, function (err, result) {
-      var key;
-      for (key in req.body) {
-        result[key] = req.body[key];
+  Article.load(req.params.id, function (err, result) {
+    var key;
+    for (key in req.body) {
+      result[key] = req.body[key];
+    }
+    result.uploadAndSave([], function (err) {
+      if (!err) {
+        setTimeout(function(){
+         res.send(result);
+        },500)
+      } else {
+        res.send(utils.errors(err.errors || err));
       }
-      result.uploadAndSave([], function (err) {
-        if (!err) {
-          setTimeout(function(){
-           res.send(result);
-          },500)
-        } else {
-          res.send(utils.errors(err.errors || err));
-        }
-      });
+    });
   });
 };
 
@@ -97,50 +95,48 @@ exports.getUpdateController = function (req, res) {
  * Delete
  */
 exports.getDeleteController = function (req, res) {
-  Article
-    .load(req.params.id, function (err, result) {
-      if (err) {
-        res.send(utils.errors(err.errors || err));
-      } else {
-        result.remove();
-        result.save(function (err) {
-          if (!err) {
+  Article.load(req.params.id, function (err, result) {
+    if (err) {
+      res.send(utils.errors(err.errors || err));
+    } else {
+      result.remove();
+      result.save(function (err) {
+        if (!err) {
 
-          setTimeout(function(){
-           res.send(result);
-          },500)
-          } else {
-            res.send(utils.errors(err.errors || err));
-          }
-        });
-      }
-    });
+        setTimeout(function(){
+         res.send(result);
+        },500)
+        } else {
+          res.send(utils.errors(err.errors || err));
+        }
+      });
+    }
+  });
 };
 
 /**
  * Create Comment
  */
 exports.getCreateCommentController = function (req, res) {
-  Article
-    .load(req.params.id, function (err, result) {
-      if (err || !result) return res.status(500).send(errMsg('There was an error in your request.'));
+  Article.load(req.params.id, function (err, result) {
+    if (err || !result) return res.status(500).send(errMsg('There was an error in your request.'));
 
-      const article = result;
-      const user = req.user;
-      if (!req.body.body) return res.status(500).send(errMsg('Requires a comment body.'));
+    const article = result;
+    const user = req.user;
+    if (!req.body.body) return res.status(500).send(errMsg('Requires a comment body.'));
 
-      article.addComment(user, req.body, function (err) {
-        if (err) return res.status(500).send(errMsg(err));
-        
-        var articleObj = article.toObject();//Adding the populated comments from a pure JS object.
-        var comments = articleObj.comments;
-        comments[comments.length-1].user=_.pick(user, ['username', '_id', 'name']); //For security we only send id and username.
+    article.addComment(user, req.body, function (err) {
+      if (err) return res.status(500).send(errMsg(err));
+      
+      var articleObj = article.toObject();//Adding the populated comments from a pure JS object.
+      var comments = articleObj.comments;
+      comments[comments.length-1].user=_.pick(user, ['username', '_id', 'name']); //For security we only send id and username.
 
-        setTimeout(function(){
-         res.send(articleObj);
-        },500)
-      });
+      setTimeout(function(){
+       res.send(articleObj);
+      },500)
     });
+  });
 }
   
 
