@@ -13,7 +13,8 @@ const CHANGE_EVENT = 'change';
 var _articles = {};
 var _total = null;
 var _didInitalGet = false;
-var _newArticleId;
+var _newArticleId =null;
+var _errors = {};
 
 /**
  * Set all ARTICLE item.
@@ -28,39 +29,12 @@ function setAll(articles) {
 }
 
 /**
- * Set total count
- * @param  {number} the total number of articles
- */
-function setTotal(num) {
-  _total = num;
-}
-
-/**
- * decrementTotal
- * @param  {number} the total number of articles
- */
-function decrementTotal() {
-  _total = --_total;
-}
-
-/**
- * incrementTotal
- * @param  {number} the total number of articles
- */
-function incrementTotal() {
-  _total = ++_total;
-}
-
-
-
-/**
  * Set one ARTICLE item.
  * @param  {string} text The content of the ARTICLES
  */
 function set(article) {
   _articles[article._id] = article;
 }
-
 
 /**
  * Update a ARTICLES item.
@@ -72,6 +46,7 @@ function update(article) {
   var id = article._id;
   _articles[id] = assign({}, _articles[id], article);
 }
+
 
 /**
  * Update all of the ARTICLES items with the same object.
@@ -108,6 +83,38 @@ function destroyComment(id) {
   delete _articles[id];
 }
 
+/**
+ * Set total count
+ * @param  {number} the total number of articles
+ */
+function setTotal(num) {
+  _total = num;
+}
+
+/**
+ * decrementTotal
+ * @param  {number} the total number of articles
+ */
+function decrementTotal() {
+  _total = --_total;
+}
+
+/**
+ * incrementTotal
+ * @param  {number} the total number of articles
+ */
+function incrementTotal() {
+  _total = ++_total;
+}
+
+
+/**
+ * Set error message
+ * @param  {error} the errors from the server
+ */
+function setError(error) {
+  _errors = error;
+}
 
 var ArticleStore = assign({}, EventEmitter.prototype, {
 
@@ -141,6 +148,16 @@ var ArticleStore = assign({}, EventEmitter.prototype, {
 
   getNewArticleId: function() {
     return _newArticleId;
+  },
+
+  /**
+   * Get the entire collection of ARTICLEs.
+   * @return {object}
+   */
+  getErrors: function() {
+    var err = _errors;
+    _errors.delete;
+    return err;
   },
 
   emitChange: function() {
@@ -215,6 +232,14 @@ AppDispatcher.register(function(action) {
       var article = action.response.body
       if (article) {
         set(article);
+        ArticleStore.emitChange();
+      }
+      break;
+
+    case Constants.ERROR:
+      var error = action.response
+      if (error) {
+        setError(error);
         ArticleStore.emitChange();
       }
       break;

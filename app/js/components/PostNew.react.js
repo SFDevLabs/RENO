@@ -68,6 +68,9 @@ const Update = React.createClass({
   _onChange: function() {
     var id = this.props.params.id;
     this.setState(getState(id));
+    // this.setState({
+    //   _messages: ArticleStore.getErrors()
+    // })
   },
   /**
    * Event handler for 'change' events coming from the DOM
@@ -83,17 +86,10 @@ const Update = React.createClass({
    * @param  {string} text
    */
   _save: function() {
-    const article = this.state;
-    if (article.title.length>0 && article.body.length>0){ //The title and body must be filled.
-      Actions.create(article);
-      this.setState({
-        _saving:true
-      });
-    }else{//We need to set a message on the state to render a message telling the user to fill in more fields.
-      this.setState({
-        _messages: [{message:"Title and Body cannot be blank."}]
-      })
-    }
+    Actions.create(this.state);
+    this.setState({
+      _saving:true
+    });
   }
 
 });

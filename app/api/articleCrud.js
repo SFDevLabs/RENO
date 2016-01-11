@@ -50,7 +50,7 @@ exports.getCreateController = function (req, res) {
        res.send(m);
       },500)
     } else {
-      res.status(500).send(utils.errors(err.errors || err));
+      res.status(422).send(utils.errors(err.errors || err));
     }
   });
 };

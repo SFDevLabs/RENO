@@ -48,7 +48,7 @@ function makeDigestFun(key, params) {
     } else if (err && res.status === 404) {
       dispatch(Constants.ERROR_NOT_FOUND, params);
     } else if (err) {
-      dispatch(Constants.ERROR, params);
+      dispatch(Constants.ERROR, res.body);
     } else {
       dispatch(key, res, params);
     }
