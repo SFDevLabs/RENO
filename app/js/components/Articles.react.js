@@ -11,6 +11,7 @@ const Loader = require('react-loader');
 
 const ArticleItem = require('./ArticleItem.react');
 const take = 5
+
 /**
  * Retrieve the current ARTICLE data from the ArticleStore
  */
@@ -89,6 +90,9 @@ const ArticleSection = React.createClass({
   _onChange: function() {
     this.setState(getState());
   },
+  /**
+   * Event handler for 'more' button coming from the DOM
+   */
   _onClickMore:function(){
     const skip = Object.keys(this.state.articles).length
     Actions.getList(take, skip);

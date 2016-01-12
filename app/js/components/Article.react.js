@@ -23,6 +23,7 @@ function getState(id) {
   };
 }
 const ArticleSection = React.createClass({
+  
   mixins: [ History ],
 
   getInitialState: function() {
@@ -46,8 +47,11 @@ const ArticleSection = React.createClass({
     if (this.state.articleNotFound){return <NotFound />} 
     else if (!this.state.article){return <Loader />}
 
+
     const article = this.state.article;
     const dateString = new Date(article.createdAt).toLocaleString();             
+    const deleting = this.state._deleting ? <Loader options={{top:'10%'}} />:null; //The loader itself.
+    const opacity = this.state._deleting ? .2 : 1;//The opacity for the items behind the loader.
 
     const tags = _.map(article.tags, function(val, key){
       return (
@@ -62,8 +66,9 @@ const ArticleSection = React.createClass({
       <div className="page-header">
         <h1>{article.title}</h1>
       </div>
-      <div className="content">
-        <div className="row">
+      <div className="content" style={{position:'relative'}}>
+        {deleting}
+        <div className="row" style={{opacity: opacity}}>
           <div className="col-md-8">
             <p>{ article.body }</p>
             <div className="meta">
@@ -85,12 +90,10 @@ const ArticleSection = React.createClass({
         </div>
         <div>
           <br />
-          <input type="hidden" name="_csrf" value="" />
           <Link  to={"/articles/"+article._id+"/edit"} title="edit" className="btn btn-default">
             Edit
           </Link>
           &nbsp;&nbsp;
-          <input type="hidden" name="_method" value="DELETE" />
           <button onClick={this._delete} className="btn btn-danger" type="submit">Delete</button>
         </div>
         <Comments comments={article.comments} id={article._id} />
@@ -115,7 +118,9 @@ const ArticleSection = React.createClass({
    * Event handler for 'change' events coming from the ArticleStore
    */
   _delete: function() {
-    this.setState(getState(null));//Set page to loading
+    this.setState({
+        _deleting: true
+    });//Set page to loading
     Actions.destroy(this.state.article._id);
   },
 
