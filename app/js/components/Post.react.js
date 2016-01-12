@@ -20,14 +20,6 @@ const Post = React.createClass({
     saving: React.PropTypes.bool.isRequired
   },
 
-  componentWillReceiveProps: function(nextProps) {
-    //We need the id of the new article after we post ot the api.
-    var newArticleId = ArticleStore.getNewArticleId();
-    if (this.props.saving){
-      this.history.pushState(null, '/articles/'+newArticleId);
-    }
-  },
-
   /**
    * @return {object}
    */

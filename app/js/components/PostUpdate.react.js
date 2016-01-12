@@ -60,8 +60,18 @@ const Update = React.createClass({
    * Event handler for 'change' events coming from store
    */
   _onChange: function() {
-    var id = this.props.params.id;
-    this.setState(getState(id));
+    const errors = ArticleStore.getErrors();
+    const newArticleId = ArticleStore.getNewArticleId();
+    if (newArticleId){
+      this.history.pushState(null, '/articles/'+newArticleId);
+    } else if (errors.length>0) {
+      this.setState({
+        _messages: errors,
+        _saving: false
+      });
+    } else {
+      this.setState(getState(this.props.params.id));
+    }
   },
   /**
    * Event handler for 'change' events coming from the DOM
@@ -77,23 +87,14 @@ const Update = React.createClass({
    * @param  {string} text
    */
   _save: function() {
-    const article = this.state;
-    if (article.title.length>0 && article.body.length>0){ //The title and body must be filled.
-      Actions.update(
-        this.state._id, 
-        _.pick(this.state, ['title', 'body', 'tags'])
-      );  
-      this.setState({
-        _saving:true
-      });
-    }else{
-      this.setState({
-        _messages: [{message:"Title and Body cannot be blank."}]
-      })
-    }
-
+    Actions.update(
+      this.state._id, 
+      _.pick(this.state, ['title', 'body', 'tags'])
+    );
+    this.setState({
+      _saving: true
+    });
   }
-
 });
 
 module.exports = Update;

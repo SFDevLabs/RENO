@@ -32,7 +32,7 @@ exports.getListController = function (req, res) {
             });
           },500)
       } else {
-        res.status(500).send(utils.errors(err.errors || err));
+        res.status(500).send(utils.errsForApi(err.errors || err));
       }
     });
   });
@@ -50,7 +50,7 @@ exports.getCreateController = function (req, res) {
        res.send(m);
       },500)
     } else {
-      res.status(422).send(utils.errors(err.errors || err));
+      res.status(422).send(utils.errsForApi(err.errors || err));
     }
   });
 };
@@ -65,7 +65,7 @@ exports.getReadController = function (req, res) {
           res.send(result);
         },500)
     } else {
-      res.status(500).send(utils.errors(err.errors || err));
+      res.status(500).send(utils.errsForApi(err.errors || err));
     }
   });
 };
@@ -85,7 +85,7 @@ exports.getUpdateController = function (req, res) {
          res.send(result);
         },500)
       } else {
-        res.send(utils.errors(err.errors || err));
+        res.send(utils.errsForApi(err.errors || err));
       }
     });
   });
@@ -97,7 +97,7 @@ exports.getUpdateController = function (req, res) {
 exports.getDeleteController = function (req, res) {
   Article.load(req.params.id, function (err, result) {
     if (err) {
-      res.send(utils.errors(err.errors || err));
+      res.send(utils.errsForApi(err.errors || err));
     } else {
       result.remove();
       result.save(function (err) {
@@ -107,7 +107,7 @@ exports.getDeleteController = function (req, res) {
          res.send(result);
         },500)
         } else {
-          res.send(utils.errors(err.errors || err));
+          res.send(utils.errsForApi(err.errors || err));
         }
       });
     }
@@ -146,15 +146,15 @@ exports.getCreateCommentController = function (req, res) {
 exports.getDeleteCommentController = function (req, res) {
   Article.load(req.params.id, function (err, result) {
     if (err) {
-      res.send(utils.errors(err.errors || err));
+      res.send(utils.errsForApi(err.errors || err));
     } else if (!result){
-      res.send(utils.errors('There was an error in your request.'));
+      res.send(utils.errsForApi('There was an error in your request.'));
     }else {
       var article = result;
       var commentId = req.params.commentId;
       article.removeComment(commentId, function (err) {
         if (err) {
-          res.send(utils.errors('Oops! The comment was not found'));
+          res.send(utils.errsForApi('Oops! The comment was not found'));
         }
         setTimeout(function(){
           res.send(article);

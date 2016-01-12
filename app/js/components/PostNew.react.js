@@ -11,29 +11,16 @@ const Post = require('./Post.react');
 const Messages = require('./Messages.react');
 const _ = require('lodash');
 
-/**
- * Blank new article
- */
-function getState(id) {
-  return {
+const Update = React.createClass({
+  getInitialState: function() {
+    return {
       title: '',
       body: '',
       tags: []
     }
-}
-
-
-const Update = React.createClass({
-  getInitialState: function() {
-    var id = this.props.params.id;
-    return getState(id);
   },
   componentDidMount: function() {
     ArticleStore.addChangeListener(this._onChange);
-    if(!this.state){
-      var id = this.props.params.id;
-      Actions.getById(id);
-    }
   },
 
   componentWillUnmount: function() {
@@ -66,11 +53,16 @@ const Update = React.createClass({
    * Event handler for 'change' events coming from store
    */
   _onChange: function() {
-    var id = this.props.params.id;
-    this.setState(getState(id));
-    // this.setState({
-    //   _messages: ArticleStore.getErrors()
-    // })
+    const newArticleId = ArticleStore.getNewArticleId();
+    const errors = ArticleStore.getErrors()
+    if (newArticleId){
+      this.history.pushState(null, '/articles/'+newArticleId);
+    } else {
+      this.setState({
+        _messages: errors.length>0?errors:['Something went wrong'],
+        _saving: false
+      });
+    }
   },
   /**
    * Event handler for 'change' events coming from the DOM
@@ -88,7 +80,7 @@ const Update = React.createClass({
   _save: function() {
     Actions.create(this.state);
     this.setState({
-      _saving:true
+      _saving: true
     });
   }
 

@@ -14,7 +14,7 @@ var _articles = {};
 var _total = null;
 var _didInitalGet = false;
 var _newArticleId =null;
-var _errors = {};
+var _errors = [];
 
 /**
  * Set all ARTICLE item.
@@ -156,7 +156,7 @@ var ArticleStore = assign({}, EventEmitter.prototype, {
    */
   getErrors: function() {
     var err = _errors;
-    _errors.delete;
+    _errors = [];
     return err;
   },
 
@@ -237,9 +237,9 @@ AppDispatcher.register(function(action) {
       break;
 
     case Constants.ERROR:
-      var error = action.response
-      if (error) {
-        setError(error);
+      var errors = action.response.errors
+      if (errors) {
+        setError(errors);
         ArticleStore.emitChange();
       }
       break;

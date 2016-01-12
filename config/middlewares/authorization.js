@@ -1,5 +1,7 @@
 'use strict';
 
+const utils = require('../../lib/utils');
+
 /*
  *  Generic require login routing middleware
  */
@@ -7,7 +9,7 @@
 exports.requiresLogin = function (req, res, next) {
   if (req.isAuthenticated()) return next();
   //if (req.method == 'GET') req.session.returnTo = req.originalUrl;
-  res.status(401).send({error:true,message:'Requires login'});
+  res.status(401).send( utils.errsForApi('Requires you to login'))
 };
 
 /*

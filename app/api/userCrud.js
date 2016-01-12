@@ -7,6 +7,7 @@
 const mongoose = require('mongoose')
 const User = mongoose.model('User');
 const _ = require('lodash');
+const utils = require('../../lib/utils');
 
 /**
  * Read
@@ -21,7 +22,25 @@ exports.getReadController = function (req, res) {
           res.send(result);
         },500)
     } else {
-      res.status(500).send(errMsg(err));
+      res.status(500).send(utils.errsForApi(err));
     }
   });
+};
+
+/**
+ * Read Profile
+ */
+exports.getReadControllerProfile = function (req, res) {
+  if (req.user){
+    res.send({
+      success:true,
+      user:req.user
+    });
+  }else{
+    res.send({
+      success:true,
+      user:null
+    });
+  }
+
 };
