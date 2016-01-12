@@ -135,7 +135,9 @@ module.exports = function (app, passport) {
   // API User
   const userPath = '/api/users'
   const userPathWithId = userPath + '/:idUser';
+  const profilePath = userPath + '/profile';
 
+  app.get(profilePath, userCrud.getReadControllerProfile);
   app.get(userPathWithId, userCrud.getReadController);
 
   /**

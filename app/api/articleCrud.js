@@ -85,7 +85,7 @@ exports.getUpdateController = function (req, res) {
          res.send(result);
         },500)
       } else {
-        res.send(utils.errsForApi(err.errors || err));
+        res.status(400).send(utils.errsForApi(err.errors || err));
       }
     });
   });

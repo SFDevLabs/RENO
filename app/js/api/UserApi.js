@@ -66,6 +66,20 @@ function get(url, params) {
 //API calls
 var Api = {
   getEntityDataById: function(id) {
+    if (!id) { 
+      return false 
+    } else {
+      var url = makeUrl("/"+id);
+      var key = Constants.GET_USER_DATA;
+      var params = {};
+      abortPendingRequests(key);
+      dispatch(Constants.PENDING, params);
+      _pendingRequests[key] = get(url).end(
+        makeDigestFun(key, params)
+      );            
+    }
+  },
+  getProfileData: function(id) {
     if (!id){ return false;}else{
       var url = makeUrl("/"+id);
       var key = Constants.GET_USER_DATA;
