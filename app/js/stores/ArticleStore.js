@@ -13,7 +13,7 @@ const CHANGE_EVENT = 'change';
 var _articles = {};
 var _total = null;
 var _didInitalGet = false;
-var _newArticleId =null;
+var _newArticleId = null;
 var _errors = [];
 
 /**
@@ -147,7 +147,9 @@ var ArticleStore = assign({}, EventEmitter.prototype, {
   },
 
   getNewArticleId: function() {
-    return _newArticleId;
+    const id = _newArticleId;
+    _newArticleId = null;
+    return id;
   },
 
   /**

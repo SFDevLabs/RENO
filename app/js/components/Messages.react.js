@@ -35,7 +35,7 @@ const Messages = React.createClass({
     for (var i = this.props.messages.length - 1; i >= 0; i--) {
     	messages.push((
 		        <ul key={i}>
-		          <li>{this.props.messages[i].message}</li>
+		          <li>{this.props.messages[i]}</li>
 		        </ul>
     		));
     };
