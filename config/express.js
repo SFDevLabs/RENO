@@ -21,6 +21,7 @@ const methodOverride = require('method-override');
 const csrf = require('csurf');
 const swig = require('swig');
 const multer = require('multer');
+const mime = require('mime');
 
 const mongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
@@ -85,7 +86,19 @@ module.exports = function (app, passport) {
   // bodyParser should be above methodOverride
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(multer().array('image', 1));
+
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, config.root+'/img')
+    },
+    filename: function (req, file, cb) {
+      cb(null, Math.pow(10,18)*Math.random().toString() + '.' + mime.extension(file.mimetype));
+    }
+  });
+
+  app.use(multer({
+    storage: storage
+  }).array('image', 1));
   app.use(methodOverride(function (req) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
       // look in urlencoded POST bodies and delete it
@@ -120,11 +133,11 @@ module.exports = function (app, passport) {
 
   // adds CSRF support
   if (process.env.NODE_ENV !== 'test') {
-    //app.use(csrf());
+    app.use(csrf());
 
     // This could be moved to view-helpers :-)
     app.use(function (req, res, next) {
-      //res.locals.csrf_token = req.csrfToken();
+      res.locals.csrf_token = req.csrfToken();
       res.locals.bundle_js = (env==='development')?'http://localhost:8090/app/js/bundle.js':'/js/bundle.js';
       next();
     });
