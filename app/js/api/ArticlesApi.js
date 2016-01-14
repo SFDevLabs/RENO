@@ -45,7 +45,7 @@ function makeDigestFun(key, params) {
   return function (err, res) {
     if (err && err.timeout === TIMEOUT) {
       dispatch(Constants.TIMEOUT, params);
-    } else if (err && res.status === 404) {
+    } else if (err && res.status && res.status === 404) {
       dispatch(Constants.ERROR_NOT_FOUND, params);
     } else if (err) {
       dispatch(Constants.ERROR, res.body);
