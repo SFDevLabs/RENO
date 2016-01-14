@@ -18,6 +18,14 @@ const Messages = React.createClass({
       collapsing: false
     };
   },
+
+  componentWillReceiveProps:function(nextProps){
+    this.setState({
+      collapsed: false,
+      collapsing: false
+    })
+  },
+
   /**
    * @return {object}
    */

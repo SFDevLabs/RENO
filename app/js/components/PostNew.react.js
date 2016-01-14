@@ -10,8 +10,10 @@ const Loader = require('react-loader');
 const Post = require('./Post.react');
 const Messages = require('./Messages.react');
 const _ = require('lodash');
+import { History } from 'react-router';
 
 const Update = React.createClass({
+  mixins: [ History ],
   getInitialState: function() {
     return {
       title: '',

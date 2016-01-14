@@ -8,6 +8,7 @@ const Actions = require('../actions/ArticleActions');
 const ArticleStore = require('../stores/ArticleStore');
 const Comments = require('./Comments.react');
 const NotFound = require('./NotFound.react');
+const Messages = require('./Messages.react');
 
 const Loader = require('react-loader');
 const _ = require('lodash');
@@ -53,6 +54,10 @@ const ArticleSection = React.createClass({
     const deleting = this.state._deleting ? <Loader options={{top:'10%'}} />:null; //The loader itself.
     const opacity = this.state._deleting ? .2 : 1;//The opacity for the items behind the loader.
 
+    const errorMessage = this.state._messages? (
+      <Messages messages={this.state._messages} type="danger" />
+      ) : null; //Rendering a warning message.
+
     const tags = _.map(article.tags, function(val, key){
       return (
           <span key={key}>
@@ -61,11 +66,17 @@ const ArticleSection = React.createClass({
          </span>
          )
     });
+
+    const img = (article.image && article.image.files && article.image.files.length) ? 
+      <img src = {article.image.cdnUri + '/mini_' + article.image.files[0]} alt="" /> :
+      null;
+
     
     return <section className="container">
       <div className="page-header">
         <h1>{article.title}</h1>
       </div>
+      {errorMessage}
       <div className="content" style={{position:'relative'}}>
         {deleting}
         <div className="row" style={{opacity: opacity}}>
@@ -85,7 +96,7 @@ const ArticleSection = React.createClass({
             </div>
           </div>
           <div className="col-md-4">
-              <img src="/img/twitter.png" alt="" />
+            {img}
           </div>
         </div>
         <div>
@@ -105,12 +116,20 @@ const ArticleSection = React.createClass({
    * Event handler for 'change' events coming from the ArticleStore
    */
   _onChange: function() {
-    var state = getState(this.props.params.id)
-    if (!state.article){
+    const state = getState(this.props.params.id)
+    const errors = ArticleStore.getErrors()
+    if (errors.length>0) {
+      this.setState({
+        _messages: errors,
+        _deleting: false
+      });
+    } else if (this.state._deleting) {
+      this.history.pushState(null, '/');
+    } else if (!state.article) {
       this.setState({
         articleNotFound: true
       });
-    }else{
+    } else {
       this.setState(state);
     }
   },

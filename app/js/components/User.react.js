@@ -26,7 +26,7 @@ const User = React.createClass({
   },
 
   componentDidMount: function() {
-    if (!this.state.article){
+    if (!this.state.user){
       Actions.getById(this.props.params.id);
     }
     UserStore.addChangeListener(this._onChange);
@@ -37,7 +37,7 @@ const User = React.createClass({
   },
 
   render :function() {
-    if (this.state.articleNotFound){return <NotFound />} 
+    if (this.state.userNotFound){return <NotFound />} 
     else if (!this.state.user){return <Loader />}
 
     return <section className="container">

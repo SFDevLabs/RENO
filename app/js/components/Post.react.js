@@ -9,6 +9,16 @@ import { Link, History } from 'react-router';
 const ArticleStore = require('../stores/ArticleStore');
 const Loader = require('react-loader');
 
+function getFiles(files){
+  var data = {};
+  for (var key in files) {
+      // is the item a File?
+      if (files.hasOwnProperty(key) && files[key] instanceof File) {
+          data[key]= files[key];
+      }
+  }
+  return data;
+}
 
 const Post = React.createClass({
   mixins: [ History ],
@@ -35,21 +45,21 @@ const Post = React.createClass({
           <div className="form-group">
             <label  className="col-sm-2 control-label">Title</label>
             <div className="col-sm-10">
-              <input onChange={this._handleChange.bind(this, 'title')} value={article.title} type="text" name="title" placeholder="Enter the title" className="form-control" id="title" />
+              <input onChange={this._handleChange.bind(this, 'title')} value={article.title} type="text" name="title" placeholder="Enter the title" className="form-control" />
             </div>
           </div>
 
           <div className="form-group">
             <label className="col-sm-2 control-label">Image</label>
             <div className="col-sm-10">
-              <input onChange={this._handleChange.bind(this, 'image')} type="file" name="image" className="form-control" id="file" />
+              <input onChange={this._handleChangeFiles} className='upload' type='file' className="form-control"/>
             </div>
           </div>
 
           <div className="form-group">
             <label className="col-sm-2 control-label">Body</label>
             <div className="col-sm-10">
-              <textarea onChange={this._handleChange.bind(this, 'body')} value={article.body} rows="5" name="body" placeholder="Enter the article description" id="desc" cols="30" rows="10" className="form-control"/>
+              <textarea onChange={this._handleChange.bind(this, 'body')} value={article.body} rows="5" name="body" placeholder="Enter the article description" cols="30" rows="10" className="form-control"/>
             </div>
           </div>
 
@@ -85,6 +95,16 @@ const Post = React.createClass({
    */
   _handleChangeTags: function(value) {
     this.props.handleChange('tags', value);
+  },
+
+  /**
+   * Event handler for 'change' events coming from tag input plugin
+   */
+  _handleChangeFiles: function(e) {
+    const file = e.target.files[0]
+    if (file instanceof File) {
+      this.props.handleChange('image', file);
+    }
   },
   /**
    * Event handler from dom for forms
