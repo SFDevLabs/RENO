@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 const Article = mongoose.model('Article');
 const _ = require('lodash');
 const utils = require('../../lib/utils');
-
+const fs = require('fs');
 
 /**
  * List
@@ -43,9 +43,15 @@ exports.getListController = function (req, res) {
  */
 exports.getCreateController = function (req, res) {
   var m = new Article(req.body);
+  //console.log(req.files[0])
+  const images = req.files[0]
+    ? [req.files[0].path]
+    : [];
+
   m.user = req.user;
-  m.uploadAndSave([],function (err) {
+  m.uploadAndSave(images, function (err) {
     if (!err) {
+      if (images[0]){fs.unlink(images[0])};//delete the image from the local machine
       setTimeout(function(){
        res.send(m);
       },500)
@@ -60,10 +66,12 @@ exports.getCreateController = function (req, res) {
  */
 exports.getReadController = function (req, res) {
   Article.load(req.params.id, function (err, result) {
-    if (!err) {
-        setTimeout(function(){
-          res.send(result);
-        },500)
+    if (!result || err && err.name == 'CastError') {
+      res.status(404).send(utils.errsForApi('User not found'));
+    } else if (result) {
+      setTimeout(function(){
+        res.send(result);
+      },500)
     } else {
       res.status(500).send(utils.errsForApi(err.errors || err));
     }
@@ -102,12 +110,11 @@ exports.getDeleteController = function (req, res) {
       result.remove();
       result.save(function (err) {
         if (!err) {
-
         setTimeout(function(){
-         res.send(result);
+          res.send(result);
         },500)
         } else {
-          res.send(utils.errsForApi(err.errors || err));
+          res.status(500).send(utils.errsForApi(err.errors || err));
         }
       });
     }
@@ -149,7 +156,7 @@ exports.getDeleteCommentController = function (req, res) {
       res.send(utils.errsForApi(err.errors || err));
     } else if (!result){
       res.send(utils.errsForApi('There was an error in your request.'));
-    }else {
+    } else {
       var article = result;
       var commentId = req.params.commentId;
       article.removeComment(commentId, function (err) {

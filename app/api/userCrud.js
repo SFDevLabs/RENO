@@ -13,18 +13,20 @@ const utils = require('../../lib/utils');
  * Read
  */
 exports.getReadController = function (req, res) {
-  const options = {
-    criteria: { _id : req.params.idUser }
-  };
-  User.load(options, function (err, result) {
-    if (!err) {
-        setTimeout(function(){
-          res.send(result);
-        },500)
-    } else {
-      res.status(500).send(utils.errsForApi(err));
-    }
-  });
+  const user = req.profile;
+  res.send(user);
+  // const options = {
+  //   criteria: { _id : req.params.userId }
+  // };
+  // User.load(options, function (err, result) {
+  //   if (err) {
+  //     res.status(500).send(utils.errsForApi(err));
+  //   } else {
+  //     setTimeout(function(){
+  //       res.send(result);
+  //     },500)
+  //   }
+  // });
 };
 
 /**

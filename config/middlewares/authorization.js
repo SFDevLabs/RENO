@@ -33,8 +33,7 @@ exports.user = {
 exports.article = {
   hasAuthorization: function (req, res, next) {
     if (req.article.user.id != req.user.id) {
-      req.flash('info', 'You are not authorized');
-      return res.redirect('/articles/' + req.article.id);
+      return res.status(401).send( utils.errsForApi('You are not authorized'))
     }
     next();
   }

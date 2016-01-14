@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const Article = mongoose.model('Article');
 const utils = require('../../lib/utils');
 const assign = require('object-assign');
+const fs = require('fs');
 
 
 /**
@@ -17,9 +18,10 @@ const assign = require('object-assign');
 exports.load = function (req, res, next, id){
   Article.load(id, function (err, article) {
     if (err) return next(err);
-    if (!article) return next(new Error('not found'));
+    if (!article) return res.status(404).send( utils.errsForApi('Not Found') )
     req.article = article;
     next();
+
   });
 };
 
@@ -76,12 +78,15 @@ exports.new = function (req, res){
 exports.create = function (req, res) {
   console.log(req.body);
   const article = new Article(req.body);
-  const images = req.files.image
-    ? [req.files.image]
+  const image = req.files[0]
+    ? req.files[0].path
     : undefined;
     
   article.user = req.user;
-  article.uploadAndSave(images, function (err) {
+
+  console.log(image)
+  article.uploadAndSave([image], function (err) {
+    fs.unlink(image)
     if (!err) {
       req.flash('success', 'Successfully created article!');
       return res.redirect('/articles/'+article._id);

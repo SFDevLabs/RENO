@@ -17,9 +17,12 @@ exports.load = function (req, res, next, id) {
     criteria: { _id : id }
   };
   User.load(options, function (err, user) {
-    if (err) return next(err);
-    if (!user) return next(new Error('Failed to load User ' + id));
-    req.profile = user;
+    if (err && err.name == 'CastError' || !user){ 
+      return res.status(404).send( utils.errsForApi('Not Found') )
+    } else if (err) {
+      return res.status(500).send( utils.errsForApi(err) )
+    }
+    if (user) req.profile = user;
     next();
   });
 };
