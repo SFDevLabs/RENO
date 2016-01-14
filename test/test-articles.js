@@ -50,7 +50,7 @@ describe('Articles', function () {
         agent
         .post('/api/articles')
         .expect(401)
-        .expect(/Requires login/)
+        .expect(/Requires you to login/)
         .end(done);
       });
     });
