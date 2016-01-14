@@ -8,7 +8,7 @@ const utils = require('../../lib/utils');
 
 exports.requiresLogin = function (req, res, next) {
   if (req.isAuthenticated()) return next();
-  //if (req.method == 'GET') req.session.returnTo = req.originalUrl;
+  //if (req.method == 'GET') req.session.returnTo = req.originalUrl;  /maybe we will bring this back.
   res.status(401).send( utils.errsForApi('Requires you to login'))
 };
 
@@ -19,8 +19,7 @@ exports.requiresLogin = function (req, res, next) {
 exports.user = {
   hasAuthorization: function (req, res, next) {
     if (req.profile.id != req.user.id) {
-      req.flash('info', 'You are not authorized');
-      return res.redirect('/users/' + req.profile.id);
+      return res.status(401).send( utils.errsForApi('You are not authorized'))
     }
     next();
   }
@@ -47,11 +46,11 @@ exports.comment = {
   hasAuthorization: function (req, res, next) {
     // if the current user is comment owner or article owner
     // give them authority to delete
+    console.log('auth', req.user, req.comment.user)
     if (req.user.id === req.comment.user.id || req.user.id === req.article.user.id) {
       next();
     } else {
-      req.flash('info', 'You are not authorized');
-      res.redirect('/articles/' + req.article.id);
+      res.status(401).send( utils.errsForApi('You are not authorized'))
     }
   }
 };

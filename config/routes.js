@@ -115,18 +115,18 @@ module.exports = function (app, passport) {
   app.get(path, articleCrud.getListController);
   app.post(path, auth.requiresLogin, articleCrud.getCreateController);
 
-  app.post(pathWithId+'/comments', auth.requiresLogin, articleCrud.getCreateCommentController);
-  app.delete(pathWithId+'/comments/:commentId', auth.requiresLogin, articleCrud.getDeleteCommentController);
-
   app.get(pathWithId, articleCrud.getReadController);
   app.put(pathWithId, articleAuth, articleCrud.getUpdateController);
   app.delete(pathWithId, articleAuth, articleCrud.getDeleteController); 
+  //API comments
+  app.post(pathWithId+'/comments', auth.requiresLogin, articleCrud.getCreateCommentController);
+  app.delete(pathWithId+'/comments/:commentId', commentAuth, articleCrud.getDeleteCommentController);
 
 
   // comment routes
   app.param('commentId', comments.load);
   app.post('/articles/:id/comments', auth.requiresLogin, comments.create);
-  app.get('/articles/:id/comments', auth.requiresLogin, comments.create);
+  //app.get('/articles/:id/comments', auth.requiresLogin, comments.create);
   app.delete('/articles/:id/comments/:commentId', commentAuth, comments.destroy);
 
   // tag routes

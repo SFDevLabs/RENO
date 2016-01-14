@@ -126,11 +126,11 @@ exports.getDeleteController = function (req, res) {
  */
 exports.getCreateCommentController = function (req, res) {
   Article.load(req.params.id, function (err, result) {
-    if (err || !result) return res.status(500).send(errMsg('There was an error in your request.'));
+    if (err || !result) return res.status(500).send( utils.errsForApi('There was an error in your request') );
 
     const article = result;
     const user = req.user;
-    if (!req.body.body) return res.status(500).send(errMsg('Requires a comment body.'));
+    if (!req.body.body) return res.status(500).send( utils.errsForApi('Requires a comment body'));
 
     article.addComment(user, req.body, function (err) {
       if (err) return res.status(500).send(errMsg(err));
@@ -151,23 +151,25 @@ exports.getCreateCommentController = function (req, res) {
  * Delete Comment
  */
 exports.getDeleteCommentController = function (req, res) {
-  Article.load(req.params.id, function (err, result) {
+  var article = req.article;
+  var commentId = req.params.commentId;
+  article.removeComment(commentId, function (err) {
     if (err) {
-      res.send(utils.errsForApi(err.errors || err));
-    } else if (!result){
-      res.send(utils.errsForApi('There was an error in your request.'));
-    } else {
-      var article = result;
-      var commentId = req.params.commentId;
-      article.removeComment(commentId, function (err) {
-        if (err) {
-          res.send(utils.errsForApi('Oops! The comment was not found'));
-        }
-        setTimeout(function(){
-          res.send(article);
-        },500)
-        
-      });
+      res.send(utils.errsForApi('There was an error in your request'));
     }
+    setTimeout(function(){
+      res.send(article);
+    },500)
+    
   });
+
+  // Article.load(req.params.id, function (err, result) {
+  //   // if (err) {
+  //   //   res.send(utils.errsForApi(err.errors || err));
+  //   // } else if (!result){
+  //   //   res.send(utils.errsForApi('There was an error in your request.'));
+  //   // } else {
+
+  //   //}
+  // });
 };
