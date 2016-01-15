@@ -15,6 +15,7 @@ const notifier = {
   service: 'postmark',
   APN: false,
   email: true, // true
+  tplType: 'html',
   actions: ['comment'],
   tplPath: path.join(__dirname, '..', 'app/mailer/templates'),
   key: 'POSTMARK_KEY'
