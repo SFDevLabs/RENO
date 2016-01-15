@@ -7,7 +7,7 @@
 const Notifier = require('notifier');
 const swig = require('swig');
 const config = require('../../config/config');
-
+const signature = 'jeff@sfdevlabs.com';
 /**
  * Process the templates using swig - refer to notifier#processTemplate method
  *
@@ -44,15 +44,15 @@ module.exports = {
 
     const obj = {
       to: author.email,
-      from: 'your@product.com',
+      from: signature,
       subject: user.name + ' added a comment on your article ' + article.title,
       alert: user.name + ' says: "' + options.comment,
       locals: {
         to: author.name,
         from: user.name,
         body: options.comment,
-        article: article.name
-      }
+        article: article.title
+      },
     };
 
     // for apple push notifications
