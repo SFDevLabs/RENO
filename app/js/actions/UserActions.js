@@ -15,6 +15,13 @@ const Actions = {
    */
   getById: function(id) {
     UserApi.getEntityDataById(id);
+  },
+
+  /**
+   * @param  {string} id
+   */
+  getProfile: function() {
+    UserApi.getProfileData();
   }
 
 };

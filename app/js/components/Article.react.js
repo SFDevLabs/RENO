@@ -28,7 +28,7 @@ const ArticleSection = React.createClass({
   mixins: [ History ],
 
   getInitialState: function() {
-    return getState(this.props.params.id);
+    return getState(this.props.params.id); //Using the antipattern to pass the id from the URL
   },
 
   componentDidMount: function() {
@@ -62,18 +62,22 @@ const ArticleSection = React.createClass({
       return (
           <span key={key}>
             <i className="muted fa fa-tag"></i>&nbsp;
-            <a className="tag"> {val} </a>
+            <Link to={"/tags/"+val} className="tag">{val}</Link>
          </span>
          )
     });
 
     const img = (article.image && article.image.files && article.image.files.length) ? 
-      <img src = {article.image.cdnUri + '/mini_' + article.image.files[0]} alt="" /> :
+      <a href={article.image.cdnUri + '/detail_' + article.image.files[0]} target="_blank" >
+        <img src = {article.image.cdnUri + '/mini_' + article.image.files[0]} alt="" />
+      </a>:
       null;
-
     
     return <section className="container">
       <div className="page-header">
+        <button onClick={this._onRefresh} className="pull-right btn btn-default">
+          <span className="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+        </button>
         <h1>{article.title}</h1>
       </div>
       {errorMessage}
@@ -118,31 +122,39 @@ const ArticleSection = React.createClass({
   _onChange: function() {
     const state = getState(this.props.params.id)
     const errors = ArticleStore.getErrors()
-    if (errors.length>0) {
+    if (errors.length>0) { //Errors from page action need to be displayed.
       this.setState({
         _messages: errors,
         _deleting: false
       });
-    } else if (this.state._deleting) {
+    } else if (!state.article && this.state._deleting) { //A delete request was fired, we have no errors and we have no article in the store. Navigate to home.
       this.history.pushState(null, '/');
-    } else if (!state.article) {
+    } else if (!state.article) { //We have no article in the store after an API request. Show the 404.
       this.setState({
         articleNotFound: true
       });
-    } else {
+    } else {  //We hae the article render it in the component.
       this.setState(state);
     }
   },
   /**
-   * Event handler for 'change' events coming from the ArticleStore
+   * Event handler for 'change' events coming from the DOM
    */
   _delete: function() {
     this.setState({
         _deleting: true
-    });//Set page to loading
-    Actions.destroy(this.state.article._id);
+    });//Set page to deleting
+    Actions.destroy(this.state.article._id); //Fire the destroy event.
   },
-
+  /**
+   * Event handler for 'refresh' button coming from the DOM
+   */
+  _onRefresh:function(){
+    Actions.getById(this.props.params.id);
+    this.setState({
+      article:null
+    });
+  }
 
 });
 

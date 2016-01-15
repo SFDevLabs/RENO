@@ -42,7 +42,7 @@ const User = React.createClass({
 
     return <section className="container">
       <div className="page-header">
-        <h1>Profile</h1>
+        <h1>User</h1>
       </div>
       <div className="content">
         <div className="row">

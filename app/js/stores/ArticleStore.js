@@ -116,6 +116,16 @@ function setError(error) {
   _errors = error;
 }
 
+/**
+ * Set error message
+ * @param  {error} the errors from the server
+ */
+function setNewArticleId(id) {
+  _newArticleId = id;
+}
+
+
+
 var ArticleStore = assign({}, EventEmitter.prototype, {
 
   /**
@@ -190,8 +200,8 @@ AppDispatcher.register(function(action) {
     case Constants.GET_ALL_ARTICLES_DATA:
       const articles = action.response.body.articles
       const total = action.response.body.total
-      _didInitalGet = true;
       if (articles) {
+        _didInitalGet = true;
         setAll(articles);
         setTotal(total);
         ArticleStore.emitChange();
@@ -223,7 +233,7 @@ AppDispatcher.register(function(action) {
     case Constants.POST_ARTICLE_DATA:
       var article = action.response.body
       if (article) {
-        _newArticleId = article._id;
+        setNewArticleId(article._id)
         set(article);
         incrementTotal();
         ArticleStore.emitChange();

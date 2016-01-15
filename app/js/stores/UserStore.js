@@ -11,6 +11,8 @@ const assign = require('object-assign');
 const CHANGE_EVENT = 'change';
 
 var _users = {};
+var _profileId = null;
+
 
 /**
  * Set one USER item.
@@ -20,7 +22,25 @@ function set(user) {
   _users[user._id] = user;
 }
 
+
+/**
+ * Set profile
+ * @param  {string} text The content of the ARTICLES
+ */
+function setProfileId(id) {
+  _profileId = id;
+}
+
+
 var UserStore = assign({}, EventEmitter.prototype, {
+
+  /**
+   * Get the article by id
+   * @return {object}
+   */
+  getProfile: function() {
+    return _users[_profileId];
+  },
 
   /**
    * Get the article by id
@@ -30,6 +50,10 @@ var UserStore = assign({}, EventEmitter.prototype, {
     return _users[id];
   },
 
+  /**
+   * Call the flux emitter
+   * @return {object}
+   */
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
@@ -56,12 +80,22 @@ AppDispatcher.register(function(action) {
   switch(action.actionType) {
 
     case Constants.GET_USER_DATA:
-      const user = action.response.body
+      var user = action.response.body;
       if (user) {
         set(user);
         UserStore.emitChange();
       }
       break;
+
+    case Constants.GET_PROFILE_DATA:
+      var user = action.response.body.user;
+      if (user) {
+        set(user);
+        setProfileId(user._id);
+      }
+      UserStore.emitChange();
+      break;
+
     case Constants.ERROR_NOT_FOUND:
       UserStore.emitChange();
       break;

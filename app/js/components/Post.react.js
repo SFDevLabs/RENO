@@ -38,6 +38,10 @@ const Post = React.createClass({
     const loader = this.props.saving?<Loader options={{top:'40%'}} />:null;//The loader itself.
     const article = this.props.article
 
+    const img = (article.image && article.image.files && article.image.files.length) ? 
+      <img src = {article.image.cdnUri + '/mini_' + article.image.files[0]} alt="" /> :
+      null;
+
     return <div className="row">
       {loader}
       <div style={{opacity: opacity}} className="col-md-8">
@@ -79,9 +83,7 @@ const Post = React.createClass({
           </div>
         </div>
       </div>
-      <div style={{opacity: opacity}} className="col-md-4">
-        <img src="/img/twitter.png" alt="" />
-      </div>
+      {img}
     </div>;
   },
   /**

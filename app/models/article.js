@@ -6,8 +6,9 @@
 
 const mongoose = require('mongoose');
 const Imager = require('imager');
-const config = require('../../config/config');
+const fs = require('fs');
 
+const config = require('../../config/config');
 const imagerConfig = require(config.root + '/config/imager.js');
 const utils = require('../../lib/utils');
 
@@ -102,6 +103,7 @@ ArticleSchema.methods = {
     this.validate(function (err) {
       if (err) return cb(err);
       imager.upload(images, function (err, cdnUri, files) {
+        if (images[0]){fs.unlink(images[0])};//delete the image from the local machine
         if (err) return cb(err);
         if (files.length) {
           self.image = { cdnUri : cdnUri, files : files };

@@ -24,9 +24,22 @@ const ArticleItem = React.createClass({
     const tags = _.map(article.tags, function(val, key){
       return <span key={key}>
             <i className="muted fa fa-tag"></i>&nbsp;
-            <Link to={"/tags/"+encodeURIComponent(val)} className="tag"> {val} </Link>
-         </span>;
+            <Link to={"/tags/"+encodeURIComponent(val)} className="tag">{val}</Link>
+            &nbsp; 
+        </span>;
     });
+
+    const imageBadge = (article.image && article.image.files && article.image.files.length)?
+      <span>
+        <span>
+          &nbsp;
+          -
+          &nbsp;
+        </span>
+        <span title="Post has a picture!"className="glyphicon glyphicon-picture" aria-hidden="true"></span>
+      </span>:
+      null;
+
     const tagTitle = article.tags.length > 0 ?//Spacer and tag title if we have 1 or more tags
       <span>
         &nbsp;
@@ -54,6 +67,7 @@ const ArticleItem = React.createClass({
       </Link>
       {tagTitle}
       {tags}
+      {imageBadge}
     </div>;
   }
 

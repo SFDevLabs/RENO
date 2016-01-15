@@ -33,7 +33,6 @@ const Update = React.createClass({
    * @return {object}
    */
   render: function() {
-    if (!this.state){return <Loader />}
     const article = this.state;
     const blankMessage = this.state._messages? (
       <Messages messages={this.state._messages} type="danger" />

@@ -58,7 +58,7 @@ const CommentItem = React.createClass({
     var commentId = this.props.comment._id
     var id = this.props.articleId;
     if (id){
-      Actions.destroyComment(id, commentId);
+      Actions.destroyComment(id, commentId); //Look at the _onChange on the Article.react file for the resulting flux event that re-renders the article.
       this.setState({
           saving: true
       });

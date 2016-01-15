@@ -33,16 +33,8 @@ exports.getReadController = function (req, res) {
  * Read Profile
  */
 exports.getReadControllerProfile = function (req, res) {
-  if (req.user){
-    res.send({
-      success:true,
-      user:req.user
-    });
-  }else{
-    res.send({
-      success:true,
-      user:null
-    });
-  }
-
+  res.send({
+    user:req.user,
+    success: !!req.user
+  });
 };

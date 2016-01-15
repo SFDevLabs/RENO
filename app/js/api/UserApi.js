@@ -41,7 +41,7 @@ function dispatch(key, response, params) {
 }
 
 // return successful response, else return request Constants
-function makeDigestFun(key, params) {
+function makeResponseCallback(key, params) {
   return function (err, res) {
     if (err && err.timeout === TIMEOUT) {
       dispatch(Constants.TIMEOUT, params);
@@ -75,21 +75,19 @@ var Api = {
       abortPendingRequests(key);
       dispatch(Constants.PENDING, params);
       _pendingRequests[key] = get(url).end(
-        makeDigestFun(key, params)
+        makeResponseCallback(key, params)
       );            
     }
   },
-  getProfileData: function(id) {
-    if (!id){ return false;}else{
-      var url = makeUrl("/"+id);
-      var key = Constants.GET_USER_DATA;
-      var params = {};
-      abortPendingRequests(key);
-      dispatch(Constants.PENDING, params);
-      _pendingRequests[key] = get(url).end(
-        makeDigestFun(key, params)
-      );            
-    }
+  getProfileData: function() {
+    var url = makeUrl("/profile");
+    var key = Constants.GET_PROFILE_DATA;
+    var params = {};
+    abortPendingRequests(key);
+    dispatch(Constants.PENDING, params);
+    _pendingRequests[key] = get(url).end(
+      makeResponseCallback(key, params)
+    );            
   }
 };
 

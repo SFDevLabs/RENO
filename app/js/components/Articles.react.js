@@ -11,6 +11,7 @@ const Loader = require('react-loader');
 
 const ArticleItem = require('./ArticleItem.react');
 const take = 5
+const initalSkip = 0;
 
 /**
  * Retrieve the current ARTICLE data from the ArticleStore
@@ -33,9 +34,8 @@ const ArticleSection = React.createClass({
 
   componentDidMount: function() {
     if (!this.state.initalGet){ //This flag tells of if we have loaded the most recent articles.
-      const skip = 0;
       const clearStore = true //We will clear the store so we are sure we load the most recent articles.
-      Actions.getList(take, skip, clearStore);
+      Actions.getList(take, initalSkip, clearStore);
     }else{
       this.setState(getState());
     }
@@ -73,6 +73,9 @@ const ArticleSection = React.createClass({
 
     return <section className="container">
       <div className="page-header">
+      <button onClick={this._onRefresh} className="pull-right btn btn-default">
+        <span className="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+      </button>
         <h1>Articles</h1>
       </div>
       <div className="content" >{articles}</div>
@@ -98,6 +101,17 @@ const ArticleSection = React.createClass({
     Actions.getList(take, skip);
     this.setState({
       loading:true
+    });
+  },
+  /**
+   * Event handler for 'refresh' button coming from the DOM
+   */
+  _onRefresh:function(){
+    const clearStore = true //We will clear the store so we are sure we load the most recent articles.
+    Actions.getList(take, initalSkip, clearStore);
+    this.setState({
+      loading:true,
+      initalGet: false
     });
   }
 

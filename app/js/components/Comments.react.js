@@ -17,7 +17,8 @@ const Comments = React.createClass({
 
   getInitialState: function() {
     return {
-    	comment: ''
+    	comment: '',
+      saving:false
     }
   },
   componentWillReceiveProps: function(nextProps) {
@@ -68,8 +69,8 @@ const Comments = React.createClass({
   _save: function() {
     var comment = this.state.comment;
     var id = this.props.id;
-    if (comment && id){
-      Actions.createComment(id, {body:comment});
+    if (id){
+      Actions.createComment(id, {body:comment}); //Look at the _onChange on the Article.react file for the resulting flux event that re-renders the article.
       //Reset the comments to an empty string
       this.setState({
         comment: '',

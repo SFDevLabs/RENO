@@ -14,14 +14,16 @@ module.exports = {
       },
       resizeAndCrop: {
         mini: { resize: '63504@', crop: '252x210' }
-      }
+      },
+      rotate: 'auto'
     },
 
     gallery: {
       crop: {
         thumb: '100x100'
       }
-    }
+    },
+    
   },
 
   storage: {

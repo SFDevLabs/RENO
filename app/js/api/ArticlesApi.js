@@ -41,15 +41,15 @@ function dispatch(key, response, params) {
 }
 
 // return successful response, else return request Constants
-function makeDigestFun(key, params) {
+function makeResponseCallback(key, params) {
   return function (err, res) {
     if (err && err.timeout === TIMEOUT) {
       dispatch(Constants.TIMEOUT, params);
-    } else if (err && res.status && res.status === 404) {
+    } else if (err && res && res.status === 404) {
       dispatch(Constants.ERROR_NOT_FOUND, params);
     } else if (err) {
       dispatch(Constants.ERROR, res.body);
-    } else {
+    } else {//All is good we dispatch the event with our data.
       dispatch(key, res, params);
     }
   };
@@ -102,7 +102,7 @@ var Api = {
     abortPendingRequests(key);
     dispatch(Constants.PENDING, params);
     _pendingRequests[key] = get(url, params).end(
-        makeDigestFun(key, params)
+        makeResponseCallback(key, params)
     );
   },
   getEntityDataById: function(id) {
@@ -113,7 +113,7 @@ var Api = {
       abortPendingRequests(key);
       dispatch(Constants.PENDING, params);
       _pendingRequests[key] = get(url).end(
-        makeDigestFun(key, params)
+        makeResponseCallback(key, params)
       );            
     }
   },
@@ -124,7 +124,7 @@ var Api = {
     abortPendingRequests(key);
     dispatch(Constants.PENDING, params);
     _pendingRequests[key] = post(url, params).end(
-      makeDigestFun(key, params)
+      makeResponseCallback(key, params)
     );
   },
   deleteEntityData: function(id) {
@@ -134,7 +134,7 @@ var Api = {
     abortPendingRequests(key);
     dispatch(Constants.PENDING, params);
     _pendingRequests[key] = del(url, params).end(
-      makeDigestFun(key, params)
+      makeResponseCallback(key, params)
     );
   },
   putEntityData: function(id, data) {
@@ -144,7 +144,7 @@ var Api = {
     abortPendingRequests(key);
     dispatch(Constants.PENDING, params);
     _pendingRequests[key] = put(url, params).end(
-      makeDigestFun(key, params)
+      makeResponseCallback(key, params)
     );
   },
   postEntityCommentData: function(id, data) {
@@ -154,7 +154,7 @@ var Api = {
     abortPendingRequests(key);
     dispatch(Constants.PENDING, params);
     _pendingRequests[key] = post(url, params).end(
-      makeDigestFun(key, params)
+      makeResponseCallback(key, params)
     ); 
   },
   deleteEntityCommentData: function(id, commentId) {
@@ -164,7 +164,7 @@ var Api = {
     abortPendingRequests(key);
     dispatch(Constants.PENDING, params);
     _pendingRequests[key] = del(url).end(
-      makeDigestFun(key, params)
+      makeResponseCallback(key, params)
     );
   }
 };

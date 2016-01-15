@@ -25,8 +25,7 @@ function getState(id) {
 const Update = React.createClass({
   mixins: [ History ],
   getInitialState: function() {
-    var id = this.props.params.id;
-    return getState(id);
+    return getState(this.props.params.id);
   },
   componentDidMount: function() {
     ArticleStore.addChangeListener(this._onChange);
@@ -87,9 +86,11 @@ const Update = React.createClass({
    * @param  {string} text
    */
   _save: function() {
+    var selectedItems = ['title', 'body', 'tags'];
+    if (this.state.image instanceof File){selectedItems.push('image')}
     Actions.update(
       this.state._id, 
-      _.pick(this.state, ['title', 'body', 'tags'])
+      _.pick(this.state, selectedItems)
     );
     this.setState({
       _saving: true

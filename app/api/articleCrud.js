@@ -8,7 +8,6 @@ const mongoose = require('mongoose')
 const Article = mongoose.model('Article');
 const _ = require('lodash');
 const utils = require('../../lib/utils');
-const fs = require('fs');
 
 /**
  * List
@@ -43,7 +42,6 @@ exports.getListController = function (req, res) {
  */
 exports.getCreateController = function (req, res) {
   var m = new Article(req.body);
-  //console.log(req.files[0])
   const images = req.files[0]
     ? [req.files[0].path]
     : [];
@@ -51,7 +49,6 @@ exports.getCreateController = function (req, res) {
   m.user = req.user;
   m.uploadAndSave(images, function (err) {
     if (!err) {
-      if (images[0]){fs.unlink(images[0])};//delete the image from the local machine
       setTimeout(function(){
        res.send(m);
       },500)
@@ -87,7 +84,10 @@ exports.getUpdateController = function (req, res) {
     for (key in req.body) {
       result[key] = req.body[key];
     }
-    result.uploadAndSave([], function (err) {
+    const images = req.files[0]
+      ? [req.files[0].path]
+      : [];
+    result.uploadAndSave(images, function (err) {
       if (!err) {
         setTimeout(function(){
          res.send(result);
@@ -127,10 +127,10 @@ exports.getDeleteController = function (req, res) {
 exports.getCreateCommentController = function (req, res) {
   Article.load(req.params.id, function (err, result) {
     if (err || !result) return res.status(500).send( utils.errsForApi('There was an error in your request') );
+    if (!req.body.body) return res.status(422).send( utils.errsForApi('Requires a comment body'));
 
     const article = result;
     const user = req.user;
-    if (!req.body.body) return res.status(500).send( utils.errsForApi('Requires a comment body'));
 
     article.addComment(user, req.body, function (err) {
       if (err) return res.status(500).send(errMsg(err));
