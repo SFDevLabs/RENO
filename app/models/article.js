@@ -123,7 +123,7 @@ ArticleSchema.methods = {
    */
 
   addComment: function (user, comment, cb) {
-    //const notify = require('../mailer');
+    const notify = require('../mailer');
 
     this.comments.push({
       body: comment.body,
@@ -131,11 +131,13 @@ ArticleSchema.methods = {
     });
 
     if (!this.user.email) this.user.email = 'email@product.com';
-    // notify.comment({
-    //   article: this,
-    //   currentUser: user,
-    //   comment: comment.body
-    // });
+    notify.comment({
+      article: this,
+      currentUser: user,
+      comment: comment.body
+    }, function(err, status){
+      console.log(err, status)
+    });
 
     this.save(cb);
   },
