@@ -78,10 +78,21 @@ describe('Articles', function () {
           agent
           .post('/api/articles')
           .field('title', '')
-          .field('body', 'foo')
+          .field('body', 'bar')
           .expect('Content-Type', /application\/json/)
           .expect(422)
           .expect(/Article title cannot be blank/)
+          .end(done);
+        });
+
+        it('should respond with error', function (done) {
+          agent
+          .post('/api/articles')
+          .field('title', 'foo')
+          .field('body', '')
+          .expect('Content-Type', /application\/json/)
+          .expect(422)
+          .expect(/Article body cannot be blank/)
           .end(done);
         });
 
@@ -121,6 +132,7 @@ describe('Articles', function () {
           });
         });
 
+        var _id = null;
         it('should save the article to the database', function (done) {
           Article
           .findOne({ title: 'foo'})
@@ -132,8 +144,29 @@ describe('Articles', function () {
             article.body.should.equal('bar');
             article.user.email.should.equal('foobar@example.com');
             article.user.name.should.equal('Foo bar');
+            _id = article._id; //set th id of the new comment
             done();
           });
+        });
+        //Use the _id to response to comments
+        it('should respond with new posted comment', function (done) {
+          agent
+          .post('/api/articles/'+_id+'/comments')
+          .field('body', 'bar')
+          .expect('Content-Type', /application\/json/)
+          .expect(200)
+          .expect(/bar/)
+          .end(done);
+        });
+
+        it('should respond with error for posted comment', function (done) {
+          agent
+          .post('/api/articles/'+_id+'/comments')
+          .field('body', '')
+          .expect('Content-Type', /application\/json/)
+          .expect(422)
+          .expect(/Requires a comment body/)
+          .end(done);
         });
       });
     });
