@@ -95,10 +95,10 @@ function del(url) {
 }
 //API calls
 var Api = {
-  getEntityData: function(count, skip) {
+  getEntityListData: function(count, skip, tag) {
     var url = makeUrl('');
     var key = Constants.GET_ALL_ARTICLES_DATA;
-    var params = {count: count, skip:skip};
+    var params = {count: count, skip:skip, tag:tag};
     abortPendingRequests(key);
     dispatch(Constants.PENDING, params);
     _pendingRequests[key] = get(url, params).end(

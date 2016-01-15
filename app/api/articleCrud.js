@@ -15,14 +15,22 @@ const utils = require('../../lib/utils');
 exports.getListController = function (req, res) {
   var skip = Number(req.query.skip)
   var count = Number(req.query.count)
+  const criteria = req.query.tag?{tags:req.query.tag}:null;
+  
   skip =  !isNaN(skip) ? skip : 0;
   count =  !isNaN(count) ? count : 30;
-  const options = {
+  
+  var options = {
     count: count,
-    skip: skip
+    skip: skip,
   };
+
+  if (criteria){
+    options.criteria = criteria
+  }
+
   Article.list(options, function (err, result) {
-    Article.count().exec(function (errCount, count) {
+    Article.count(criteria).exec(function (errCount, count) {
       if (!err) {
           setTimeout(function(){
             res.send({
@@ -160,16 +168,5 @@ exports.getDeleteCommentController = function (req, res) {
     setTimeout(function(){
       res.send(article);
     },500)
-    
   });
-
-  // Article.load(req.params.id, function (err, result) {
-  //   // if (err) {
-  //   //   res.send(utils.errsForApi(err.errors || err));
-  //   // } else if (!result){
-  //   //   res.send(utils.errsForApi('There was an error in your request.'));
-  //   // } else {
-
-  //   //}
-  // });
 };

@@ -61,7 +61,7 @@ const ArticleItem = React.createClass({
       &nbsp;
       -
       &nbsp;
-      <span>Author:</span>
+      <span>Author: </span>
       <Link to={"/users/"+article.user._id}> 
         {article.user.username} 
       </Link>

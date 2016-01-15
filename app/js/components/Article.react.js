@@ -83,7 +83,7 @@ const ArticleSection = React.createClass({
       {errorMessage}
       <div className="content" style={{position:'relative'}}>
         {deleting}
-        <div className="row" style={{opacity: opacity}}>
+        <div className="row" style={{opacity: opacity, minHeight:'210px'}}>
           <div className="col-md-8">
             <p>{ article.body }</p>
             <div className="meta">

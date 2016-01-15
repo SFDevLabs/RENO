@@ -13,7 +13,6 @@ const Article = require('./Article.react');
 const PostNew = require('./PostNew.react');
 const PostUpdate = require('./PostUpdate.react');
 const NotFound = require('./NotFound.react');
-
 const User = require('./User.react');
 
 const Main = React.createClass({
@@ -37,6 +36,7 @@ const Root = React.createClass({
       <Router>
         <Route path="/" component={Main} >
           <IndexRoute component={Articles} />
+          <Route path="tags/:tag" component={Articles} />
           <Route path="articles/new" component={PostNew} />
           <Route path="articles/:id" component={Article}/>
           <Route path="articles/:id/edit" component={PostUpdate}/>

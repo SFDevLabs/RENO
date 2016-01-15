@@ -12,6 +12,7 @@ const Loader = require('react-loader');
 const ArticleItem = require('./ArticleItem.react');
 const take = 5
 const initalSkip = 0;
+const clearStore = true //We will clear the store so we are sure we load the most recent articles.
 
 /**
  * Retrieve the current ARTICLE data from the ArticleStore
@@ -33,17 +34,33 @@ const ArticleSection = React.createClass({
   },
 
   componentDidMount: function() {
-    if (!this.state.initalGet){ //This flag tells of if we have loaded the most recent articles.
-      const clearStore = true //We will clear the store so we are sure we load the most recent articles.
-      Actions.getList(take, initalSkip, clearStore);
-    }else{
+    const tag = this.props.params.tag
+
+    if (this.state.initalGet){ //This flag tells of if we have loaded the most recent articles.
       this.setState(getState());
+    } else if (tag) {
+      Actions.getListByTag(tag, take, initalSkip, clearStore);
+    } else {
+      Actions.getList(take, initalSkip, clearStore);
     }
     ArticleStore.addChangeListener(this._onChange);
   },
 
   componentWillUnmount: function() {
     ArticleStore.removeChangeListener(this._onChange);
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    const tag = nextProps.params.tag
+    this.setState({
+      initalGet: false
+    });
+
+    if (tag) {
+      Actions.getListByTag(tag, take, initalSkip, clearStore);
+    } else {
+      Actions.getList(take, initalSkip, clearStore);
+    }
   },
   /**
    * @return {object}
@@ -56,7 +73,6 @@ const ArticleSection = React.createClass({
     
     const opacity = this.state.loading?.2:1; //The opacity for the items behind the loader.
     const loader = this.state.loading?<Loader />:null; //The loader itself.
-
 
     const moreButton = count < this.state.total ? (
           <a style={{opacity:opacity}} onClick={this._onClickMore} type="button" className="btn btn-primary active" >
@@ -71,12 +87,14 @@ const ArticleSection = React.createClass({
       })
       .value();
 
+    const tagTitle = this.props.params.tag? ( <span> - {this.props.params.tag}</span>):null;
+    
     return <section className="container">
       <div className="page-header">
       <button onClick={this._onRefresh} className="pull-right btn btn-default">
         <span className="glyphicon glyphicon-refresh" aria-hidden="true"></span>
       </button>
-        <h1>Articles</h1>
+        <h1>Articles{tagTitle}</h1>
       </div>
       <div className="content" >{articles}</div>
       <div className="row" styl style={{position:'relative', margin:'15px 0px'}} >

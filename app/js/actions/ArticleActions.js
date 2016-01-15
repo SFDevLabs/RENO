@@ -15,11 +15,24 @@ const Actions = {
    * @param  {number} skip
    */
   getList: function(start, skip, clearStore) {
-    ArticleApi.getEntityData(start, skip);
+    ArticleApi.getEntityListData(start, skip);
     if (clearStore){
       AppDispatcher.dispatch({actionType: ArticleConstants.CLEAR_ALL_ARTICLES_DATA})
     }
   },
+  /**
+   * @param  {number} start
+   * @param  {number} skip
+   */
+  getListByTag: function(tag, start, skip, clearStore) {
+    ArticleApi.getEntityListData(start, skip, tag);
+    if (clearStore){
+      AppDispatcher.dispatch({actionType: ArticleConstants.CLEAR_ALL_ARTICLES_DATA})
+    }
+  },
+
+
+  
 
   /**
    * @param  {string} id

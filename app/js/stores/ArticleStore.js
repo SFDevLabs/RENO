@@ -210,7 +210,6 @@ AppDispatcher.register(function(action) {
 
     case Constants.CLEAR_ALL_ARTICLES_DATA:
       destroyAll(articles);
-      ArticleStore.emitChange();
       break;
 
     case Constants.GET_ARTICLE_DATA:
