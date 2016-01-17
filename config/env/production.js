@@ -3,7 +3,7 @@
  */
 
 module.exports = {
-  db: 'mongodb://localhost/noobjs_dev',
+  db: process.env.MONGOLAB_URI || 'mongodb://localhost/noobjs_prod',
   facebook: {
     clientID: process.env.FACEBOOK_CLIENTID || '',
     clientSecret: process.env.FACEBOOK_SECRET || '',
