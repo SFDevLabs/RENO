@@ -18,7 +18,7 @@ const notifier = {
   tplType: 'html',
   actions: ['comment'],
   tplPath: path.join(__dirname, '..', 'app/mailer/templates'),
-  key: 'POSTMARK_KEY'
+  key: process.env.POSTMARK_KEY || 'KEY'
 };
 
 const defaults = {
