@@ -91,7 +91,6 @@ const Header = React.createClass({
           <ul className="nav navbar-nav">
             {navItemsLeft}
           </ul>
-
           <ul className="nav navbar-nav navbar-right">
             {navItemsRight}
           </ul>

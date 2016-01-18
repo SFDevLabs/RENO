@@ -9,3 +9,5 @@
         }
     ]
 }
+
+The biggest little example React.js app in the world.

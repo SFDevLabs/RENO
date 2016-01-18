@@ -267,6 +267,11 @@ AppDispatcher.register(function(action) {
       ArticleStore.emitChange();
       break;
 
+    case Constants.TIMEOUT:
+      setError(['The Request Timed Out']);
+      ArticleStore.emitChange();
+      break;
+
     default:
       // no operation
   }
