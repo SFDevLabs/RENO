@@ -44,45 +44,56 @@ const Header = React.createClass({
   render: function() {
     const profile = this.state.profile? this.state.profile:{};
     const isLoggedIn = !!profile._id
+    // Create the right side based on logged in state. (Notice the react.js required unique keys placed in each item)
+    const navItemsLeft= isLoggedIn?[
+    <li onClick={this._onSelect} key={0} className={this._activeClass('/articles/new')}>
+        <Link to="/articles/new">New</ Link>
+    </li>,
+
+    <li onClick={this._onSelect} key={1}>
+      <a href="/logout" title="logout">Logout</a>
+    </li>
+    ]:
+    [<li onClick={this._onSelect} key={0} >
+      <a href="/login" title="Login">Login</a>
+    </li>,
+    <li onClick={this._onSelect} key={1} >
+      <a href="/signup" title="Signup">Signup</a>
+    </li>]
+    // Create theleft side based on logged in state.
+    var navItemsRight = isLoggedIn?
+            [<li key={2} >
+              <Link onClick={this._onSelect} to={ "/users/"+profile._id}>{profile.username}</Link>
+            </li>]:[];
+    // Place out github logo as the first item on the right side.
+    navItemsRight.unshift(<li key={3} >
+              <a href="https://github.com/sfdevlabs/reno" title="GitHub">GitHub</a>
+            </li>);
+
+    //The total height and current css properties for the Bootsrap navbar.
+    const itemHeight = 40;
+    const paddingHeight = 23
+    const totalHeight = (navItemsRight.length + navItemsLeft.length) * itemHeight + paddingHeight;
 
     var navBar = 'navbar-collapse';
     var styleCollapse = {};
     if (this.state.collapsing){
       navBar += ' collapsing';
-      styleCollapse.height = this.state.collapsed?'0px':' 223px';
+      styleCollapse.height = this.state.collapsed?'0px':totalHeight;
     }else{
       navBar += this.state.collapsed?' collapse':' in';
       styleCollapse.height = 'auto';
     } 
 
-    const navItems= isLoggedIn?[
-    <li key={0} className={this._activeClass('/articles/new')}>
-        <Link to="/articles/new">New</ Link>
-    </li>,
 
-    <li key={1}>
-      <a href="/logout" title="logout">Logout</a>
-    </li>
-    ]:
-    [<li key={0} >
-      <a href="/login" title="Login">Login</a>
-    </li>,
-    <li key={1} >
-      <a href="/signup" title="Login">Signup</a>
-    </li>] 
-
-    const profileLink = isLoggedIn?
-            <li>
-              <Link to={ "/users/"+profile._id}>{profile.username}</Link>
-            </li>:null;
     const navBarJSX = !this.state.loading?
         <div className={navBar} style={styleCollapse}>
           <ul className="nav navbar-nav">
-            {navItems}
+            {navItemsLeft}
           </ul>
 
           <ul className="nav navbar-nav navbar-right">
-            {profileLink}
+            {navItemsRight}
           </ul>
         </div>:
         null
@@ -128,6 +139,17 @@ const Header = React.createClass({
         collapsing: false
       });
      }, 500);
+  },
+  /**
+   * _onClick - Boostrap functions for collapsing the nav bar.
+   * @return {[type]} [description]
+   */
+  _onSelect:function(){
+    // Set the navbar closed when we select somthing.  No animation nessecary.
+    this.setState({
+      collapsing: false,
+      collapsed: true
+    });
   },
   _activeClass: function(path){
     return this.context.history.isActive(path)?'active':null;
