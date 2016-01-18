@@ -16,7 +16,8 @@ const User = mongoose.model('User');
 module.exports = new FacebookStrategy({
     clientID: config.facebook.clientID,
     clientSecret: config.facebook.clientSecret,
-    callbackURL: config.facebook.callbackURL
+    callbackURL: config.facebook.callbackURL,
+    profileFields: ['emails', 'displayName', 'username']
   },
   function (accessToken, refreshToken, profile, done) {
     const options = {
