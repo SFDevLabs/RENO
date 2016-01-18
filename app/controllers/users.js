@@ -117,5 +117,5 @@ function login (req, res) {
     ? req.session.returnTo
     : '/';
   delete req.session.returnTo;
-  res.redirect(redirectTo);
+  res.redirect('/');
 }
