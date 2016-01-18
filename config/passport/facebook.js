@@ -17,7 +17,7 @@ module.exports = new FacebookStrategy({
     clientID: config.facebook.clientID,
     clientSecret: config.facebook.clientSecret,
     callbackURL: config.facebook.callbackURL,
-    profileFields: ['emails', 'displayName', 'username']
+    profileFields: ['emails', 'displayName']
   },
   function (accessToken, refreshToken, profile, done) {
     const options = {
