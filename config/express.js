@@ -88,9 +88,9 @@ module.exports = function (app, passport) {
   app.use(bodyParser.urlencoded({ extended: true }));
 
   const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, config.root+'/img')
-    },
+    // destination: function (req, file, cb) {
+    //   cb(null, config.root+'/img')
+    // },
     filename: function (req, file, cb) {
       cb(null, Math.pow(10,18)*Math.random().toString() + '.' + mime.extension(file.mimetype));
     }
