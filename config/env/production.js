@@ -7,7 +7,7 @@ module.exports = {
   facebook: {
     clientID: process.env.FACEBOOK_CLIENTID || '',
     clientSecret: process.env.FACEBOOK_SECRET || '',
-    callbackURL: 'http://reno-demo.herokuapp.com/auth/facebook/callback'
+    callbackURL: 'http://reno-demo.herokuapp.com/auth/facebook/callback#/'
   },
   twitter: {
     clientID: process.env.TWITTER_CLIENTID || '',
