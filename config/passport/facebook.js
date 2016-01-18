@@ -25,6 +25,7 @@ module.exports = new FacebookStrategy({
     User.load(options, function (err, user) {
       if (err) return done(err);
       if (!user) {
+        console.log(profile)
         user = new User({
           name: profile.displayName,
           email: profile.emails[0].value,
