@@ -23,9 +23,10 @@ module.exports = new GoogleStrategy({
       criteria: { 'google.id': profile.id }
     };
     User.load(options, function (err, user) {
+        console.log(profile)
+
       if (err) return done(err);
       if (!user) {
-        console.log(profile)
         user = new User({
           name: profile.displayName,
           email: profile.emails[0].value,
