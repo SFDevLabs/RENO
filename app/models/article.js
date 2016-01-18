@@ -103,9 +103,9 @@ ArticleSchema.methods = {
     this.validate(function (err) {
       if (err) return cb(err);
       imager.upload(images, function (err, cdnUri, files) {
-        //if (images[0]){fs.unlink(images[0])};//delete the image from the local machine
         if (err) return cb(err);
         if (files.length) {
+          console.log(err, cdnUri, files, 'cdn')
           self.image = { cdnUri : cdnUri, files : files };
         }
         self.save(cb);

@@ -87,10 +87,8 @@ module.exports = function (app, passport) {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
+  //Storage obj for preserving file name.
   const storage = multer.diskStorage({
-    // destination: function (req, file, cb) {
-    //   cb(null, config.root+'/img')
-    // },
     filename: function (req, file, cb) {
       cb(null, Math.pow(10,18)*Math.random().toString() + '.' + mime.extension(file.mimetype));
     }

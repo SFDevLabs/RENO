@@ -67,12 +67,19 @@ const ArticleSection = React.createClass({
          )
     });
 
-    const img = (article.image && article.image.files && article.image.files.length) ? 
-      <a href={article.image.cdnUri + '/detail_' + article.image.files[0]} target="_blank" >
-        <img src = {article.image.cdnUri + '/mini_' + article.image.files[0]} alt="" />
-      </a>:
-      null;
-    
+
+    var img
+    if (article.image && article.image.files && article.image.files.length){
+      //Stripping to protcole from the link for propper link structure.
+      var parser = document.createElement('a');
+      parser.href = article.image.cdnUri;
+      const cdnUri = parser.host + parser.pathname
+      img =
+        <a href={article.image.cdnUri + '/detail_' + article.image.files[0]} target="_blank" >
+          <img src = {'//' + cdnUri + 'mini_' + article.image.files[0]} alt="" />
+        </a>
+    }
+
     return <section className="container">
       <div className="page-header">
         <button onClick={this._onRefresh} className="pull-right btn btn-default">
