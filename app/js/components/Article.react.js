@@ -11,6 +11,8 @@ const NotFound = require('./NotFound.react');
 const Messages = require('./Messages.react');
 
 const Loader = require('react-loader');
+const LoaderPage = require('./LoaderPage.react');
+
 const _ = require('lodash');
 
 import { Link, History } from 'react-router';
@@ -46,7 +48,7 @@ const ArticleSection = React.createClass({
    */
   render :function() {
     if (this.state.articleNotFound){return <NotFound />} 
-    else if (!this.state.article){return <Loader />}
+    else if (!this.state.article){return <LoaderPage />}
 
 
     const article = this.state.article;

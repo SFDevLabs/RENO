@@ -10,6 +10,8 @@ const assign = require('object-assign');
 
 const CHANGE_EVENT = 'change';
 
+const TIMEOUT_EVENT = 'timeout';
+
 var _articles = {};
 var _total = null;
 var _didInitalGet = false;
@@ -188,6 +190,25 @@ var ArticleStore = assign({}, EventEmitter.prototype, {
    */
   removeChangeListener: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
+  },
+
+  /**
+   * @param {function} callback
+   */
+  emitTimeout: function() {
+    this.emit(TIMEOUT_EVENT);
+  },
+  /**
+   * @param {function} callback
+   */
+  addTimeoutChangeListener: function(callback) {
+    this.on(TIMEOUT_EVENT, callback);
+  },
+  /**
+   * @param {function} callback
+   */
+  removeTimeoutChangeListener: function(callback) {
+    this.removeListener(TIMEOUT_EVENT, callback);
   }
 });
 
@@ -268,8 +289,8 @@ AppDispatcher.register(function(action) {
       break;
 
     case Constants.TIMEOUT:
-      setError(['The Request Timed Out']);
-      ArticleStore.emitChange();
+      //setError(['The Request Timed Out']);
+      ArticleStore.emitTimeout();
       break;
 
     default:
