@@ -117,13 +117,12 @@ exports.pwResetSubmit = function (req, res) {
           title: 'Password Reset',
           errors: utils.errors('Sorry! We cannot find that email.')
         });
-      } else{
+      } else {
         user.resetPassword(function(err){
-          console.log(err)
           if (err){ 
            res.render('users/reset', {
               title: 'Password Reset',
-              error: utils.errors(err.errors || err.message)
+              errors: utils.errors(err.errors || err.message)
             });
           } else {
             res.render('users/reset', {
