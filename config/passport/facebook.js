@@ -26,6 +26,7 @@ module.exports = new FacebookStrategy({
     User.load(options, function (err, user) {
       if (err) return done(err);
       if (!user) {
+        console.log(profile, 'profile')
         const username = profile.username? profile.username : profile.displayName.replace(' ','');
         user = new User({
           name: profile.displayName,
