@@ -4,13 +4,7 @@
  * Module dependencies.
  */
 
-// Note: We can require users, articles and other cotrollers because we have
-// set the NODE_PATH to be ./app/controllers (package.json # scripts # start)
-
 const users = require('../app/controllers/users');
-// const articles = require('../app/controllers/articles');
-// const comments = require('../app/controllers/comments');
-// const tags = require('../app/controllers/tags');
 
 const mongoose = require('mongoose')
 const articleCrud = require('../app/api/articleCrud');
@@ -157,26 +151,5 @@ module.exports = function (app, passport) {
       error: 'Not found'
     });
   });
-
-  /**
-   * Controllers [Deprecated]
-   */
-  // article routes 
-  // app.param('id', articles.load);
-  // app.get('/articles', articles.indexOld);
-  // app.get('/articles/new', auth.requiresLogin, articles.new);
-  // app.post('/articles', auth.requiresLogin , articles.create);
-  // app.get('/articles/:id', articles.show);
-  // app.get('/articles/:id/edit', articleAuth, articles.edit);
-  // app.put('/articles/:id', articleAuth, articles.update);
-  // app.delete('/articles/:id', articleAuth, articles.destroy);
-
-  // comment routes
-  //app.param('commentId', comments.load);
-  //app.post('/articles/:id/comments', auth.requiresLogin, comments.create);
-  //app.delete('/articles/:id/comments/:commentId', commentAuth, comments.destroy);
-
-  // tag routes
-  //app.get('/tags/:tag', tags.index);
 
 };
