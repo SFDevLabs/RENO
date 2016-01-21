@@ -119,6 +119,7 @@ exports.pwResetSubmit = function (req, res) {
         });
       } else {
         user.resetPassword(function(err){
+          console.log(err, 'pwResetSubmit')
           if (err){ 
            res.render('users/reset', {
               title: 'Password Reset',
@@ -148,8 +149,6 @@ exports.pwResetSubmit = function (req, res) {
 exports.pwResetLink = function (req, res) {
   const token = req.params.token;
   const options = {select:'name username email resetPasswordExpires'};
-  
-  console.log(req.params)
 
   options.criteria ={resetPasswordToken:token}
   

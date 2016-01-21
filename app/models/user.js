@@ -135,7 +135,6 @@ UserSchema.methods = {
         //no opp
       });
     }
-
     this.save(cb);
   },
 
@@ -156,7 +155,6 @@ UserSchema.methods = {
     } else{
       cb({message:'Reset request has expired!'})
     }
-    
   },
 
   /**
