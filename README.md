@@ -1,14 +1,12 @@
 
 # RENO - React Express Node mOngoDB 
 
-RENO is an example of a how to set up a full stack react app.
-
-
+RENO is an example of a how to set up a full stack react app. See it live at [reno-demo.herokuapp.com](https://reno-demo.herokuapp.com).
 
 ## Install
 
 ```sh
-$ git clone git://github.com/madhums/node-express-mongoose-demo.git
+$ git clone git://github.com/SFDevLabs/reno.git
 $ npm install
 ```
 
