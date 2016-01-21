@@ -11,6 +11,7 @@ const fs = require('fs');
 const config = require('../../config/config');
 const imagerConfig = require(config.root + '/config/imager.js');
 const utils = require('../../lib/utils');
+const notify = require('../mailer');
 
 const Schema = mongoose.Schema;
 
@@ -123,21 +124,20 @@ ArticleSchema.methods = {
    */
 
   addComment: function (user, comment, cb) {
-    const notify = require('../mailer');
-
     this.comments.push({
       body: comment.body,
       user: user._id
     });
 
-    if (!this.user.email) this.user.email = 'email@product.com';
-    notify.comment({
-      article: this,
-      currentUser: user,
-      comment: comment.body
-    }, function(err, status){
-      console.log(err, status)
-    });
+    if (this.user.email) {
+      notify.comment({
+        article: this,
+        currentUser: user,
+        comment: comment.body
+      }, function(err, status){
+        //no opp
+      });
+    }
 
     this.save(cb);
   },
