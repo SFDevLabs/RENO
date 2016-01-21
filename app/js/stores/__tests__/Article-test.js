@@ -1,38 +1,48 @@
-/*
- * Copyright (c) 2014-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * TodoStore-test
- */
+/**
+ * The MIT License (MIT)
+ * Copyright (c) 2016, Jeff Jenkins.
+*/
 
-jest.dontMock('../../constants/ArticleConstants');
+jest.dontMock('../../constants/Constants');
 jest.dontMock('../ArticleStore');
 jest.dontMock('object-assign');
 
 describe('Store', function() {
 
-  var Constants = require('../../constants/ArticleConstants');
+  var Constants = require('../../constants/Constants');
   var AppDispatcher;
-  var TodoStore;
+  var ArticleStore;
   var callback;
 
   // mock actions
-  var actionTodoCreate = {
-    actionType: Constants.TODO_CREATE,
-    text: 'foo'
+  var actionCreate = {
+    actionType: Constants.GET_ALL_ARTICLES_DATA,
+    response:{
+      body: {
+        total:2,
+        articles:[{
+          title: 'foo',
+          body: 'bar',
+          _id:1
+        }]
+      }
+    }
   };
-  var actionTodoDestroy = {
-    actionType: Constants.TODO_DESTROY,
-    id: 'replace me in test'
+
+  var actionDestroy = {
+    actionType: Constants.DELETE_ARTICLE,
+    response:{
+      body: {
+          title: 'foo',
+          body: 'bar',
+          _id:1
+      }
+    }
   };
 
   beforeEach(function() {
     AppDispatcher = require('../../dispatcher/AppDispatcher');
-    TodoStore = require('../ArticleStore');
+    ArticleStore = require('../ArticleStore');
     callback = AppDispatcher.register.mock.calls[0][0];
   });
 
@@ -40,51 +50,35 @@ describe('Store', function() {
     expect(AppDispatcher.register.mock.calls.length).toBe(1);
   });
 
-  it('should initialize with no to-do items', function() {
-    var all = TodoStore.getAll();
+  it('should initialize with no article items', function() {
+    var all = ArticleStore.getAll();
     expect(all).toEqual({});
   });
 
-  it('creates a to-do item', function() {
-    callback(actionTodoCreate);
-    var all = TodoStore.getAll();
+  it('creates a article item', function() {
+    callback(actionCreate);
+    var all = ArticleStore.getAll();
+    var total = ArticleStore.getTotal();
     var keys = Object.keys(all);
     expect(keys.length).toBe(1);
-    expect(all[keys[0]].text).toEqual('foo');
+    expect(total).toBe(2);
+    expect(all[keys[0]].title).toEqual('foo');
+    expect(all[keys[0]].body).toEqual('bar');
   });
 
-  it('destroys a to-do item', function() {
-    callback(actionTodoCreate);
-    var all = TodoStore.getAll();
+
+  it('destroys an article item', function() {
+    //Make an Article
+    callback(actionCreate);
+    var all = ArticleStore.getAll();
     var keys = Object.keys(all);
-    expect(keys.length).toBe(1);
-    actionTodoDestroy.id = keys[0];
-    callback(actionTodoDestroy);
+
+    //Then Destroy It
+    callback(actionDestroy);
+    var totalAfter = ArticleStore.getTotal();
     expect(all[keys[0]]).toBeUndefined();
-  });
+    expect(totalAfter).toBe(1);// This test that the toal was decimented from 2 to 1.
 
-  it('can determine whether all to-do items are complete', function() {
-    var i = 0;
-    for (; i < 3; i++) {
-      callback(actionTodoCreate);
-    }
-    expect(Object.keys(TodoStore.getAll()).length).toBe(3);
-    expect(TodoStore.areAllComplete()).toBe(false);
-
-    var all = TodoStore.getAll();
-    for (key in all) {
-      callback({
-        actionType: Constants.TODO_COMPLETE,
-        id: key
-      });
-    }
-    expect(TodoStore.areAllComplete()).toBe(true);
-
-    callback({
-      actionType: Constants.TODO_UNDO_COMPLETE,
-      id: key
-    });
-    expect(TodoStore.areAllComplete()).toBe(false);
   });
 
 });

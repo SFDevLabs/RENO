@@ -1,98 +1,82 @@
-/*
- * Copyright (c) 2014-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * TodoActions
- */
+/**
+ * The MIT License (MIT)
+ * Copyright (c) 2016, Jeff Jenkins.
+*/
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var ArticleConstants = require('../constants/ArticleConstants');
-var ArticleApi = require('../api/ArticlesApi');
+const AppDispatcher = require('../dispatcher/AppDispatcher');
+const ArticleConstants = require('../constants/Constants');
+const ArticleApi = require('../api/ArticlesApi');
 
 
-var Actions = {
+const Actions = {
 
   /**
-   * @param  {string} text
+   * @param  {number} start
+   * @param  {number} skip
    */
-  getAll: function() {
-    ArticleApi.getEntityData();
+  getList: function(start, skip, clearStore) {
+    ArticleApi.getEntityListData(start, skip);
+    if (clearStore){
+      AppDispatcher.dispatch({actionType: ArticleConstants.CLEAR_ALL_ARTICLES_DATA})
+    }
   },
   /**
-   * @param  {string} text
+   * @param  {number} start
+   * @param  {number} skip
+   */
+  getListByTag: function(tag, start, skip, clearStore) {
+    ArticleApi.getEntityListData(start, skip, tag);
+    if (clearStore){
+      AppDispatcher.dispatch({actionType: ArticleConstants.CLEAR_ALL_ARTICLES_DATA})
+    }
+  },
+
+
+  
+
+  /**
+   * @param  {string} id
    */
   getById: function(id) {
     ArticleApi.getEntityDataById(id);
   },
 
   /**
-   * @param  {string} text
+   * @param  {obj} article data
    */
-  create: function(text) {
-    AppDispatcher.dispatch({
-      actionType: ArticleConstants.TODO_CREATE,
-      text: text
-    });
-  },
-
-  /**
-   * @param  {string} id The ID of the ToDo item
-   * @param  {string} text
-   */
-  updateText: function(id, text) {
-    AppDispatcher.dispatch({
-      actionType: ArticleConstants.TODO_UPDATE_TEXT,
-      id: id,
-      text: text
-    });
-  },
-
-  /**
-   * Toggle whether a single ToDo is complete
-   * @param  {object} todo
-   */
-  toggleComplete: function(todo) {
-    var id = todo.id;
-    var actionType = todo.complete ?
-        ArticleConstants.TODO_UNDO_COMPLETE :
-        ArticleConstants.TODO_COMPLETE;
-
-    AppDispatcher.dispatch({
-      actionType: actionType,
-      id: id
-    });
-  },
-
-  /**
-   * Mark all ToDos as complete
-   */
-  toggleCompleteAll: function() {
-    AppDispatcher.dispatch({
-      actionType: ArticleConstants.TODO_TOGGLE_COMPLETE_ALL
-    });
+  create: function(obj) {
+    ArticleApi.postEntityData(obj);
   },
 
   /**
    * @param  {string} id
+   * @param  {obj} article data
    */
-  destroy: function(id) {
-    AppDispatcher.dispatch({
-      actionType: ArticleConstants.TODO_DESTROY,
-      id: id
-    });
+  update: function(id, obj) {
+    ArticleApi.putEntityData(id, obj);
   },
 
   /**
-   * Delete all the completed ToDos
+   * @param  {object} update
    */
-  destroyCompleted: function() {
-    AppDispatcher.dispatch({
-      actionType: ArticleConstants.TODO_DESTROY_COMPLETED
-    });
+  destroy: function(id) {
+    ArticleApi.deleteEntityData(id);
+  },
+
+  /**
+   * @param  {string} articleId
+   * @param  {obj} comment data
+   */
+  createComment: function(articleId, obj) {
+    ArticleApi.postEntityCommentData(articleId, obj);
+  },
+
+  /**
+   * @param  {string} articleId
+   * @param  {obj} commentId
+   */
+  destroyComment: function(articleId, commentId) {
+    ArticleApi.deleteEntityCommentData(articleId, commentId);
   }
 
 };

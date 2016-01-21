@@ -1,135 +1,191 @@
+'use strict';
+
 /**
- * Very basic CRUD route creation utility for models.
- * For validation, simply override the model's save method.
+ * The MIT License (MIT)
+ * Copyright (c) 2016, Jeff Jenkins @jeffj.
+*/
+const mongoose = require('mongoose')
+const Article = mongoose.model('Article');
+const _ = require('lodash');
+const utils = require('../../lib/utils');
+
+/**
+ * Load
  */
 
-(function (exports) {
+exports.load = function (req, res, next, id){
+  Article.load(id, function (err, article) {
+    if (!article || (err && err.message==='Cast to ObjectId failed')) return  res.status(404).send(utils.errsForApi('Article not found'));
+    if (err) return  res.status(500).send( utils.errsForApi(err.errors || err) );
+    req.article = article;
+    next();
+  });
+};
 
-  "use strict";
+/**
+ * Load comment
+ */
 
-  function errMsg(msg) {
-    return {'error': {'message': msg.toString()}};
-  }
+exports.loadComment = function (req, res, next, id) {
+  const article = req.article;
+  utils.findByParam(article.comments, { id: id }, function (err, comment) {
+    if (err) return next(err);
+    req.comment = comment;
+    next();
+  });
+};
 
-  //------------------------------
-  // List
-  //
-  function getListController(model) {
-    return function (req, res) {
-
-      const page = (req.query.page > 0 ? req.query.page : 1) - 1;
-      const perPage = 30;
-      const options = {
-        perPage: perPage,
-        page: page
-      };
-
-      model.list(options, function (err, result) {
-        if (!err) {
-          res.send(result);
-        } else {
-          res.send(errMsg(err));
-        }
-      });
-    };
-  }
-
-  //------------------------------
-  // Create
-  //
-  function getCreateController(model) {
-    return function (req, res) {
-      //console.log('create', req.body);
-      var m = new model(req.body);
-      m.save(function (err) {
-        if (!err) {
-          res.send(m);
-        } else {
-          res.send(errMsg(err));
-        }
-      });
-    };
-  }
-
-  //------------------------------
-  // Read
-  //
-  function getReadController(model) {
-    return function (req, res) {
-      //console.log('read', req.body);
-      model.load(req.params.id, function (err, result) {
-        if (!err) {
-          res.send(result);
-        } else {
-          res.send(errMsg(err));
-        }
-      });
-    };
-  }
-
-  //------------------------------
-  // Update
-  //
-  function getUpdateController(model) {
-    return function (req, res) {
-      //console.log('update', req.body);
-      model.findById(req.params.id, function (err, result) {
-        var key;
-        for (key in req.body) {
-          result[key] = req.body[key];
-        }
-        result.save(function (err) {
-          if (!err) {
-            res.send(result);
-          } else {
-            res.send(errMsg(err));
-          }
-        });
-      });
-    };
-  }
-
-  //------------------------------
-  // Delete
-  //
-  function getDeleteController(model) {
-    return function (req, res) {
-      //console.log('delete', req.body);
-      model.findById(req.params.id, function (err, result) {
-        if (err) {
-          res.send(errMsg(err));
-        } else {
-          result.remove();
-          result.save(function (err) {
-            if (!err) {
-              res.send({});
-            } else {
-              res.send(errMsg(err));
-            }
-          });
-        }
-      });
-    };
-  }
-
-  exports.initRoutesForModel = function (options) {
-    var app = options.app,
-      model = options.model,
-      path,
-      pathWithId;
-
-    if (!app || !model) {
-      return;
-    }
-
-    path = options.path || '/' + model.modelName.toLowerCase();
-    pathWithId = path + '/:id';
-
-    app.get(path, getListController(model));
-    app.post(path, getCreateController(model));
-    app.get(pathWithId, getReadController(model));
-    app.put(pathWithId, getUpdateController(model));
-    app.delete(pathWithId, getDeleteController(model));
+/**
+ * List
+ */
+exports.getListController = function (req, res) {
+  var skip = Number(req.query.skip)
+  var count = Number(req.query.count)
+  const criteria = req.query.tag?{tags:req.query.tag}:null;
+  
+  skip =  !isNaN(skip) ? skip : 0;
+  count =  !isNaN(count) ? count : 30;
+  
+  var options = {
+    count: count,
+    skip: skip,
   };
 
-}(exports));
+  if (criteria){
+    options.criteria = criteria
+  }
+
+  Article.list(options, function (err, result) {
+    Article.count(criteria).exec(function (errCount, count) {
+      if (!err) {
+          setTimeout(function(){
+            res.send({
+              articles:result,
+              total: count
+            });
+          },500)
+      } else {
+        res.status(500).send(utils.errsForApi(err.errors || err));
+      }
+    });
+  });
+};
+
+/**
+ * Create
+ */
+exports.getCreateController = function (req, res) {
+  var m = new Article(req.body);
+  const images = req.files[0]
+    ? [req.files[0].path]
+    : [];
+
+  m.user = req.user;
+  m.uploadAndSave(images, function (err) {
+    if (!err) {
+      setTimeout(function(){
+       res.send(m);
+      },500)
+    } else {
+      res.status(422).send(utils.errsForApi(err.errors || err));
+    }
+  });
+};
+
+/**
+ * Load
+ */
+exports.getReadController = function (req, res) {
+  var article = req.article
+  if (!article) {
+    res.status(404).send(utils.errsForApi('Article not found!!'));
+  } else if (article) {
+    setTimeout(function(){
+      res.send(article);
+    },500)
+  }
+};
+
+/**
+ * Update
+ */
+exports.getUpdateController = function (req, res) {
+  var article = req.article
+  var key;
+  for (key in req.body) {
+    article[key] = req.body[key];
+  }
+  const images = req.files[0]
+    ? [req.files[0].path]
+    : [];
+  article.uploadAndSave(images, function (err) {
+    if (!err) {
+      setTimeout(function(){
+       res.send(article);
+      },500)
+    } else {
+      res.status(400).send(utils.errsForApi(err.errors || err));
+    }
+  });
+};
+
+/**
+ * Delete
+ */
+exports.getDeleteController = function (req, res) {
+  var article = req.article
+  if (!article) {
+    res.status(500).send(utils.errsForApi('Error loading article.'));
+  } else {
+    article.remove();
+    article.save(function (err) {
+      if (!err) {
+      setTimeout(function(){
+        res.send(article);
+      },500)
+      } else {
+        res.status(500).send(utils.errsForApi(err.errors || err));
+      }
+    });
+  }
+};
+
+/**
+ * Create Comment
+ */
+exports.getCreateCommentController = function (req, res) {
+  const article = req.article
+  const user = req.user;
+
+  if (!article) return res.status(500).send( utils.errsForApi('There was an error in your request') );
+  if (!req.body.body) return res.status(422).send( utils.errsForApi('Requires a comment body'));
+
+  article.addComment(user, req.body, function (err) {
+    if (err) return res.status(500).send(errMsg(err));
+    
+    var articleObj = article.toObject();//Adding the populated comments from a pure JS object.
+    var comments = articleObj.comments;
+    comments[comments.length-1].user=_.pick(user, ['username', '_id', 'name']); //For security we only send id and username.
+
+    setTimeout(function(){
+     res.send(articleObj);
+    },500)
+  });
+}
+  
+
+/**
+ * Delete Comment
+ */
+exports.getDeleteCommentController = function (req, res) {
+  var article = req.article;
+  var commentId = req.params.commentId;
+  article.removeComment(commentId, function (err) {
+    if (err) {
+      res.send(utils.errsForApi('There was an error in your request'));
+    }
+    setTimeout(function(){
+      res.send(article);
+    },500)
+  });
+};

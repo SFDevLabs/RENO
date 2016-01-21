@@ -1,40 +1,47 @@
 /**
- * Copyright (c) 2014-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+ * The MIT License (MIT)
+ * Copyright (c) 2016, Jeff Jenkins @jeffj.
+*/
 
-var React = require('react');
-var ArticleActions = require('../actions/ArticleActions');
-var ArticleStore = require('../stores/ArticleStore');
+const React = require('react');
+const _ = require('lodash');
+const Actions = require('../actions/ArticleActions');
+const ArticleStore = require('../stores/ArticleStore');
+const Loader = require('react-loader');
 
-var ArticleItem = require('./ArticleItem.react');
+const ArticleItem = require('./ArticleItem.react');
+const take = 5
+const initalSkip = 0;
+const clearStore = true //We will clear the store so we are sure we load the most recent articles.
 
 /**
  * Retrieve the current ARTICLE data from the ArticleStore
  */
 function getState() {
   return {
-    allArticles: ArticleStore.getAll(),
+    articles: ArticleStore.getAll(),
+    total: ArticleStore.getTotal(),
     initalGet: ArticleStore.didInitalGet(),
-    collapsed: false,
-    collapsing: false
+    loading:false
   };
 }
 
 
-var ArticleSection = React.createClass({
+const ArticleSection = React.createClass({
 
   getInitialState: function() {
-    return getState();
+    return getState()
   },
 
   componentDidMount: function() {
-    if (!this.state.initalGet){
-      ArticleActions.getAll();
+    const tag = this.props.params.tag
+
+    if (this.state.initalGet){ //This flag tells of if we have loaded the most recent articles.
+      this.setState(getState());
+    } else if (tag) {
+      Actions.getListByTag(tag, take, initalSkip, clearStore);
+    } else {
+      Actions.getList(take, initalSkip, clearStore);
     }
     ArticleStore.addChangeListener(this._onChange);
   },
@@ -42,49 +49,61 @@ var ArticleSection = React.createClass({
   componentWillUnmount: function() {
     ArticleStore.removeChangeListener(this._onChange);
   },
+
+  componentWillReceiveProps: function(nextProps) {
+    const tag = nextProps.params.tag
+    this.setState({
+      initalGet: false
+    });
+
+    if (tag) {
+      Actions.getListByTag(tag, take, initalSkip, clearStore);
+    } else {
+      Actions.getList(take, initalSkip, clearStore);
+    }
+  },
   /**
    * @return {object}
    */
   render: function() {
-//in alert
-    var alertBox = 'fade alert-info';
-//    var styleStuff = {};
-    if (this.state.collapsing){
-      alertBox += '  alert';
-//      styleStuff.height = this.state.collapsed?'0px':' 200px';
-    }else{
-      alertBox += this.state.collapsed?' ':' in alert';
-//      styleStuff.height = 'auto';
-    }
+    if (!this.state.initalGet){return <Loader />}
 
-    var allArticles = this.state.allArticles;
-    var articles = [];
+    const articlesData = this.state.articles;
+    const count = Object.keys(articlesData).length //Number of articles we will render.
+    
+    const opacity = this.state.loading?.2:1; //The opacity for the items behind the loader.
+    const loader = this.state.loading?<Loader />:null; //The loader itself.
 
-    for (var key in allArticles) {
-      articles.push(<ArticleItem key={key} article={allArticles[key]} />);
-    }
-
-    return (
-      <section>
-        <div className="page-header">
-          <h1>Articles</h1>
-        </div>
-        <div className="messages">
-          <div className={alertBox}>
-            <button onClick={this._onClick} className="close" type="button" data-dismiss="alert">×</button>
-            <ul>
-              <li>Some Info</li>
-            </ul>
-          </div>
-        </div>
-        <div className="content" id="todo-list">{articles}</div>
-        <div className="content pagination">
-          <a type="button" className="btn btn-primary active" >
-            More        
+    const moreButton = count < this.state.total ? (
+          <a style={{opacity:opacity}} onClick={this._onClickMore} type="button" className="btn btn-primary active" >
+            Load More    
           </a>
-        </div>
-      </section>
-    );
+          ):null;
+
+    const articles = _.chain(articlesData)//Lodash functions to sort and map our article items
+      .sortBy(function(n){return -new Date(n.createdAt);}) //reverse cronological by creation
+      .map(function(val, key){
+        return <ArticleItem key={key} article={val} />
+      })
+      .value();
+
+    const tagTitle = this.props.params.tag? ( <span> - {this.props.params.tag}</span>):null;
+    
+    return <section className="container">
+      <div className="page-header">
+      <button onClick={this._onRefresh} className="pull-right btn btn-default">
+        <span className="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+      </button>
+        <h1>Articles{tagTitle}</h1>
+      </div>
+      <div className="content" >{articles}</div>
+      <div className="row" styl style={{position:'relative', margin:'15px 0px'}} >
+        {loader}
+        {moreButton}
+        &nbsp;
+        <div style={{opacity:opacity}} className="badge pull-right">Showing {count} of {this.state.total}</div>
+      </div>
+    </section>;
   },
   /**
    * Event handler for 'change' events coming from the ArticleStore
@@ -92,22 +111,26 @@ var ArticleSection = React.createClass({
   _onChange: function() {
     this.setState(getState());
   },
-  _onClick:function(){
-    var that = this;
+  /**
+   * Event handler for 'more' button coming from the DOM
+   */
+  _onClickMore:function(){
+    const skip = Object.keys(this.state.articles).length
+    Actions.getList(take, skip);
     this.setState({
-      collapsing: true,
+      loading:true
     });
-
-    setTimeout(function(){ 
-      that.setState({
-        collapsed: !that.state.collapsed
-      });
-     }, 10);
-    setTimeout(function(){ 
-      that.setState({
-        collapsing: false
-      });
-     }, 500);
+  },
+  /**
+   * Event handler for 'refresh' button coming from the DOM
+   */
+  _onRefresh:function(){
+    const clearStore = true //We will clear the store so we are sure we load the most recent articles.
+    Actions.getList(take, initalSkip, clearStore);
+    this.setState({
+      loading:true,
+      initalGet: false
+    });
   }
 
 });

@@ -1,31 +1,26 @@
-/*
- * Copyright (c) 2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * ArticleStore
- */
+/**
+ * The MIT License (MIT)
+ * Copyright (c) 2016, Jeff Jenkins.
+*/
 
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var EventEmitter = require('events').EventEmitter;
-var ArticleConstants = require('../constants/ArticleConstants');
-var assign = require('object-assign');
+const AppDispatcher = require('../dispatcher/AppDispatcher');
+const EventEmitter = require('events').EventEmitter;
+const Constants = require('../constants/Constants');
+const assign = require('object-assign');
 
-var CHANGE_EVENT = 'change';
+const CHANGE_EVENT = 'change';
 
 var _articles = {};
+var _total = null;
 var _didInitalGet = false;
-
+var _newArticleId = null;
+var _errors = [];
 
 /**
  * Set all ARTICLE item.
  * @param  {string} text The content of the ARTICLES
  */
 function setAll(articles) {
-  _didInitalGet = true
   for (var i = articles.length - 1; i >= 0; i--) {
     var article = articles[i]
     var id = article._id
@@ -41,27 +36,17 @@ function set(article) {
   _articles[article._id] = article;
 }
 
-
 /**
  * Update a ARTICLES item.
  * @param  {string} id
  * @param {object} updates An object literal containing only the data to be
  *     updated.
  */
-function update(id, updates) {
-  _articles[id] = assign({}, _articles[id], updates);
+function update(article) {
+  var id = article._id;
+  _articles[id] = assign({}, _articles[id], article);
 }
 
-/**
- * Update all of the ARTICLES items with the same object.
- * @param  {object} updates An object literal containing only the data to be
- *     updated.
- */
-function updateAll(updates) {
-  for (var id in _articles) {
-    update(id, updates);
-  }
-}
 
 /**
  * Delete a ARTICLES item.
@@ -72,30 +57,58 @@ function destroy(id) {
 }
 
 /**
- * Delete all the completed ARTICLES items.
+ * Delete all ARTICLES items.
+ * @param  {string} id
  */
-function destroyCompleted() {
-  for (var id in _articles) {
-    if (_articles[id].complete) {
-      destroy(id);
-    }
-  }
+function destroyAll(id) {
+  _articles={};
 }
 
-var ArticleStore = assign({}, EventEmitter.prototype, {
 
-  /**
-   * Tests whether all the remaining ARTICLES items are marked as completed.
-   * @return {boolean}
-   */
-  areAllComplete: function() {
-    for (var id in _articles) {
-      if (!_articles[id].complete) {
-        return false;
-      }
-    }
-    return true;
-  },
+/**
+ * Set total count
+ * @param  {number} the total number of articles
+ */
+function setTotal(num) {
+  _total = num;
+}
+
+/**
+ * decrementTotal
+ * @param  {number} the total number of articles
+ */
+function decrementTotal() {
+  _total = --_total;
+}
+
+/**
+ * incrementTotal
+ * @param  {number} the total number of articles
+ */
+function incrementTotal() {
+  _total = ++_total;
+}
+
+
+/**
+ * Set error message
+ * @param  {error} the errors from the server
+ */
+function setError(error) {
+  _errors = error;
+}
+
+/**
+ * Set error message
+ * @param  {error} the errors from the server
+ */
+function setNewArticleId(id) {
+  _newArticleId = id;
+}
+
+
+
+var ArticleStore = assign({}, EventEmitter.prototype, {
 
   /**
    * Get the entire collection of ARTICLEs.
@@ -106,6 +119,14 @@ var ArticleStore = assign({}, EventEmitter.prototype, {
   },
 
   /**
+   * Get total number of ARTICLEs.
+   * @return {number}
+   */
+  getTotal: function() {
+    return _total;
+  },
+  
+  /**
    * Get the article by id
    * @return {object}
    */
@@ -115,6 +136,22 @@ var ArticleStore = assign({}, EventEmitter.prototype, {
   
   didInitalGet: function() {
     return _didInitalGet;
+  },
+
+  getNewArticleId: function() {
+    const id = _newArticleId;
+    _newArticleId = null;
+    return id;
+  },
+
+  /**
+   * Get the entire collection of ARTICLEs.
+   * @return {object}
+   */
+  getErrors: function() {
+    var err = _errors;
+    _errors = [];
+    return err;
   },
 
   emitChange: function() {
@@ -138,19 +175,25 @@ var ArticleStore = assign({}, EventEmitter.prototype, {
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  var text;
 
   switch(action.actionType) {
 
-    case ArticleConstants.GET_ALL_ARTICLES_DATA:
-      var articles = action.response.body
+    case Constants.GET_ALL_ARTICLES_DATA:
+      const articles = action.response.body.articles
+      const total = action.response.body.total
       if (articles) {
+        _didInitalGet = true;
         setAll(articles);
+        setTotal(total);
         ArticleStore.emitChange();
       }
       break;
 
-    case ArticleConstants.GET_ARTICLE_DATA:
+    case Constants.CLEAR_ALL_ARTICLES_DATA:
+      destroyAll(articles);
+      break;
+
+    case Constants.GET_ARTICLE_DATA:
       var article = action.response.body
       if (article) {
         set(article);
@@ -158,48 +201,60 @@ AppDispatcher.register(function(action) {
       }
       break;
 
-    case ArticleConstants.TODO_CREATE:
-      text = action.text.trim();
-      if (text !== '') {
-        create(text);
+    case Constants.DELETE_ARTICLE:
+      var article = action.response.body;
+      if (article) {
+        destroy(article._id);
+        decrementTotal();
         ArticleStore.emitChange();
       }
       break;
 
-    case ArticleConstants.TODO_TOGGLE_COMPLETE_ALL:
-      if (ArticleStore.areAllComplete()) {
-        updateAll({complete: false});
-      } else {
-        updateAll({complete: true});
-      }
-      ArticleStore.emitChange();
-      break;
-
-    case ArticleConstants.TODO_UNDO_COMPLETE:
-      update(action.id, {complete: false});
-      ArticleStore.emitChange();
-      break;
-
-    case ArticleConstants.TODO_COMPLETE:
-      update(action.id, {complete: true});
-      ArticleStore.emitChange();
-      break;
-
-    case ArticleConstants.TODO_UPDATE_TEXT:
-      text = action.text.trim();
-      if (text !== '') {
-        update(action.id, {text: text});
+    case Constants.POST_ARTICLE_DATA:
+      var article = action.response.body
+      if (article) {
+        setNewArticleId(article._id)
+        set(article);
+        incrementTotal();
         ArticleStore.emitChange();
       }
       break;
 
-    case ArticleConstants.TODO_DESTROY:
-      destroy(action.id);
+    case Constants.POST_ARTICLE_COMMENT_DATA:
+      var article = action.response.body
+      if (article) {
+        set(article);
+        ArticleStore.emitChange();
+      }
+      break;
+
+    case Constants.ERROR:
+      var errors = action.response.errors
+      if (errors) {
+        setError(errors);
+        ArticleStore.emitChange();
+      }
+      break;
+      
+    case Constants.DELETE_ARTICLE_COMMENT_DATA:
+      var article = action.response.body
+      if (article) {
+        update(article);
+        ArticleStore.emitChange();
+      }
+      break;
+
+    case Constants.ERROR_NOT_FOUND:
+      ArticleStore.emitChange();
+      break;
+
+    case Constants.TIMEOUT:
+      setError(['The Request Timed Out']);
       ArticleStore.emitChange();
       break;
 
     default:
-      // no op
+      // no operation
   }
 });
 

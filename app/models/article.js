@@ -6,10 +6,12 @@
 
 const mongoose = require('mongoose');
 const Imager = require('imager');
-const config = require('../../config/config');
+const fs = require('fs');
 
+const config = require('../../config/config');
 const imagerConfig = require(config.root + '/config/imager.js');
 const utils = require('../../lib/utils');
+const notify = require('../mailer');
 
 const Schema = mongoose.Schema;
 
@@ -26,7 +28,13 @@ const getTags = function (tags) {
  */
 
 const setTags = function (tags) {
-  return tags.split(',');
+  var array;
+  if (tags.length>0){
+    array = tags.split(',');
+  }else {
+    array = []
+  }
+  return array;
 };
 
 /**
@@ -98,6 +106,7 @@ ArticleSchema.methods = {
       imager.upload(images, function (err, cdnUri, files) {
         if (err) return cb(err);
         if (files.length) {
+          console.log(err, cdnUri, files, 'cdn')
           self.image = { cdnUri : cdnUri, files : files };
         }
         self.save(cb);
@@ -115,19 +124,20 @@ ArticleSchema.methods = {
    */
 
   addComment: function (user, comment, cb) {
-    const notify = require('../mailer');
-
     this.comments.push({
       body: comment.body,
       user: user._id
     });
 
-    if (!this.user.email) this.user.email = 'email@product.com';
-    notify.comment({
-      article: this,
-      currentUser: user,
-      comment: comment.body
-    });
+    if (this.user.email) {
+      notify.comment({
+        article: this,
+        currentUser: user,
+        comment: comment.body
+      }, function(err, status){
+        //no opp
+      });
+    }
 
     this.save(cb);
   },
@@ -163,9 +173,9 @@ ArticleSchema.statics = {
    */
 
   load: function (id, cb) {
-    this.findOne({ _id : id })
+    this.findOne({ _id : id }, 'title body tags comments createdAt image _id user')
       .populate('user', 'name email username')
-      .populate('comments.user')
+      .populate('comments.user', 'name email username')
       .exec(cb);
   },
 
@@ -179,7 +189,17 @@ ArticleSchema.statics = {
 
   list: function (options, cb) {
     const criteria = options.criteria || {};
-
+    this.find(criteria, 'title body tags comments createdAt image _id user')
+      .populate('user', 'name username')
+      .populate('comments.user')
+      .sort({'createdAt': -1}) // sort by date
+      .limit(options.count)
+      .skip(options.skip)
+      .exec(cb);
+  },
+  //kill me in the future
+  listOld: function (options, cb) {
+    const criteria = options.criteria || {};
     this.find(criteria)
       .populate('user', 'name username')
       .populate('comments.user')

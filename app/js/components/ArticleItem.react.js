@@ -1,66 +1,70 @@
 /**
- * Copyright (c) 2014-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+ * The MIT License (MIT)
+ * Copyright (c) 2016, Jeff Jenkins.
+*/
 
-var React = require('react');
-var ReactPropTypes = React.PropTypes;
-var ArticleActions = require('../actions/ArticleActions');
+const React = require('react');
 import { Link } from 'react-router';
 
-var classNames = require('classnames');
-
-var ArticleItem = React.createClass({
+const ArticleItem = React.createClass({
 
   propTypes: {
    article: React.PropTypes.object.isRequired,
-  },
-
-  getInitialState: function() {
-    return {
-      isEditing: false
-    };
   },
 
   /**
    * @return {object}
    */
   render: function() {
-    var article = this.props.article;
+    const article = this.props.article;
+    const tags = _.map(article.tags, function(val, key){
+      return <span key={key}>
+            <i className="muted fa fa-tag"></i>&nbsp;
+            <Link to={"/tags/"+encodeURIComponent(val)} className="tag">{val}</Link>
+            &nbsp; 
+        </span>;
+    });
 
-    // List items should get the class 'editing' when editing
-    // and 'completed' when marked as completed.
-    // Note that 'completed' is a classification while 'complete' is a state.
-    // This differentiation between classification and state becomes important
-    // in the naming of view actions toggleComplete() vs. destroyCompleted().
-    var dateString = new Date(article.createdAt).toLocaleString();
-    return (
+    const imageBadge = (article.image && article.image.files && article.image.files.length)?
+      <span>
+        <span>
+          &nbsp;
+          -
+          &nbsp;
+        </span>
+        <span title="Post has a picture!"className="glyphicon glyphicon-picture" aria-hidden="true"></span>
+      </span>:
+      null;
 
-      <div className="article">
-        <h3>
-          <Link to={"/articles/"+article._id} title={ article.title }>
-            {article.title}
-          </Link>
-        </h3>
-        <p>{article.body}</p>
+    const tagTitle = article.tags.length > 0 ?//Spacer and tag title if we have 1 or more tags
+      <span>
+        &nbsp;
+        -
+        &nbsp;
+        Tags:
+      </span>
+    :null;
+    const dateString = new Date(article.createdAt).toLocaleString();
+    return <div className="article">
+      <h3>
+        <Link to={"/articles/"+article._id}>
+          {article.title}
+        </Link>
+      </h3>
+      <p>{article.body}</p>
 
-        <span className="muted">{dateString}</span>
-      </div>
-    );
-  },
-
-  /**
-   * Event handler called within TodoTextInput.
-   * Defining this here allows TodoTextInput to be used in multiple places
-   * in different ways.
-   * @param  {string} text
-   */
-  _onClick: function(text) {
-
+      <span className="muted">{dateString}</span>
+      &nbsp;
+      -
+      &nbsp;
+      <span>Author: </span>
+      <Link to={"/users/"+article.user._id}> 
+        {article.user.username} 
+      </Link>
+      {tagTitle}
+      {tags}
+      {imageBadge}
+    </div>;
   }
 
 });

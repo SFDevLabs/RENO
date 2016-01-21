@@ -1,40 +1,39 @@
 /**
- * Copyright (c) 2014-2015, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+ * The MIT License (MIT)
+ * Copyright (c) 2016, Jeff Jenkins @jeffj.
+*/
 
-var React = require('react');
-var ArticleActions = require('../actions/ArticleActions');
-var ArticleStore = require('../stores/ArticleStore');
+const React = require('react');
+const Actions = require('../actions/ArticleActions');
+const ArticleStore = require('../stores/ArticleStore');
+const Comments = require('./Comments.react');
+const NotFound = require('./NotFound.react');
+const Messages = require('./Messages.react');
 
-import { Link } from 'react-router';
+const Loader = require('react-loader');
+const _ = require('lodash');
 
+import { Link, History } from 'react-router';
 
 /**
- * Retrieve the current ARTICLE data from the ArticleStore
+ * Retrieve the current ARTICLES data from the ArticleStore
  */
 function getState(id) {
   return {
     article: ArticleStore.getById(id)
   };
 }
-
-var ArticleSection = React.createClass({
-
-  propTypes: {
-  },
+const ArticleSection = React.createClass({
+  
+  mixins: [ History ],
 
   getInitialState: function() {
-    return getState(this.props.params.id);
+    return getState(this.props.params.id); //Using the antipattern to pass the id from the URL
   },
 
   componentDidMount: function() {
     if (!this.state.article){
-      ArticleActions.getById(this.props.params.id);
+      Actions.getById(this.props.params.id);
     }
     ArticleStore.addChangeListener(this._onChange);
   },
@@ -46,97 +45,122 @@ var ArticleSection = React.createClass({
    * @return {object}
    */
   render :function() {
-    if (!this.state.article){return <div>loading</div>}
+    if (this.state.articleNotFound){return <NotFound />} 
+    else if (!this.state.article){return <Loader />}
+
+
     const article = this.state.article;
-    const dateString = new Date(article.createdAt).toLocaleString();
-    const comments= [];
-    for (var i = article.comments.length - 1; i >= 0; i--) {
-      var comment = article.comments[i];
-      comments.push((
-          <div key={i} className="comment">
-            <p>
-              <a href="">{comment.user.username}</a>
-              :&nbsp;
-              {comment.body}
-            </p>
-            <form role="form" method="post" action="" onsubmit="return confirm('Are you sure?')" className="form-inline">
-              <input type="hidden" name="_csrf" value="" />
-              <span className="muted">Dec 17, 2015 02:45 am</span>
-              <input type="hidden" name="_method" value="DELETE" />
-              <button className="btn btn-danger btn-link error" type="submit">delete</button>
-            </form>
-          </div>
-          ));
+    const dateString = new Date(article.createdAt).toLocaleString();             
+    const deleting = this.state._deleting ? <Loader options={{top:'10%'}} />:null; //The loader itself.
+    const opacity = this.state._deleting ? .2 : 1;//The opacity for the items behind the loader.
+
+    const errorMessage = this.state._messages? (
+      <Messages messages={this.state._messages} type="danger" />
+      ) : null; //Rendering a warning message.
+
+    const tags = _.map(article.tags, function(val, key){
+      return (
+          <span key={key}>
+            <i className="muted fa fa-tag"></i>&nbsp;
+            <Link to={"/tags/"+val} className="tag">{val}</Link>
+         </span>
+         )
+    });
+
+
+    var img
+    if (article.image && article.image.files && article.image.files.length){
+      //Stripping to protcole from the link for propper link structure.
+      var parser = document.createElement('a');
+      parser.href = article.image.cdnUri;
+      const cdnUri = parser.host + parser.pathname
+      img =
+        <a href={article.image.cdnUri + '/detail_' + article.image.files[0]} target="_blank" >
+          <img src = {'//' + cdnUri + 'mini_' + article.image.files[0]} alt="" />
+        </a>
     }
 
-    return (
-      <section>
-
-        <div className="page-header">
-          <h1>{article.title}</h1>
-        </div>
-        <div className="messages">
-          <div className="fade in alert alert-info">
-            <button className="close" type="button" data-dismiss="alert">×</button>
-            <ul>
-              <li>Some Info</li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="content">
-          <div className="row">
-            <div className="col-md-8">
-              <p>{ article.body }</p>
-              <div className="meta">
-                  Author: &nbsp;
-                  <a href="#">
-                    Jeff Jenkins - Hard Coded
-                  </a>
-
-                  <p>
-                    Tags: &nbsp;
-                      <i className="muted fa fa-tag"></i>&nbsp;
-                      <a href="" className="tag">111 - Hard Coded </a>
-                      &nbsp;&nbsp;
-                  </p>
-                <span className="muted">{dateString}</span>
-              </div>
-            </div>
-            <div className="col-md-4">
-                <img src="/img/twitter.png" alt="" />
+    return <section className="container">
+      <div className="page-header">
+        <button onClick={this._onRefresh} className="pull-right btn btn-default">
+          <span className="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+        </button>
+        <h1>{article.title}</h1>
+      </div>
+      {errorMessage}
+      <div className="content" style={{position:'relative'}}>
+        {deleting}
+        <div className="row" style={{opacity: opacity, minHeight:'210px'}}>
+          <div className="col-md-8">
+            <p>{ article.body }</p>
+            <div className="meta">
+                Author: &nbsp;
+                <Link to={"/users/"+article.user._id}>
+                  {article.user.username}
+                </Link>
+                <p>
+                  Tags: &nbsp;
+                    {tags}
+                    &nbsp;&nbsp;
+                </p>
+              <span className="muted">{dateString}</span>
             </div>
           </div>
-          <form action="" method="post" onsubmit="return confirm('Are you sure?')">
-            <br />
-            <input type="hidden" name="_csrf" value="" />
-            <a href="" title="edit" className="btn btn-default">
-              Edit
-            </a>
-            &nbsp;&nbsp;
-            <input type="hidden" name="_method" value="DELETE" />
-            <button className="btn btn-danger" type="submit">Delete</button>
-          </form>
+          <div className="col-md-4">
+            {img}
+          </div>
+        </div>
+        <div>
           <br />
-          <h3>Comments</h3>
-          {comments}
-          <form method="post" action="" role="form">
-            <input type="hidden" name="_csrf" value="" />
-            <div className="form-group">
-              <textarea rows="6" name="body" placeholder="Add your comment" id="" cols="30" rows="6" className="form-control"></textarea>
-            </div>
-            <button className="btn btn-primary" type="submit">Add comment</button>
-          </form>
-
+          <Link  to={"/articles/"+article._id+"/edit"} title="edit" className="btn btn-default">
+            Edit
+          </Link>
+          &nbsp;&nbsp;
+          <button onClick={this._delete} className="btn btn-danger" type="submit">Delete</button>
         </div>
-      </section>
-    )
+        <Comments comments={article.comments} id={article._id} />
+      </div>
+    </section>;
   },
+
   /**
    * Event handler for 'change' events coming from the ArticleStore
    */
   _onChange: function() {
-    this.setState(getState(this.props.params.id));
+    const state = getState(this.props.params.id)
+    const errors = ArticleStore.getErrors()
+    if (errors.length>0) { //Errors from page action need to be displayed.
+      this.setState({
+        _messages: errors,
+        _deleting: false
+      });
+    } else if (!state.article && this.state._deleting) { //A delete request was fired, we have no errors and we have no article in the store. Navigate to home.
+      this.history.pushState(null, '/');
+    } else if (!state.article) { //We have no article in the store after an API request. Show the 404.
+      this.setState({
+        articleNotFound: true
+      });
+    } else {  //We hae the article render it in the component.
+      this.setState(state);
+    }
+  },
+  /**
+   * Event handler for 'change' events coming from the DOM
+   */
+  _delete: function() {
+    this.setState({
+        _deleting: true
+    });//Set page to deleting
+    Actions.destroy(this.state.article._id); //Fire the destroy event.
+  },
+  /**
+   * Event handler for 'refresh' button coming from the DOM
+   */
+  _onRefresh:function(){
+    Actions.getById(this.props.params.id);
+    this.setState({
+      article:null
+    });
   }
 
 });

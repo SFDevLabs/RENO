@@ -1,13 +1,15 @@
 'use strict';
 
+const utils = require('../../lib/utils');
+
 /*
  *  Generic require login routing middleware
  */
 
 exports.requiresLogin = function (req, res, next) {
   if (req.isAuthenticated()) return next();
-  if (req.method == 'GET') req.session.returnTo = req.originalUrl;
-  res.redirect('/login');
+  //if (req.method == 'GET') req.session.returnTo = req.originalUrl;  /maybe we will bring this back.
+  res.status(401).send( utils.errsForApi('Requires you to login'))
 };
 
 /*
@@ -17,8 +19,7 @@ exports.requiresLogin = function (req, res, next) {
 exports.user = {
   hasAuthorization: function (req, res, next) {
     if (req.profile.id != req.user.id) {
-      req.flash('info', 'You are not authorized');
-      return res.redirect('/users/' + req.profile.id);
+      return res.status(401).send( utils.errsForApi('You are not authorized'))
     }
     next();
   }
@@ -31,8 +32,7 @@ exports.user = {
 exports.article = {
   hasAuthorization: function (req, res, next) {
     if (req.article.user.id != req.user.id) {
-      req.flash('info', 'You are not authorized');
-      return res.redirect('/articles/' + req.article.id);
+      return res.status(401).send( utils.errsForApi('You are not authorized'))
     }
     next();
   }
@@ -49,8 +49,7 @@ exports.comment = {
     if (req.user.id === req.comment.user.id || req.user.id === req.article.user.id) {
       next();
     } else {
-      req.flash('info', 'You are not authorized');
-      res.redirect('/articles/' + req.article.id);
+      res.status(401).send( utils.errsForApi('You are not authorized'))
     }
   }
 };

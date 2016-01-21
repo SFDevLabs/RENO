@@ -7,6 +7,8 @@
 const Notifier = require('notifier');
 const swig = require('swig');
 const config = require('../../config/config');
+const signature = 'jeff@sfdevlabs.com';
+const notifier = new Notifier(config.notifier);
 
 /**
  * Process the templates using swig - refer to notifier#processTemplate method
@@ -40,19 +42,18 @@ module.exports = {
     const article = options.article;
     const author = article.user;
     const user = options.currentUser;
-    const notifier = new Notifier(config.notifier);
 
     const obj = {
       to: author.email,
-      from: 'your@product.com',
+      from: signature,
       subject: user.name + ' added a comment on your article ' + article.title,
       alert: user.name + ' says: "' + options.comment,
       locals: {
         to: author.name,
         from: user.name,
         body: options.comment,
-        article: article.name
-      }
+        article: article.title
+      },
     };
 
     // for apple push notifications
@@ -63,6 +64,33 @@ module.exports = {
 
     try {
       notifier.send('comment', obj, cb);
+    } catch (err) {
+      console.log(err);
+    }
+  },
+
+  pwreset: function (options, cb) {
+    const username = options.username;
+    const token = options.token;
+    const email = options.email;
+
+    const obj = {
+      to: email,
+      from: signature,
+      subject: 'Please reset your password',
+      locals: {
+        to: username,
+        link: config.url+'/pwreset/'+token
+      },
+    };
+    // for apple push notifications
+    /*notifier.use({
+      APN: true
+      parseChannels: ['USER_' + author._id.toString()]
+    })*/
+    
+    try {
+      notifier.send('pwreset', obj, cb);
     } catch (err) {
       console.log(err);
     }

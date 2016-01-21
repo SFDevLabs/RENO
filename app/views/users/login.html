@@ -1,6 +1,8 @@
 {% extends 'auth.html' %}
 
 {% block auth %}
+  {% include '../includes/providers.html' %}
+
   <form action="/users/session" method="post" role="form" class="form-horizontal">
     <input type="hidden" name="_csrf" value="{{ csrf_token }}">
 
@@ -27,6 +29,8 @@
         <button class="btn btn-primary" type="submit">Log in</button>
         &nbsp; or &nbsp;
         <a href="/signup" class="show-signup">Sign up</a>
+        &nbsp; | &nbsp;
+        <a href="/pwreset" class="show-signup">Forgot Password</a>
       </div>
     </div>
   </form>

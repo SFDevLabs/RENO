@@ -7,14 +7,10 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a href="/" class="navbar-brand">Node Express Mongoose Demo</a>
+      <a href="/" class="navbar-brand">RENO</a>
     </div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li class="{% if (isActive('/articles/new')) %}active{% endif %}">
-          <a href="/articles/new" title="new article">New</a>
-        </li>
-
         {% if (req.isAuthenticated()) %}
           <li class="{% if (isActive('/users/' + req.user.id )) %}active{% endif %}">
             <a href="{{ '/users/' + req.user.id }}" title="Profile">Profile</a>
@@ -24,16 +20,14 @@
           </li>
         {% else %}
           <li class="{% if (isActive('/login')) %}active{% endif %}">
-            <a href="/login" title="Login">/</a>
+            <a href="/login" title="Login">Login</a>
+          </li>
+          <li class="{% if (isActive('/signup')) %}active{% endif %}">
+            <a href="/signup" title="signup">Signup</a>
           </li>
         {% endif %}
       </ul>
-
       <ul class="nav navbar-nav navbar-right">
-        <li>
-          <a href="/">Test</a>
-        </li>
-
       </ul>
     </div>
   </div>

@@ -32,51 +32,28 @@ describe('Articles', function () {
   });
 
   describe('GET /articles', function () {
-    it('should respond with Content-Type text/html', function (done) {
+    it('should respond with Content-Type application/json', function (done) {
       agent
-      .get('/articles')
-      .expect('Content-Type', /html/)
+      .get('/api/articles')
+      .expect('Content-Type', /application\/json/)
       .expect(200)
-      .expect(/Articles/)
+      .expect(/articles/)
       .end(done);
     });
   });
 
-  describe('GET /articles/new', function () {
+
+  describe('POST /api/articles/', function () {
+
     context('When not logged in', function () {
-      it('should redirect to /login', function (done) {
+      it('should send 401 asking for login.', function (done) {
         agent
-        .get('/articles/new')
-        .expect('Content-Type', /plain/)
-        .expect(302)
-        .expect('Location', '/login')
+        .post('/api/articles')
+        .expect(401)
+        .expect(/Requires you to login/)
         .end(done);
       });
     });
-
-    context('When logged in', function () {
-      before(function (done) {
-        // login the user
-        agent
-        .post('/users/session')
-        .field('email', 'foobar@example.com')
-        .field('password', 'foobar')
-        .expect(302)
-        .end(done);
-      });
-
-      it('should respond with Content-Type text/html', function (done) {
-        agent
-        .get('/articles/new')
-        .expect('Content-Type', /html/)
-        .expect(200)
-        .expect(/New Article/)
-        .end(done);
-      });
-    });
-  });
-
-  describe('POST /articles', function () {
 
     context('When logged in', function () {
       before(function (done) {
@@ -99,12 +76,23 @@ describe('Articles', function () {
 
         it('should respond with error', function (done) {
           agent
-          .post('/articles')
+          .post('/api/articles')
           .field('title', '')
-          .field('body', 'foo')
-          .expect('Content-Type', /html/)
+          .field('body', 'bar')
+          .expect('Content-Type', /application\/json/)
           .expect(422)
           .expect(/Article title cannot be blank/)
+          .end(done);
+        });
+
+        it('should respond with error', function (done) {
+          agent
+          .post('/api/articles')
+          .field('title', 'foo')
+          .field('body', '')
+          .expect('Content-Type', /application\/json/)
+          .expect(422)
+          .expect(/Article body cannot be blank/)
           .end(done);
         });
 
@@ -114,6 +102,7 @@ describe('Articles', function () {
             done(err);
           });
         });
+
       });
 
       describe('Valid parameters', function () {
@@ -124,14 +113,15 @@ describe('Articles', function () {
           });
         });
 
-        it('should redirect to the new article page', function (done) {
+        it('should respond with new posted article', function (done) {
           agent
-          .post('/articles')
+          .post('/api/articles')
           .field('title', 'foo')
           .field('body', 'bar')
-          .expect('Content-Type', /plain/)
-          .expect('Location', /\/articles\//)
-          .expect(302)
+          .expect('Content-Type', /application\/json/)
+          .expect(200)
+          .expect(/foo/)
+          .expect(/bar/)
           .end(done);
         });
 
@@ -142,6 +132,7 @@ describe('Articles', function () {
           });
         });
 
+        var _id = null;
         it('should save the article to the database', function (done) {
           Article
           .findOne({ title: 'foo'})
@@ -153,8 +144,29 @@ describe('Articles', function () {
             article.body.should.equal('bar');
             article.user.email.should.equal('foobar@example.com');
             article.user.name.should.equal('Foo bar');
+            _id = article._id; //set th id of the new comment
             done();
           });
+        });
+        //Use the _id to response to comments
+        it('should respond with new posted comment', function (done) {
+          agent
+          .post('/api/articles/'+_id+'/comments')
+          .field('body', 'bar')
+          .expect('Content-Type', /application\/json/)
+          .expect(200)
+          .expect(/bar/)
+          .end(done);
+        });
+
+        it('should respond with error for posted comment', function (done) {
+          agent
+          .post('/api/articles/'+_id+'/comments')
+          .field('body', '')
+          .expect('Content-Type', /application\/json/)
+          .expect(422)
+          .expect(/Requires a comment body/)
+          .end(done);
         });
       });
     });
