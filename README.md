@@ -1,13 +1,31 @@
 
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": "s3:*",
-            "Resource": "arn:aws:s3:::mybucket/*"
-        }
-    ]
-}
+# RENO - React Express Node mOngoDB 
 
-The biggest little example React.js app in the world.
+RENO is an example of a how to set up a full stack react app.
+
+
+
+## Install
+
+```sh
+$ git clone git://github.com/madhums/node-express-mongoose-demo.git
+$ npm install
+```
+
+
+Then visit [http://localhost:3000/](http://localhost:3000/)
+
+## Tests
+
+```sh
+$ npm test
+```
+
+## CREDIT
+
+1) Madhums's [node-express-mongoose-demo](https://github.com/madhums/node-express-mongoose-demo)
+
+
+## License
+
+MIT
