@@ -119,10 +119,18 @@ exports.pwResetSubmit = function (req, res) {
         });
       } else{
         user.resetPassword(function(err){
-          res.render('users/reset', {
-            title: 'Password Reset',
-            success: utils.errors('Check your email for a password reset link')
-          });
+          console.log(err)
+          if (err){ 
+           res.render('users/reset', {
+              title: 'Password Reset',
+              error: utils.errors(err.errors || err.message)
+            });
+          } else {
+            res.render('users/reset', {
+              title: 'Password Reset',
+              success: utils.errors('Check your email for a password reset link')
+            });
+          }
         })
       }
     })
