@@ -144,6 +144,11 @@ exports.pwResetLink = function (req, res) {
   options.criteria ={resetPasswordToken:token}
   
   User.load(options, function(err, user){
+    console.log(user.resetPasswordExpires < new Date())
+    console.log(user.resetPasswordExpires)
+    console.log(new Date())
+    console.log('date time')
+
     if (!user || user.resetPasswordExpires < new Date() ){
       req.flash('error', 'Link is not valid or expired')
       res.redirect('/pwreset')
