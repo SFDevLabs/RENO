@@ -25,7 +25,7 @@ module.exports = new GoogleStrategy({
     User.load(options, function (err, user) {
       if (err) return done(err);
       if (!user) {
-        const username = profile.username? profile.username : profile.displayName.replace(' ','');
+        const username = profile.username.length>0? profile.username : profile.displayName.replace(' ','');
         user = new User({
           name: profile.displayName,
           email: profile.emails[0].value,
