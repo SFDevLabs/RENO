@@ -6,6 +6,7 @@
 
 const mongoose = require('mongoose');
 const crypto = require('crypto');
+const notify = require('../mailer');
 
 const Schema = mongoose.Schema;
 const oAuthTypes = [
@@ -33,8 +34,8 @@ const UserSchema = new Schema({
   github: {},
   google: {},
   linkedin: {},
-  resetPasswordToken: String,
-  resetPasswordExpires: Date
+  resetPasswordToken: { type: String, default: null },
+  resetPasswordExpires: { type: Date, default: null },
 });
 
 const validatePresenceOf = value => value && value.length;
@@ -112,6 +113,53 @@ UserSchema.pre('save', function (next) {
  */
 
 UserSchema.methods = {
+
+  /**
+   * Activate reset password ability for a user with a token
+   *
+   * @param {commentId} String
+   * @param {Function} cb
+   * @api private
+   */
+
+  resetPassword: function (cb) {
+    this.resetPasswordToken = crypto.randomBytes(64).toString('hex');
+    this.resetPasswordExpires = new Date( new Date().getTime() + 3600000); //3 hours in the future
+
+    if (this.email) {
+      notify.pwreset({
+        token: this.resetPasswordToken,
+        username: this.username,
+        email: this.email,
+      }, function(err, status){
+        //no opp
+        console.log(err, status, 'pwreset1')
+
+      });
+    }
+
+    this.save(cb);
+  },
+
+  /**
+   * reset password with with a expiration date.
+   *
+   * @param {commentId} String
+   * @param {Function} cb
+   * @api private
+   */
+
+  setPassword: function (password, cb) {
+    if (this.resetPasswordExpires > new Date() ) {
+      this.password = password;
+      this.resetPasswordExpires = null;
+      this.resetPasswordToken = null;
+      this.save(cb);
+    } else{
+      cb({message:'Reset request has expired!'})
+    }
+    
+  },
 
   /**
    * Authenticate - check if the passwords are the same

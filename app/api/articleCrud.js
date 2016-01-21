@@ -10,6 +10,32 @@ const _ = require('lodash');
 const utils = require('../../lib/utils');
 
 /**
+ * Load
+ */
+
+exports.load = function (req, res, next, id){
+  Article.load(id, function (err, article) {
+    if (!article || (err && err.message==='Cast to ObjectId failed')) return  res.status(404).send(utils.errsForApi('Article not found'));
+    if (err) return  res.status(500).send( utils.errsForApi(err.errors || err) );
+    req.article = article;
+    next();
+  });
+};
+
+/**
+ * Load comment
+ */
+
+exports.loadComment = function (req, res, next, id) {
+  const article = req.article;
+  utils.findByParam(article.comments, { id: id }, function (err, comment) {
+    if (err) return next(err);
+    req.comment = comment;
+    next();
+  });
+};
+
+/**
  * List
  */
 exports.getListController = function (req, res) {
@@ -70,40 +96,36 @@ exports.getCreateController = function (req, res) {
  * Load
  */
 exports.getReadController = function (req, res) {
-  Article.load(req.params.id, function (err, result) {
-    if (!result || err && err.name == 'CastError') {
-      res.status(404).send(utils.errsForApi('User not found'));
-    } else if (result) {
-      setTimeout(function(){
-        res.send(result);
-      },500)
-    } else {
-      res.status(500).send(utils.errsForApi(err.errors || err));
-    }
-  });
+  var article = req.article
+  if (!article) {
+    res.status(404).send(utils.errsForApi('Article not found!!'));
+  } else if (article) {
+    setTimeout(function(){
+      res.send(article);
+    },500)
+  }
 };
 
 /**
  * Update
  */
 exports.getUpdateController = function (req, res) {
-  Article.load(req.params.id, function (err, result) {
-    var key;
-    for (key in req.body) {
-      result[key] = req.body[key];
+  var article = req.article
+  var key;
+  for (key in req.body) {
+    article[key] = req.body[key];
+  }
+  const images = req.files[0]
+    ? [req.files[0].path]
+    : [];
+  article.uploadAndSave(images, function (err) {
+    if (!err) {
+      setTimeout(function(){
+       res.send(article);
+      },500)
+    } else {
+      res.status(400).send(utils.errsForApi(err.errors || err));
     }
-    const images = req.files[0]
-      ? [req.files[0].path]
-      : [];
-    result.uploadAndSave(images, function (err) {
-      if (!err) {
-        setTimeout(function(){
-         res.send(result);
-        },500)
-      } else {
-        res.status(400).send(utils.errsForApi(err.errors || err));
-      }
-    });
   });
 };
 
@@ -111,46 +133,43 @@ exports.getUpdateController = function (req, res) {
  * Delete
  */
 exports.getDeleteController = function (req, res) {
-  Article.load(req.params.id, function (err, result) {
-    if (err) {
-      res.send(utils.errsForApi(err.errors || err));
-    } else {
-      result.remove();
-      result.save(function (err) {
-        if (!err) {
-        setTimeout(function(){
-          res.send(result);
-        },500)
-        } else {
-          res.status(500).send(utils.errsForApi(err.errors || err));
-        }
-      });
-    }
-  });
+  var article = req.article
+  if (!article) {
+    res.status(500).send(utils.errsForApi('Error loading article.'));
+  } else {
+    article.remove();
+    article.save(function (err) {
+      if (!err) {
+      setTimeout(function(){
+        res.send(article);
+      },500)
+      } else {
+        res.status(500).send(utils.errsForApi(err.errors || err));
+      }
+    });
+  }
 };
 
 /**
  * Create Comment
  */
 exports.getCreateCommentController = function (req, res) {
-  Article.load(req.params.id, function (err, result) {
-    if (err || !result) return res.status(500).send( utils.errsForApi('There was an error in your request') );
-    if (!req.body.body) return res.status(422).send( utils.errsForApi('Requires a comment body'));
+  const article = req.article
+  const user = req.user;
 
-    const article = result;
-    const user = req.user;
+  if (!article) return res.status(500).send( utils.errsForApi('There was an error in your request') );
+  if (!req.body.body) return res.status(422).send( utils.errsForApi('Requires a comment body'));
 
-    article.addComment(user, req.body, function (err) {
-      if (err) return res.status(500).send(errMsg(err));
-      
-      var articleObj = article.toObject();//Adding the populated comments from a pure JS object.
-      var comments = articleObj.comments;
-      comments[comments.length-1].user=_.pick(user, ['username', '_id', 'name']); //For security we only send id and username.
+  article.addComment(user, req.body, function (err) {
+    if (err) return res.status(500).send(errMsg(err));
+    
+    var articleObj = article.toObject();//Adding the populated comments from a pure JS object.
+    var comments = articleObj.comments;
+    comments[comments.length-1].user=_.pick(user, ['username', '_id', 'name']); //For security we only send id and username.
 
-      setTimeout(function(){
-       res.send(articleObj);
-      },500)
-    });
+    setTimeout(function(){
+     res.send(articleObj);
+    },500)
   });
 }
   
