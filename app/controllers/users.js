@@ -141,11 +141,13 @@ exports.pwResetSubmit = function (req, res) {
 exports.pwResetLink = function (req, res) {
   const token = req.params.token;
   const options = {select:'name username email resetPasswordExpires'};
+  
+  console.log(req.params)
+
   options.criteria ={resetPasswordToken:token}
   
   User.load(options, function(err, user){
-    console.log(user.resetPasswordExpires < new Date())
-    console.log(user.resetPasswordExpires)
+    console.log(user)
     console.log(new Date())
     console.log('date time')
 

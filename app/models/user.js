@@ -133,8 +133,6 @@ UserSchema.methods = {
         email: this.email,
       }, function(err, status){
         //no opp
-        console.log(err, status, 'pwreset1')
-
       });
     }
 
