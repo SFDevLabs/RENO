@@ -118,6 +118,7 @@ module.exports = function (app, passport) {
   app.get(pathWithId, articleCrud.getReadController);
   app.put(pathWithId, articleAuth, articleCrud.getUpdateController);
   app.delete(pathWithId, articleAuth, articleCrud.getDeleteController); 
+  
   //API comments
   app.post(pathWithId+'/comments', auth.requiresLogin, articleCrud.getCreateCommentController);
   app.delete(pathWithId+'/comments/:commentId', commentAuth, articleCrud.getDeleteCommentController);
@@ -131,31 +132,6 @@ module.exports = function (app, passport) {
 
   // tag routes
   app.get('/tags/:tag', tags.index);
-
-  // app.get('/test', function(req, res){
-
-  //   var article = new Article({
-  //     title:1,
-  //     body:2
-  //   });
-
-  //   article.uploadAndSave(['/Users/jeffjenkins/repos/reno/img/Ok-icon.png'], function (err) {
-  //     // if (!err) {
-  //     //   req.flash('success', 'Successfully created article!');
-  //     //   return res.redirect('/articles/'+article._id);
-  //     // }
-  //     // res.status(422)
-  //     // res.render('articles/new', {
-  //     //   title: 'New Article',
-  //     //   article: article,
-  //     //   errors: utils.errors(err.errors || err)
-  //     // });
-  //     res.send()
-  //   });
-  // });
-
-
-
 
   // API User
   const userPath = '/api/users'
