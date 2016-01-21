@@ -4,7 +4,6 @@
 */
 
 const React = require('react');
-const Link = require('react-router').Link
 const UserStore = require('../stores/UserStore');
 const Actions = require('../actions/UserActions');
 const Loader = require('react-loader');

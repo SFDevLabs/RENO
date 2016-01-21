@@ -49,17 +49,6 @@ function update(article) {
 
 
 /**
- * Update all of the ARTICLES items with the same object.
- * @param  {object} updates An object literal containing only the data to be
- *     updated.
- */
-function updateAll(updates) {
-  for (var id in _articles) {
-    update(id, updates);
-  }
-}
-
-/**
  * Delete a ARTICLES item.
  * @param  {string} id
  */
@@ -75,13 +64,6 @@ function destroyAll(id) {
   _articles={};
 }
 
-/**
- * Delete a ARTICLES item.
- * @param  {string} id
- */
-function destroyComment(id) {
-  delete _articles[id];
-}
 
 /**
  * Set total count
@@ -193,7 +175,6 @@ var ArticleStore = assign({}, EventEmitter.prototype, {
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
-  var text;
 
   switch(action.actionType) {
 

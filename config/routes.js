@@ -8,12 +8,11 @@
 // set the NODE_PATH to be ./app/controllers (package.json # scripts # start)
 
 const users = require('../app/controllers/users');
-const articles = require('../app/controllers/articles');
-const comments = require('../app/controllers/comments');
-const tags = require('../app/controllers/tags');
+// const articles = require('../app/controllers/articles');
+// const comments = require('../app/controllers/comments');
+// const tags = require('../app/controllers/tags');
 
 const mongoose = require('mongoose')
-const Article = mongoose.model('Article');
 const articleCrud = require('../app/api/articleCrud');
 const userCrud = require('../app/api/userCrud');
 
@@ -43,7 +42,6 @@ module.exports = function (app, passport) {
       failureRedirect: '/login',
       failureFlash: 'Invalid email or password.'
     }), users.session);
-  app.get('/users/:userId', users.show);
   app.get('/auth/facebook',
     passport.authenticate('facebook', {
       scope: [ 'email', 'user_about_me'],
@@ -93,25 +91,26 @@ module.exports = function (app, passport) {
       failureRedirect: '/login'
     }), users.authCallback);
 
-  app.param('userId', users.load);
-
-  // article routes
-  app.param('id', articles.load);
-  app.get('/articles', articles.indexOld);
-  app.get('/articles/new', auth.requiresLogin, articles.new);
-  app.post('/articles', auth.requiresLogin , articles.create);
-  app.get('/articles/:id', articles.show);
-  app.get('/articles/:id/edit', articleAuth, articles.edit);
-  app.put('/articles/:id', articleAuth, articles.update);
-  app.delete('/articles/:id', articleAuth, articles.destroy);
 
   // home route
-  app.get('/', articles.index);
+  app.get('/', function (req, res) {
+    res.render('index',{
+      title: 'Home'
+    })
+  });
+
+  // reset
+  app.get('/pwreset', users.pwReset);
+  app.post('/pwreset', users.pwResetSubmit);
+  app.get('/pwreset/:token', users.pwResetLink);
+  app.post('/pwreset/:token', users.pwResetLinkSumbmit);
+
 
   // API Routes
   const path = '/api/articles'
   const pathWithId = path + '/:id';
 
+  app.param('id', articleCrud.load);
   app.get(path, articleCrud.getListController);
   app.post(path, auth.requiresLogin, articleCrud.getCreateController);
 
@@ -120,24 +119,16 @@ module.exports = function (app, passport) {
   app.delete(pathWithId, articleAuth, articleCrud.getDeleteController); 
   
   //API comments
+  app.param('commentId', articleCrud.loadComment);  
   app.post(pathWithId+'/comments', auth.requiresLogin, articleCrud.getCreateCommentController);
   app.delete(pathWithId+'/comments/:commentId', commentAuth, articleCrud.getDeleteCommentController);
-
-
-  // comment routes
-  app.param('commentId', comments.load);
-  app.post('/articles/:id/comments', auth.requiresLogin, comments.create);
-  //app.get('/articles/:id/comments', auth.requiresLogin, comments.create);
-  app.delete('/articles/:id/comments/:commentId', commentAuth, comments.destroy);
-
-  // tag routes
-  app.get('/tags/:tag', tags.index);
 
   // API User
   const userPath = '/api/users'
   const userPathWithId = userPath + '/:userId';
   const profilePath = userPath + '/profile';
 
+  app.param('userId', userCrud.load);
   app.get(profilePath, userCrud.getReadControllerProfile);
   app.get(userPathWithId, userCrud.getReadController);
 
@@ -154,7 +145,9 @@ module.exports = function (app, passport) {
     }
     console.error(err.stack);
     // error page
-    res.status(500).send({ error: err });
+    res.status(500).render('500',{ 
+      error: err.message
+    });
   });
 
   // assume 404 since no middleware responded
@@ -164,4 +157,26 @@ module.exports = function (app, passport) {
       error: 'Not found'
     });
   });
+
+  /**
+   * Controllers [Deprecated]
+   */
+  // article routes 
+  // app.param('id', articles.load);
+  // app.get('/articles', articles.indexOld);
+  // app.get('/articles/new', auth.requiresLogin, articles.new);
+  // app.post('/articles', auth.requiresLogin , articles.create);
+  // app.get('/articles/:id', articles.show);
+  // app.get('/articles/:id/edit', articleAuth, articles.edit);
+  // app.put('/articles/:id', articleAuth, articles.update);
+  // app.delete('/articles/:id', articleAuth, articles.destroy);
+
+  // comment routes
+  //app.param('commentId', comments.load);
+  //app.post('/articles/:id/comments', auth.requiresLogin, comments.create);
+  //app.delete('/articles/:id/comments/:commentId', commentAuth, comments.destroy);
+
+  // tag routes
+  //app.get('/tags/:tag', tags.index);
+
 };

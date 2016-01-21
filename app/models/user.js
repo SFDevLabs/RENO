@@ -32,7 +32,9 @@ const UserSchema = new Schema({
   twitter: {},
   github: {},
   google: {},
-  linkedin: {}
+  linkedin: {},
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 });
 
 const validatePresenceOf = value => value && value.length;

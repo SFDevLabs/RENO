@@ -5,7 +5,6 @@
 */
 
 const React = require('react');
-const Link = require('react-router').Link
 const Actions = require('../actions/ArticleActions');
 const Loader = require('react-loader');
 

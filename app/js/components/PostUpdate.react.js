@@ -4,7 +4,6 @@
 */
 
 const React = require('react');
-const TagsInput = require('react-tagsinput');
 const Actions = require('../actions/ArticleActions');
 import { Link, History } from 'react-router';
 const ArticleStore = require('../stores/ArticleStore');
@@ -44,7 +43,6 @@ const Update = React.createClass({
    */
   render: function() {
     if (!this.state){return <Loader />}
-    const article = this.state;
     const blankMessage = this.state._messages? (<Messages messages={this.state._messages} type="danger" />) : null;
 
     return <section className="container">

@@ -103,6 +103,25 @@ exports.logout = function (req, res) {
 };
 
 /**
+ * Reset
+ */
+
+exports.reset = function (req, res) {
+  // req.logout();
+  // res.redirect('/login');
+  res.send('stuff');
+};
+
+/**
+ * Post Reset
+ */
+
+exports.passwordupdate = function (req, res) {
+  // req.logout();
+  // res.redirect('/login');
+};
+
+/**
  * Session
  */
 

@@ -6,10 +6,8 @@
 const React = require('react');
 const Actions = require('../actions/ArticleActions');
 const ArticleStore = require('../stores/ArticleStore');
-const Loader = require('react-loader');
 const Post = require('./Post.react');
 const Messages = require('./Messages.react');
-const _ = require('lodash');
 import { History } from 'react-router';
 
 const Update = React.createClass({
@@ -33,7 +31,6 @@ const Update = React.createClass({
    * @return {object}
    */
   render: function() {
-    const article = this.state;
     const blankMessage = this.state._messages? (
       <Messages messages={this.state._messages} type="danger" />
       ) : null; //Rendering a warning message.

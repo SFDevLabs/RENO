@@ -5,23 +5,10 @@
 
 const React = require('react');
 const TagsInput = require('react-tagsinput');
-import { Link, History } from 'react-router';
-const ArticleStore = require('../stores/ArticleStore');
+import { Link } from 'react-router';
 const Loader = require('react-loader');
 
-function getFiles(files){
-  var data = {};
-  for (var key in files) {
-      // is the item a File?
-      if (files.hasOwnProperty(key) && files[key] instanceof File) {
-          data[key]= files[key];
-      }
-  }
-  return data;
-}
-
 const Post = React.createClass({
-  mixins: [ History ],
   
   props:{
     article: React.PropTypes.object.isRequired,
