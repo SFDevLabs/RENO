@@ -70,7 +70,7 @@ describe('Users', function () {
         });
       });
 
-      it('should redirect to /articles', function (done) {
+      it('should redirect to /', function (done) {
         request(app)
         .post('/users')
         .field('name', 'Foo bar')
@@ -107,11 +107,11 @@ describe('Users', function () {
     before(function (done) {
       // login the user
       agent
-      .post('/users/session')
-      .field('email', 'foobar@example.com')
-      .field('password', 'foobar')
-      .expect(302)
-      .end(done);
+        .post('/users/session')
+        .field('email', 'foobar@example.com')
+        .field('password', 'foobar')
+        .expect(302)
+        .end(done);
     });
 
     it('Profile API should respond with user', function (done) {
@@ -132,7 +132,120 @@ describe('Users', function () {
       .end(done);
     });
 
+    after(function(done){
+      agent
+        .get('/logout')
+        .expect(302)
+        .end(done);
+    })
+
   });
+
+  describe('Password Reset', function () {
+    it('should respond with a reset page', function (done) {
+      agent
+      .get('/pwreset')
+      .expect('Content-Type', /html/)
+      .expect(200)
+      .expect(/Password Reset/)
+      .end(done);
+    });
+
+    it('should respond when we post request for a reset email', function (done) {
+      agent
+      .post('/pwreset')
+      .field('email', 'foobar@example.com')
+      .expect('Content-Type', /html/)
+      .expect(200)
+      .expect(/Check your email for a password reset link/)
+      .end(done);
+    });
+
+    var token;
+    it('should update the db with a token and expiration', function (done) {
+      User.findOne({ email: 'foobar@example.com' }).exec(function (err, user) {
+        should.not.exist(err);
+        user.should.be.an.instanceOf(User);
+        should(user.resetPasswordExpires).not.equal(null)
+        should(user.resetPasswordToken).not.equal(null)
+        token = user.resetPasswordToken
+        done();
+      });
+    });
+
+    it('should get reset page with our token', function (done) {
+      agent
+      .get('/pwreset/'+token)
+      .expect('Content-Type', /html/)
+      .expect(200)
+      .expect(/Set New Password/)
+      .end(done);
+    });
+
+    it('should save password with our reset token', function (done) {
+      agent
+      .post('/pwreset/'+token)
+      .field('password', 'newfoobar')
+      .expect('Content-Type', /plain/)
+      .expect(302)
+      .expect('Location', /\/login/)
+      .end(done);
+    });
+
+    it('should update the db with null values for reset and expiration', function (done) {
+      User.findOne({ email: 'foobar@example.com' }).exec(function (err, user) {
+        should.not.exist(err);
+        user.should.be.an.instanceOf(User);
+        should(user.resetPasswordExpires).equal(null)
+        should(user.resetPasswordToken).equal(null)
+        done();
+      });
+    });
+
+    it('should not get reset page with our reset token', function (done) {
+      agent
+      .get('/pwreset/'+token)
+      .expect('Content-Type', /plain/)
+      .expect(302)
+      .expect('Location', /\/pwreset/)
+      .end(done);
+    });
+
+    it('should not post a new password with our reset token', function (done) {
+      agent
+      .post('/pwreset/'+token)
+      .field('password', 'newfoobar')
+      .expect('Content-Type', /plain/)
+      .expect(302)
+      .expect('Location', /\/pwreset/)
+      .end(done);
+    });
+
+
+  });
+
+  describe('Check app with our new password', function () {
+
+    before(function (done) {
+      // login the user
+      agent
+        .post('/users/session')
+        .field('email', 'foobar@example.com')
+        .field('password', 'newfoobar')
+        .expect(302)
+        .end(done);
+    });
+
+    it('Profile API should respond with user after we log in', function (done) {
+      agent
+      .get('/api/users/profile')
+      .expect('Content-Type', /application\/json/)
+      .expect(200)
+      .expect(/foobar/)
+      .end(done);
+    });
+
+  })
 
   after(function (done) {
     require('./helper').clearDb(done);
