@@ -40,7 +40,6 @@ exports.getReadController = function (req, res) {
  * Read Profile
  */
 exports.getReadControllerProfile = function (req, res) {
-	console.log(req.user)
   res.send({
     user:req.user,
     success: !!req.user

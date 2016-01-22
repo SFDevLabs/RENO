@@ -58,12 +58,10 @@ exports.getListController = function (req, res) {
   Article.list(options, function (err, result) {
     Article.count(criteria).exec(function (errCount, count) {
       if (!err) {
-          setTimeout(function(){
-            res.send({
-              articles:result,
-              total: count
-            });
-          },500)
+        res.send({
+          articles:result,
+          total: count
+        });
       } else {
         res.status(500).send(utils.errsForApi(err.errors || err));
       }
@@ -83,9 +81,7 @@ exports.getCreateController = function (req, res) {
   m.user = req.user;
   m.uploadAndSave(images, function (err) {
     if (!err) {
-      setTimeout(function(){
-       res.send(m);
-      },500)
+      res.send(m);
     } else {
       res.status(422).send(utils.errsForApi(err.errors || err));
     }
@@ -100,9 +96,7 @@ exports.getReadController = function (req, res) {
   if (!article) {
     res.status(404).send(utils.errsForApi('Article not found!!'));
   } else if (article) {
-    setTimeout(function(){
-      res.send(article);
-    },500)
+    res.send(article);
   }
 };
 
@@ -120,9 +114,7 @@ exports.getUpdateController = function (req, res) {
     : [];
   article.uploadAndSave(images, function (err) {
     if (!err) {
-      setTimeout(function(){
-       res.send(article);
-      },500)
+      res.send(article);
     } else {
       res.status(400).send(utils.errsForApi(err.errors || err));
     }
@@ -140,9 +132,7 @@ exports.getDeleteController = function (req, res) {
     article.remove();
     article.save(function (err) {
       if (!err) {
-      setTimeout(function(){
         res.send(article);
-      },500)
       } else {
         res.status(500).send(utils.errsForApi(err.errors || err));
       }
@@ -166,10 +156,7 @@ exports.getCreateCommentController = function (req, res) {
     var articleObj = article.toObject();//Adding the populated comments from a pure JS object.
     var comments = articleObj.comments;
     comments[comments.length-1].user=_.pick(user, ['username', '_id', 'name']); //For security we only send id and username.
-
-    setTimeout(function(){
-     res.send(articleObj);
-    },500)
+    res.send(articleObj);
   });
 }
   
@@ -184,8 +171,6 @@ exports.getDeleteCommentController = function (req, res) {
     if (err) {
       res.send(utils.errsForApi('There was an error in your request'));
     }
-    setTimeout(function(){
-      res.send(article);
-    },500)
+    res.send(article);
   });
 };
