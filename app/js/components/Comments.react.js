@@ -7,6 +7,7 @@ const React = require('react');
 const Actions = require('../actions/ArticleActions');
 const CommentItem = require('./CommentItem.react');
 const Loader = require('react-loader');
+const _ = require('lodash');
 
 const Comments = React.createClass({
 
@@ -30,13 +31,11 @@ const Comments = React.createClass({
 
   render :function() {
     const commentsData = this.props.comments;
+    const articleId = this.props.id
+    const comments = _.map(commentsData, function(comment, i){
+      return <CommentItem  key={i} comment={comment} articleId={articleId} />
+    });
 
-    const comments= [];
-
-    for (var i = 0; i < commentsData.length; i++) {
-      var comment = commentsData[i];
-      comments.push(<CommentItem  key={i} comment={comment} articleId={this.props.id} />);
-    }
     const opacity = this.state.saving?.2:1;
     const loader = this.state.saving?<Loader options={{top:'40%'}} />:null;
     return <div>

@@ -17,6 +17,8 @@ const ArticleItem = React.createClass({
    */
   render: function() {
     const article = this.props.article;
+    const overflow = {overflow: 'hidden', textOverflow: 'ellipsis'};
+
     const tags = _.map(article.tags, function(val, key){
       return <span key={key}>
             <i className="muted fa fa-tag"></i>&nbsp;
@@ -45,13 +47,13 @@ const ArticleItem = React.createClass({
       </span>
     :null;
     const dateString = new Date(article.createdAt).toLocaleString();
-    return <div className="article">
-      <h3>
+    return <div className="article" >
+      <h3 style={overflow} >
         <Link to={"/articles/"+article._id}>
           {article.title}
         </Link>
       </h3>
-      <p>{article.body}</p>
+      <p style={overflow}>{article.body}</p>
 
       <span className="muted">{dateString}</span>
       &nbsp;

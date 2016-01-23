@@ -4,6 +4,8 @@
 */
 
 const React = require('react');
+import { Alert } from 'react-bootstrap'; 
+const _ = require('lodash');
 
 const Messages = React.createClass({
   
@@ -14,65 +16,62 @@ const Messages = React.createClass({
 
   getInitialState:function(){
     return {
-      collapsed: false,
-      collapsing: false
+      removed: false,
     };
   },
 
+  componentDidMount:function(){
+    this._visible();
+  },
+
   componentWillReceiveProps:function(nextProps){
-    this.setState({
-      collapsed: false,
-      collapsing: false
-    })
+    this._visible();
   },
 
   /**
    * @return {object}
    */
   render: function() {
-    var alertBox = 'fade alert-'+this.props.type;
-    var main = "alert"
-    if (this.state.collapsing){
-      alertBox += '  alert';
-    }else{
-      alertBox += this.state.collapsed?' ':' in alert';
-      main += this.state.collapsed?' hidden':' ';
-    }
+    const type = this.props.type;
 
-    var messages = []
-    for (var i = this.props.messages.length - 1; i >= 0; i--) {
-    	messages.push((
-		        <ul key={i}>
-		          <li>{this.props.messages[i]}</li>
-		        </ul>
-    		));
-    };
-
-    return (
-	    <div className={main}>
-	      <div className={alertBox}>
-	        <button onClick={this._onClick} className="close" type="button" data-dismiss="alert">×</button>
-	        {messages}
-	      </div>
-	    </div>
-    );
-  },
-  _onClick:function(){
-    //Simple logic for fade out of message.
-    var that = this;
-    this.setState({
-      collapsing: true,
+    const messages = _.map(this.props.messages, function(message, i){
+      return <ul key={i}>
+        <li>{message}</li>
+      </ul>
     });
-    setTimeout(function(){ 
+    const visible = this.state.alertVisible
+    const removed = this.state.removed
+
+    const JSX = !removed ?
+      <Alert  bsStyle={type} onDismiss={this._notVisible}>
+        {messages}
+      </Alert>:
+    null;
+    return JSX
+  },
+  /**
+   * _visible
+   */
+  _visible:function(){
+    const that = this;
+    that.setState({removed:false});
+    setTimeout(function(){
       that.setState({
-        collapsed: !that.state.collapsed
-      });
-     }, 10);
-    setTimeout(function(){ 
+        alertVisible: true
+      })      
+    },10)
+  },
+  /**
+    * _notVisible
+   */
+  _notVisible:function(){
+    const that = this;
+    this.setState({alertVisible: false});
+    setTimeout(function(){
       that.setState({
-        collapsing: false
-      });
-     }, 500);
+        removed: true
+      })      
+    },500)
   }
 
 });

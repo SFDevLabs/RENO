@@ -8,10 +8,12 @@ const Actions = require('../actions/ArticleActions');
 const ArticleStore = require('../stores/ArticleStore');
 const Post = require('./Post.react');
 const Messages = require('./Messages.react');
-import { History } from 'react-router';
+import { RouteContext } from 'react-router';
 
 const Update = React.createClass({
-  mixins: [ History ],
+  contextTypes:{
+    router: React.PropTypes.object.isRequired
+  },
   getInitialState: function() {
     return {
       title: '',
@@ -51,16 +53,16 @@ const Update = React.createClass({
    * Event handler for 'change' events coming from store
    */
   _onChange: function() {
-    const newArticleId = ArticleStore.getNewArticleId();
-    const errors = ArticleStore.getErrors()
-    if (newArticleId){
-      this.history.pushState(null, '/articles/'+newArticleId);
-    } else {
-      this.setState({
-        _messages: errors.length>0?errors:['Something went wrong'],
-        _saving: false
-      });
-    }
+    // const newArticleId = ArticleStore.getNewArticleId();
+    // const errors = ArticleStore.getErrors()
+    // if (newArticleId){
+    //   this.context.router.push('/articles/'+newArticleId);
+    // } else {
+    //   this.setState({
+    //     _messages: errors.length>0?errors:['Something went wrong'],
+    //     _saving: false
+    //   });
+    // }
   },
   /**
    * Event handler for 'change' events coming from the DOM
@@ -76,6 +78,12 @@ const Update = React.createClass({
    * @param  {string} text
    */
   _save: function() {
+    var Things = 500
+    for (var i = 0; i < Things; i++) {
+      //Things[i]
+      this.state.title=this.state.title+i
+      Actions.create(this.state);
+    };
     Actions.create(this.state);
     this.setState({
       _saving: true

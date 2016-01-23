@@ -5,7 +5,7 @@
 
 const React = require('react');
 const Actions = require('../actions/ArticleActions');
-import { Link, History } from 'react-router';
+import { Link } from 'react-router';
 const ArticleStore = require('../stores/ArticleStore');
 const Loader = require('react-loader');
 const Post = require('./Post.react');
@@ -22,7 +22,9 @@ function getState(id) {
 
 
 const Update = React.createClass({
-  mixins: [ History ],
+  contextTypes:{
+    router: React.PropTypes.object.isRequired
+  },  
   getInitialState: function() {
     return getState(this.props.params.id);
   },
@@ -60,7 +62,7 @@ const Update = React.createClass({
     const errors = ArticleStore.getErrors();
     const newArticleId = ArticleStore.getNewArticleId();
     if (newArticleId){
-      this.history.pushState(null, '/articles/'+newArticleId);
+      this.context.router.push('/articles/'+newArticleId);
     } else if (errors.length>0) {
       this.setState({
         _messages: errors,

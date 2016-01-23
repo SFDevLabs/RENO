@@ -6,7 +6,13 @@
 const React = require('react');
 const Actions = require('../actions/UserActions');
 const UserStore = require('../stores/UserStore');
-import { Link, History } from 'react-router';
+import { Link } from 'react-router';
+const AppDispatcher = require('../dispatcher/AppDispatcher');
+const Constants = require('../constants/Constants');
+
+import { Navbar, MenuItem, NavItem, Nav, NavDropdown} from 'react-bootstrap'; 
+import { LinkContainer } from 'react-router-bootstrap'; 
+
 
 /**
  * Retrieve the current USER data from the UserStore
@@ -19,13 +25,12 @@ function getState() {
 }
 
 const Header = React.createClass({
-
-  mixins: [ History ],
+  contextTypes:{
+    router: React.PropTypes.object.isRequired
+  },
 
   getInitialState:function(){
     return {
-      collapsed: true,
-      collapsing: false,
       loading: true
     };
   },
@@ -42,75 +47,46 @@ const Header = React.createClass({
    * @return {object}
    */
   render: function() {
+
     const profile = this.state.profile? this.state.profile:{};
-    const isLoggedIn = !!profile._id
+    const isLoggedIn = !!profile._id;
+    const loading = this.state.loading;
     // Create the right side based on logged in state. (Notice the react.js required unique keys placed in each item)
-    const navItemsLeft= isLoggedIn?[
-    <li onClick={this._onSelect} key={0} className={this._activeClass('/articles/new')}>
-        <Link to="/articles/new">New</ Link>
-    </li>,
-
-    <li onClick={this._onSelect} key={1}>
-      <a href="/logout" title="logout">Logout</a>
-    </li>
-    ]:
-    [<li onClick={this._onSelect} key={0} >
-      <a href="/login" title="Login">Login</a>
-    </li>,
-    <li onClick={this._onSelect} key={1} >
-      <a href="/signup" title="Signup">Signup</a>
-    </li>]
-    // Create theleft side based on logged in state.
+    var navItemsLeft = isLoggedIn?
+      [<LinkContainer key={0} className={this._activeClass('/articles/new')} to='/articles/new'>
+        <NavItem>New</NavItem>
+      </LinkContainer>]
+      :[];
+    //Add Github link
+    navItemsLeft.push(<NavItem key={1} href="https://github.com/sfdevlabs/reno">Github Repo</NavItem>);
+    // Create the left side based on logged in state.
     var navItemsRight = isLoggedIn?
-            [<li key={2} >
-              <Link onClick={this._onSelect} to={ "/users/"+profile._id}>{profile.username}</Link>
-            </li>]:[];
-    // Place out github logo as the first item on the right side.
-    navItemsRight.unshift(<li key={3} >
-              <a href="https://github.com/sfdevlabs/reno" title="GitHub">GitHub</a>
-            </li>);
+          <NavDropdown className={this._activeClass('/users/'+profile._id)} eventKey={2} title={profile.username} id="basic-nav-dropdown">
+            <LinkContainer key={2.0} to={'/users/'+profile._id}>
+              <MenuItem >Profile</MenuItem>
+            </LinkContainer>
+            <MenuItem eventKey={2.1} href="/logout" >Logout</MenuItem>
+          </NavDropdown>:
+          <NavItem eventKey={3} href="/login">Login</NavItem>;
+    const navBar = !loading?
+    <Navbar.Collapse>
+      <Nav>
+        {navItemsLeft}
+      </Nav>
+      <Nav pullRight>
+        {navItemsRight}
+      </Nav>
+    </Navbar.Collapse>:null;
 
-    //The total height and current css properties for the Bootsrap navbar.
-    const itemHeight = 40;
-    const paddingHeight = 23
-    const totalHeight = (navItemsRight.length + navItemsLeft.length) * itemHeight + paddingHeight;
-
-    var navBar = 'navbar-collapse';
-    var styleCollapse = {};
-    if (this.state.collapsing){
-      navBar += ' collapsing';
-      styleCollapse.height = this.state.collapsed?'0px':totalHeight;
-    }else{
-      navBar += this.state.collapsed?' collapse':' in';
-      styleCollapse.height = 'auto';
-    } 
-
-
-    const navBarJSX = !this.state.loading?
-        <div className={navBar} style={styleCollapse}>
-          <ul className="nav navbar-nav">
-            {navItemsLeft}
-          </ul>
-          <ul className="nav navbar-nav navbar-right">
-            {navItemsRight}
-          </ul>
-        </div>:
-        null
-
-    return <nav role="navigation" className="navbar navbar-default navbar-fixed-top">
-      <div className="container">
-        <div className="navbar-header">
-          <button onClick={this._onClick} type="button" data-toggle="collapse" data-target=".navbar-collapse" className="navbar-toggle">
-            <span className="sr-only">Toggle navigation</span>
-            <span className="icon-bar"></span>
-            <span className="icon-bar"></span>
-            <span className="icon-bar"></span>
-          </button>
+    return <Navbar fluid fixedTop style={{padding: "0px 15px"}} >
+      <Navbar.Header>
+        <Navbar.Brand>
           <Link to="/" className="navbar-brand">RENO</ Link>
-        </div>
-        {navBarJSX}
-      </div>
-    </nav>;
+        </Navbar.Brand>
+        <Navbar.Toggle />
+      </Navbar.Header>
+      {navBar}
+    </Navbar>
   },
   /**
    * Event handler for 'change' events coming from the UserStore
@@ -119,39 +95,12 @@ const Header = React.createClass({
     this.setState(getState());
   },
   /**
-   * _onClick - Boostrap functions for collapsing the nav bar.
-   * @return {[type]} [description]
+   * [_activeClass Is this link the active href]
+   * @param  {string} path 
+   * @return {[type]}      [description]
    */
-  _onClick:function(){
-    // Simple logic to flip classes for the bootrap animation on the collapse navbar.
-    var that = this;
-    this.setState({
-      collapsing: true,
-    });
-    setTimeout(function(){ 
-      that.setState({
-        collapsed: !that.state.collapsed
-      });
-     }, 10);
-    setTimeout(function(){ 
-      that.setState({
-        collapsing: false
-      });
-     }, 500);
-  },
-  /**
-   * _onClick - Boostrap functions for collapsing the nav bar.
-   * @return {[type]} [description]
-   */
-  _onSelect:function(){
-    // Set the navbar closed when we select somthing.  No animation nessecary.
-    this.setState({
-      collapsing: false,
-      collapsed: true
-    });
-  },
   _activeClass: function(path){
-    return this.context.history.isActive(path)?'active':null;
+    return this.context.router.isActive(path)?'active':null;
   }
 
 });
