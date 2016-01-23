@@ -13,7 +13,7 @@ const Messages = require('./Messages.react');
 const Loader = require('react-loader');
 const _ = require('lodash');
 
-import { Link, History } from 'react-router';
+import { Link } from 'react-router';
 
 /**
  * Retrieve the current ARTICLES data from the ArticleStore
@@ -25,8 +25,9 @@ function getState(id) {
 }
 const ArticleSection = React.createClass({
   
-  mixins: [ History ],
-
+  contextTypes:{
+    router: React.PropTypes.object.isRequired
+  },
   getInitialState: function() {
     return getState(this.props.params.id); //Using the antipattern to pass the id from the URL
   },
@@ -45,17 +46,22 @@ const ArticleSection = React.createClass({
    * @return {object}
    */
   render :function() {
-    if (this.state.articleNotFound){return <NotFound />} 
-    else if (!this.state.article){return <Loader />}
+    if (this.state.article===null){return <NotFound />}//null means the api gave us a 404.
+    else if (!this.state.article){return <Loader />}//undefined means that no request for the article has been made.
 
 
     const article = this.state.article;
     const dateString = new Date(article.createdAt).toLocaleString();             
     const deleting = this.state._deleting ? <Loader options={{top:'10%'}} />:null; //The loader itself.
-    const opacity = this.state._deleting ? .2 : 1;//The opacity for the items behind the loader.
+    const overflow = {overflow: 'hidden', textOverflow: 'ellipsis'};
+
+    const mainArticleRow = {
+      opacity: this.state._deleting ? .2 : 1, //The opacity for the items behind the loader.
+      minHeight:'210px' //Min height besed on image size for the articles.
+    }
 
     const errorMessage = this.state._messages? (
-      <Messages messages={this.state._messages} type="danger" />
+      <Messages messages={this.state._messages} type="warning" />
       ) : null; //Rendering a warning message.
 
     const tags = _.map(article.tags, function(val, key){
@@ -67,31 +73,32 @@ const ArticleSection = React.createClass({
          )
     });
 
-
-    var img
+    //Logic create image
+    var img 
     if (article.image && article.image.files && article.image.files.length){
-      //Stripping to protcole from the link for propper link structure.
-      var parser = document.createElement('a');
+      var parser = document.createElement('a');// Stripping the protocol from the link for proper link structure
       parser.href = article.image.cdnUri;
       const cdnUri = parser.host + parser.pathname
       img =
         <a href={article.image.cdnUri + '/detail_' + article.image.files[0]} target="_blank" >
           <img src = {'//' + cdnUri + 'mini_' + article.image.files[0]} alt="" />
         </a>
+    }else{
+      img = null;
     }
 
     return <section className="container">
       <div className="page-header">
         <button onClick={this._onRefresh} className="pull-right btn btn-default">
-          <span className="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+          <span className="glyphicon glyphicon-refresh"></span>
         </button>
-        <h1>{article.title}</h1>
+        <h1 style={overflow} >{article.title}</h1>
       </div>
       {errorMessage}
       <div className="content" style={{position:'relative'}}>
         {deleting}
-        <div className="row" style={{opacity: opacity, minHeight:'210px'}}>
-          <div className="col-md-8">
+        <div className="row" style={mainArticleRow}>
+          <div style={overflow} className="col-md-8">
             <p>{ article.body }</p>
             <div className="meta">
                 Author: &nbsp;
@@ -135,12 +142,8 @@ const ArticleSection = React.createClass({
         _deleting: false
       });
     } else if (!state.article && this.state._deleting) { //A delete request was fired, we have no errors and we have no article in the store. Navigate to home.
-      this.history.pushState(null, '/');
-    } else if (!state.article) { //We have no article in the store after an API request. Show the 404.
-      this.setState({
-        articleNotFound: true
-      });
-    } else {  //We hae the article render it in the component.
+      this.context.router.push('/');
+    } else {
       this.setState(state);
     }
   },
@@ -150,8 +153,8 @@ const ArticleSection = React.createClass({
   _delete: function() {
     this.setState({
         _deleting: true
-    });//Set page to deleting
-    Actions.destroy(this.state.article._id); //Fire the destroy event.
+    });
+    Actions.destroy(this.state.article._id); //Fire the destroy event
   },
   /**
    * Event handler for 'refresh' button coming from the DOM
@@ -159,7 +162,7 @@ const ArticleSection = React.createClass({
   _onRefresh:function(){
     Actions.getById(this.props.params.id);
     this.setState({
-      article:null
+      article:undefined
     });
   }
 

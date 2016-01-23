@@ -31,6 +31,13 @@ function setProfileId(id) {
   _profileId = id;
 }
 
+/**
+ * Set one USER itemas null if we get a 404.
+ * @param  {string} text The content of the ARTICLES
+ */
+function setNotFound(id) {
+  _users[id] = null;
+}
 
 var UserStore = assign({}, EventEmitter.prototype, {
 
@@ -96,7 +103,11 @@ AppDispatcher.register(function(action) {
       break;
 
     case Constants.ERROR_NOT_FOUND:
-      UserStore.emitChange();
+      var id = action.data?action.data._id:null;
+      if (id) {
+        setNotFound(id);
+        UserStore.emitChange();
+      }
       break;
       
     default:

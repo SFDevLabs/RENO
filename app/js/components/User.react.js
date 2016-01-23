@@ -36,7 +36,7 @@ const User = React.createClass({
   },
 
   render :function() {
-    if (this.state.userNotFound){return <NotFound />} 
+    if (this.state.user===null){return <NotFound />} 
     else if (!this.state.user){return <Loader />}
 
     return <section className="container">
@@ -68,14 +68,7 @@ const User = React.createClass({
    * Event handler for 'change' events coming from the UserStore
    */
   _onChange: function() {
-    var state = getState(this.props.params.id)
-    if (!state.user){
-      this.setState({
-        userNotFound: true
-      });
-    }else{
-      this.setState(state);
-    }
+    this.setState(getState(this.props.params.id));
   },
 
 })
