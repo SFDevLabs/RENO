@@ -152,7 +152,7 @@ const ArticleSection = React.createClass({
    */
   _delete: function() {
     this.setState({
-        _deleting: true
+      _deleting: true
     });
     Actions.destroy(this.state.article._id); //Fire the destroy event
   },
