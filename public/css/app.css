@@ -33,6 +33,10 @@ body {
   margin: 20px 0;
 }
 
+.top {
+  padding-top: 60px;
+}
+
 #footer > .container {
   padding-left: 15px;
   padding-right: 15px;
@@ -43,7 +47,11 @@ body {
   ------------------------------------------------ */
 
 body {
-  padding-top: 60px;
+  
+}
+
+#app {
+  height:100%;
 }
 
 .article, .comment {

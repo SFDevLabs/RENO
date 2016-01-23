@@ -4,7 +4,7 @@
 */
 
 const AppDispatcher = require('../dispatcher/AppDispatcher');
-const ArticleConstants = require('../constants/Constants');
+const Constants = require('../constants/Constants');
 const ArticleApi = require('../api/ArticlesApi');
 
 
@@ -17,7 +17,7 @@ const Actions = {
   getList: function(start, skip, clearStore) {
     ArticleApi.getEntityListData(start, skip);
     if (clearStore){
-      AppDispatcher.dispatch({actionType: ArticleConstants.CLEAR_ALL_ARTICLES_DATA})
+      AppDispatcher.dispatch({actionType: Constants.CLEAR_ALL_ARTICLES_DATA})
     }
   },
   /**
@@ -27,7 +27,7 @@ const Actions = {
   getListByTag: function(tag, start, skip, clearStore) {
     ArticleApi.getEntityListData(start, skip, tag);
     if (clearStore){
-      AppDispatcher.dispatch({actionType: ArticleConstants.CLEAR_ALL_ARTICLES_DATA})
+      AppDispatcher.dispatch({actionType: Constants.CLEAR_ALL_ARTICLES_DATA})
     }
   },
 
