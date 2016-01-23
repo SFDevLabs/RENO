@@ -58,7 +58,7 @@ const Update = React.createClass({
     const newArticleId = ArticleStore.getNewArticleId();
     const errors = ArticleStore.getErrors()
     if (newArticleId){
-      this.history.push('/articles/'+newArticleId);
+      this.context.router.push('/articles/'+newArticleId);
     } else {
       this.setState({
         _messages: errors.length>0?errors:['Something went wrong'],
