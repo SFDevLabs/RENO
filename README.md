@@ -1,8 +1,7 @@
 
 # RENO - React Express Node mOngoDB 
 
-RENO is an example of a how to set up a full stack [React.js](https://facebook.github.io/react/) app. See it live
-example ar [reno-demo.herokuapp.com](https://reno-demo.herokuapp.com).
+RENO is an example of a how to set up a full stack [React.js](https://facebook.github.io/react/) app. See it live at [reno-demo.herokuapp.com](https://reno-demo.herokuapp.com).
 
 ## Install
 
