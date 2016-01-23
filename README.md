@@ -36,7 +36,7 @@ $ npm test
 
 ## CREDIT
 
-Thanks to Madhums for Express Server, Model and [node-express-mongoose-demo](https://github.com/madhums/node-express-mongoose-demo)
+The server and mongoose models are based on those found in  [node-express-mongoose-demo](https://github.com/madhums/node-express-mongoose-demo). (Thanks to [madhums](https://github.com/madhums))
 
 
 ## License
