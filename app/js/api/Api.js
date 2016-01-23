@@ -40,7 +40,7 @@ var Api = {
       } else if (err && res && res.status === 404) {
         dispatch(Constants.ERROR_NOT_FOUND, res.body, params, data);
       } else if (err) {
-        dispatch(Constants.ERROR, res.body);
+        dispatch(Constants.ERROR, res);
       } else {//All is good we dispatch the event with our data.
         dispatch(key, res, params);
       }

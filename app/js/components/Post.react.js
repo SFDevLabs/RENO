@@ -25,9 +25,19 @@ const Post = React.createClass({
     const loader = this.props.saving?<Loader options={{top:'40%'}} />:null;//The loader itself.
     const article = this.props.article
 
-    const img = (article.image && article.image.files && article.image.files.length) ? 
-      <img src = {article.image.cdnUri + '/mini_' + article.image.files[0]} alt="" /> :
-      null;
+    //Logic create image
+    var img 
+    if (article.image && article.image.files && article.image.files.length){
+      var parser = document.createElement('a');// Stripping the protocol from the link for proper link structure
+      parser.href = article.image.cdnUri;
+      const cdnUri = parser.host + parser.pathname
+      img =
+        <a href={article.image.cdnUri + '/detail_' + article.image.files[0]} target="_blank" >
+          <img src = {'//' + cdnUri + 'mini_' + article.image.files[0]} alt="" />
+        </a>
+    }else{
+      img = null;
+    }
 
     return <div className="row">
       {loader}
