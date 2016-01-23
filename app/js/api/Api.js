@@ -46,34 +46,37 @@ var Api = {
       }
     };
   },
-  get: function (url, params) {  // a get request with an authtoken param
+  // a get request with an csrfToken param
+  get: function (url, params) { 
     return request
       .get(url)
       .query(params)
       .timeout(TIMEOUT)
   },
-  post: function (url, data) {  // a post request with an authtoken param
+  // a post request with an csrfToken param
+  post: function (url, data) {
     var r = request.post(url)
     for (var key in data) {
       r.field(key, data[key])
     };
-    r.field('_csrf', csrfToken);//adding the csrf token
+    r.field('_csrf', csrfToken);
 
     return r.timeout(TIMEOUT);
   },
-  // a put request with an authtoken param
+  // a put request with an csrfToken param
   put: function (url, data) {
     var r = request.put(url)
     for (var key in data) {
       r.field(key, data[key])
     };
-    r.field('_csrf', csrfToken);//adding the csrf token
+    r.field('_csrf', csrfToken);
 
     return r.timeout(TIMEOUT);
   },
-  del: function (url) {  // a delete request with an authtoken param
+  // a delete request with an csrfToken param
+  del: function (url) {
     var r = request.delete(url)
-    r.field('_csrf', csrfToken);//adding the csrf token
+    r.field('_csrf', csrfToken);
     return r.timeout(TIMEOUT);
   }
 }

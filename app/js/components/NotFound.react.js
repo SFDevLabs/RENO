@@ -12,11 +12,11 @@ const About = React.createClass({
   render :function() {
     return <section className="container">
         <div className="page-header">
-          <h1>404</h1>
+          <h2>404 - Not Found</h2>
         </div>
         <div className="content" >
-        	<p>We could not find that page.</p>
-			<Link to="/">Return Home</Link>
+          <p>We could not find that page.</p>
+          <Link to="/">Return Home</Link>
         </div>
     </section>;
   }

@@ -58,16 +58,18 @@ const Header = React.createClass({
       </LinkContainer>]
       :[];
     //Add Github link
-    navItemsLeft.push(<NavItem key={1} href="https://github.com/sfdevlabs/reno">Github Repo</NavItem>);
+    navItemsLeft.push(<NavItem key={1} href="https://github.com/sfdevlabs/reno">GitHub Repo</NavItem>);
     // Create the left side based on logged in state.
     var navItemsRight = isLoggedIn?
-          <NavDropdown className={this._activeClass('/users/'+profile._id)} eventKey={2} title={profile.username} id="basic-nav-dropdown">
+          <NavDropdown eventKey={2} className={this._activeClass('/users/'+profile._id)} title={profile.username} id="basic-nav-dropdown">
             <LinkContainer key={2.0} to={'/users/'+profile._id}>
               <MenuItem >Profile</MenuItem>
             </LinkContainer>
             <MenuItem eventKey={2.1} href="/logout" >Logout</MenuItem>
           </NavDropdown>:
-          <NavItem eventKey={3} href="/login">Login</NavItem>;
+          [<NavItem key={2} eventKey={3} href="/login">Login</NavItem>,
+          <NavItem key={3} eventKey={3} href="/signup">Signup</NavItem>]
+          
     const navBar = !loading?
     <Navbar.Collapse>
       <Nav>
@@ -79,13 +81,15 @@ const Header = React.createClass({
     </Navbar.Collapse>:null;
 
     return <Navbar fluid fixedTop style={{padding: "0px 15px"}} >
-      <Navbar.Header>
-        <Navbar.Brand>
-          <Link to="/" className="navbar-brand">RENO</ Link>
-        </Navbar.Brand>
-        <Navbar.Toggle />
-      </Navbar.Header>
-      {navBar}
+      <div className="container">
+        <Navbar.Header>
+          <Navbar.Brand>
+            <Link to="/" className="navbar-brand">RENO</ Link>
+          </Navbar.Brand>
+          <Navbar.Toggle />
+        </Navbar.Header>
+        {navBar}
+      </div>
     </Navbar>
   },
   /**

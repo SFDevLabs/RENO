@@ -87,16 +87,18 @@ module.exports = function (app, passport) {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
-  //Storage obj for preserving file name.
+  //Storage obj for preserving file name. @jeffj
   const storage = multer.diskStorage({
     filename: function (req, file, cb) {
       cb(null, Math.pow(10,18)*Math.random().toString() + '.' + mime.extension(file.mimetype));
     }
   });
 
+  //Where our images upload to @jeffj
   app.use(multer({
     storage: storage
   }).array('image', 1));
+
   app.use(methodOverride(function (req) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
       // look in urlencoded POST bodies and delete it
@@ -136,6 +138,7 @@ module.exports = function (app, passport) {
     // This could be moved to view-helpers :-)
     app.use(function (req, res, next) {
       res.locals.csrf_token = req.csrfToken();
+      //Our live loading bundle from webpack-dev-server @jeffj
       res.locals.bundle_js = (env==='development')?'http://localhost:8090/app/js/bundle.js':'/js/bundle.js';
       next();
     });
