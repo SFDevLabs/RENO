@@ -17,7 +17,7 @@ Then visit [http://localhost:3000/](http://localhost:3000/)
 
 ## Heroku
 
-To run the app on heroku you must set the [environment variables](https://nodejs.org/api/process.html#process_process_env) for the app.
+To run the app on Heroku you must set the [environment variables](https://nodejs.org/api/process.html#process_process_env) for the app.
 
 
 1. Set NODE_ENV to 'production'
@@ -37,7 +37,7 @@ $ npm test
 
 ## CREDIT
 
-Thanks to Madhums for Exrpess Server, Model and [node-express-mongoose-demo](https://github.com/madhums/node-express-mongoose-demo)
+Thanks to Madhums for Express Server, Model and [node-express-mongoose-demo](https://github.com/madhums/node-express-mongoose-demo)
 
 
 ## License
