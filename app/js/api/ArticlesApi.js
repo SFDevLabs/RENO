@@ -18,9 +18,9 @@ function makeUrl(part) {
 //API calls
 var ArticleApi = {
   getEntityListData: function(count, skip, tag) {
-    var url = makeUrl('');
-    var key = Constants.GET_ALL_ARTICLES_DATA;
-    var params = {count: count, skip:skip, tag:tag};
+    const url = makeUrl('');
+    const key = Constants.GET_ALL_ARTICLES_DATA;
+    const params = {count: count, skip:skip, tag:tag};
     RequestAPI.abortPendingRequests(key, _pendingRequests);
     RequestAPI.dispatch(Constants.PENDING, params);
     _pendingRequests[key] = RequestAPI.get(url, params).end(
@@ -29,20 +29,21 @@ var ArticleApi = {
   },
   getEntityDataById: function(id) {
     if (!id){ return false;}else{
-      var url = makeUrl("/"+id);
-      var key = Constants.GET_ARTICLE_DATA;
-      var params = {};
+      const url = makeUrl("/"+id);
+      const key = Constants.GET_ARTICLE_DATA;
+      const params = {};
+      const data = {_id:id}
       RequestAPI.abortPendingRequests(key, _pendingRequests);
       RequestAPI.dispatch(Constants.PENDING, params);
       _pendingRequests[key] = RequestAPI.get(url, params).end(
-        RequestAPI.makeResponseCallback(key, params)
+        RequestAPI.makeResponseCallback(key, params, data)
       );            
     }
   },
   postEntityData: function(data) {
-    var url = makeUrl('');
-    var key = Constants.POST_ARTICLE_DATA;
-    var params = data;
+    const url = makeUrl('');
+    const key = Constants.POST_ARTICLE_DATA;
+    const params = data;
     RequestAPI.abortPendingRequests(key, _pendingRequests);
     RequestAPI.dispatch(Constants.PENDING, params);
     _pendingRequests[key] = RequestAPI.post(url, params).end(
@@ -50,9 +51,9 @@ var ArticleApi = {
     );
   },
   deleteEntityData: function(id) {
-    var url = makeUrl("/"+id);
-    var key = Constants.DELETE_ARTICLE;
-    var params = {};
+    const url = makeUrl("/"+id);
+    const key = Constants.DELETE_ARTICLE;
+    const params = {};
     RequestAPI.abortPendingRequests(key, _pendingRequests);
     RequestAPI.dispatch(Constants.PENDING, params);
     _pendingRequests[key] = RequestAPI.del(url, params).end(
@@ -60,9 +61,9 @@ var ArticleApi = {
     );
   },
   putEntityData: function(id, data) {
-    var url = makeUrl('/'+id);
-    var key = Constants.POST_ARTICLE_DATA;
-    var params = data;
+    const url = makeUrl('/'+id);
+    const key = Constants.POST_ARTICLE_DATA;
+    const params = data;
     RequestAPI.abortPendingRequests(key, _pendingRequests);
     RequestAPI.dispatch(Constants.PENDING, params);
     _pendingRequests[key] = RequestAPI.put(url, params).end(
@@ -70,9 +71,9 @@ var ArticleApi = {
     );
   },
   postEntityCommentData: function(id, data) {
-    var url = makeUrl('/'+id+'/comments');
-    var key = Constants.POST_ARTICLE_COMMENT_DATA;
-    var params = data;
+    const url = makeUrl('/'+id+'/comments');
+    const key = Constants.POST_ARTICLE_COMMENT_DATA;
+    const params = data;
     RequestAPI.abortPendingRequests(key, _pendingRequests);
     RequestAPI.dispatch(Constants.PENDING, params);
     _pendingRequests[key] = RequestAPI.post(url, params).end(
@@ -80,9 +81,9 @@ var ArticleApi = {
     ); 
   },
   deleteEntityCommentData: function(id, commentId) {
-    var url = makeUrl('/'+ id +'/comments/'+ commentId);
-    var key = Constants.DELETE_ARTICLE_COMMENT_DATA;
-    var params = {};
+    const url = makeUrl('/'+ id +'/comments/'+ commentId);
+    const key = Constants.DELETE_ARTICLE_COMMENT_DATA;
+    const params = {};
     RequestAPI.abortPendingRequests(key, _pendingRequests);
     RequestAPI.dispatch(Constants.PENDING, params);
     _pendingRequests[key] = RequestAPI.del(url, params).end(

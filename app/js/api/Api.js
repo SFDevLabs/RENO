@@ -3,7 +3,7 @@
  * Copyright (c) 2016, Jeff Jenkins.
 */
 
-const TIMEOUT = 10000;
+const TIMEOUT = 12000;
 
 const request = require('superagent');
 const AppDispatcher = require('../dispatcher/AppDispatcher');
@@ -13,10 +13,13 @@ const csrf = document.getElementById('csrf');
 const csrfToken = csrf?csrf.content:'';
 
 
-function dispatch(key, response, params) {
+function dispatch(key, response, params, data) {
   var payload = {actionType: key, response: response};
   if (params) {
-    payload.queryParams = params;
+    payload.params = params;
+  }
+  if (data) {
+    payload.data = data;
   }
   AppDispatcher.dispatch(payload);
 }
@@ -30,12 +33,12 @@ var Api = {
     }
   },
   dispatch : dispatch,
-  makeResponseCallback: function (key, params) {
+  makeResponseCallback: function (key, params, data) {
     return function (err, res) {
       if (err && err.timeout === TIMEOUT) {
-        dispatch(Constants.TIMEOUT, params);
+        dispatch(Constants.TIMEOUT, params, data);
       } else if (err && res && res.status === 404) {
-        dispatch(Constants.ERROR_NOT_FOUND, params);
+        dispatch(Constants.ERROR_NOT_FOUND, res.body, params, data);
       } else if (err) {
         dispatch(Constants.ERROR, res.body);
       } else {//All is good we dispatch the event with our data.
