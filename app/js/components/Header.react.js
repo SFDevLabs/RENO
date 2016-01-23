@@ -7,8 +7,6 @@ const React = require('react');
 const Actions = require('../actions/UserActions');
 const UserStore = require('../stores/UserStore');
 import { Link } from 'react-router';
-const AppDispatcher = require('../dispatcher/AppDispatcher');
-const Constants = require('../constants/Constants');
 
 import { Navbar, MenuItem, NavItem, Nav, NavDropdown} from 'react-bootstrap'; 
 import { LinkContainer } from 'react-router-bootstrap'; 

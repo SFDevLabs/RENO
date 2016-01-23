@@ -39,7 +39,6 @@ const Messages = React.createClass({
         <li>{message}</li>
       </ul>
     });
-    const visible = this.state.alertVisible
     const removed = this.state.removed
 
     const JSX = !removed ?
