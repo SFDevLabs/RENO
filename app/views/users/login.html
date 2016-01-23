@@ -1,7 +1,7 @@
 {% extends 'auth.html' %}
 
 {% block auth %}
-  {% include '../includes/providers.html' %}
+  {% include './providers.html' %}
 
   <form action="/users/session" method="post" role="form" class="form-horizontal">
     <input type="hidden" name="_csrf" value="{{ csrf_token }}">

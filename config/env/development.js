@@ -25,7 +25,7 @@ if (fs.existsSync(envFile)) {
 const url = 'http://localhost:3000'
 module.exports = {
   url : url,
-  db: 'mongodb://localhost/noobjs_dev',
+  db: 'mongodb://localhost/reno_dev',
   facebook: {
     clientID: process.env.FACEBOOK_CLIENTID,
     clientSecret: process.env.FACEBOOK_SECRET,

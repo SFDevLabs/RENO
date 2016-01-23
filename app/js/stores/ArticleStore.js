@@ -37,6 +37,14 @@ function set(article) {
 }
 
 /**
+ * Set one ARTICLE item as null if we get a 404.
+ * @param  {string} text The content of the ARTICLES
+ */
+function setNotFound(id) {
+  _articles[id] = null;
+}
+
+/**
  * Update a ARTICLES item.
  * @param  {string} id
  * @param {object} updates An object literal containing only the data to be
@@ -245,7 +253,11 @@ AppDispatcher.register(function(action) {
       break;
 
     case Constants.ERROR_NOT_FOUND:
-      ArticleStore.emitChange();
+      var id = action.data?action.data._id:null;
+      if (id) {
+        setNotFound(id);
+        ArticleStore.emitChange();
+      }
       break;
 
     case Constants.TIMEOUT:

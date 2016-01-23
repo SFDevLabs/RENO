@@ -5,7 +5,7 @@
 
 
 const React = require('react');
-import { Router, Route, Link, IndexRoute } from 'react-router';
+import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
 
 const Header = require('./Header.react');
 const Articles = require('./Articles.react');
@@ -14,12 +14,15 @@ const PostNew = require('./PostNew.react');
 const PostUpdate = require('./PostUpdate.react');
 const NotFound = require('./NotFound.react');
 const User = require('./User.react');
+const AppDispatcher = require('../dispatcher/AppDispatcher');
+const Constants = require('../constants/Constants');
 
 const Main = React.createClass({
   render() {
+    //route={'/'}
     return (
         <div>
-          <Header />
+          <Header route={{}} />
           {this.props.children}
         </div>
       )
@@ -32,8 +35,8 @@ const Root = React.createClass({
    */
   render: function() {
     //Our React Router table
-    return <div>
-      <Router>
+    return <div className="top" style={{height:'100%'}} onClick={this._onClick}>
+      <Router history={hashHistory}>
         <Route path="/" component={Main} >
           <IndexRoute component={Articles} />
           <Route path="tags/:tag" component={Articles} />
@@ -45,6 +48,9 @@ const Root = React.createClass({
         </Route>
       </Router>
     </div>;
+  },
+  _onClick: function(){
+      AppDispatcher.dispatch({actionType: Constants.APP_CLICK});
   }
 
 });

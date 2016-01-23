@@ -10,9 +10,8 @@ const ArticleStore = require('../stores/ArticleStore');
 const Loader = require('react-loader');
 
 const ArticleItem = require('./ArticleItem.react');
-const take = 5
+const take = 20
 const initalSkip = 0;
-const clearStore = true //We will clear the store so we are sure we load the most recent articles.
 
 /**
  * Retrieve the current ARTICLE data from the ArticleStore
@@ -35,16 +34,17 @@ const ArticleSection = React.createClass({
 
   componentDidMount: function() {
     const tag = this.props.params.tag
+    const initalSkip = 0;
 
-    if (this.state.initalGet){ //This flag tells of if we have loaded the most recent articles.
+    if (this.state.initalGet && tag === this.state.tag){ //This flag tells of if we have hit the list API for this query.
       this.setState(getState());
-    } else if (tag) {
-      Actions.getListByTag(tag, take, initalSkip, clearStore);
     } else {
-      Actions.getList(take, initalSkip, clearStore);
+      this._fetch(tag, initalSkip);
     }
     ArticleStore.addChangeListener(this._onChange);
   },
+
+
 
   componentWillUnmount: function() {
     ArticleStore.removeChangeListener(this._onChange);
@@ -52,15 +52,15 @@ const ArticleSection = React.createClass({
 
   componentWillReceiveProps: function(nextProps) {
     const tag = nextProps.params.tag
-    this.setState({
-      initalGet: false
-    });
-
-    if (tag) {
-      Actions.getListByTag(tag, take, initalSkip, clearStore);
-    } else {
-      Actions.getList(take, initalSkip, clearStore);
-    }
+    if (tag!==this.state.tag) { //If we recive props from the router we need to refetch!
+      this.setState({
+        initalGet: false,
+        tag:tag
+      });
+      const clearStore = true //We will clear the store so we are sure we load the most recent articles.
+      const skip = 0;
+      this._fetch(tag, skip, clearStore)
+    } 
   },
   /**
    * @return {object}
@@ -105,6 +105,14 @@ const ArticleSection = React.createClass({
       </div>
     </section>;
   },
+  _fetch:function(tag, skip, clearStore){
+    if (tag) {
+        this.setState({tag: tag})
+        Actions.getListByTag(tag, take, skip, clearStore);
+      } else {
+        Actions.getList(take, skip, clearStore);
+    }
+  },
   /**
    * Event handler for 'change' events coming from the ArticleStore
    */
@@ -114,9 +122,10 @@ const ArticleSection = React.createClass({
   /**
    * Event handler for 'more' button coming from the DOM
    */
-  _onClickMore:function(){
+  _onClickMore:function(){   
     const skip = Object.keys(this.state.articles).length
-    Actions.getList(take, skip);
+    const tag = this.state.tag 
+    this._fetch(tag, skip);
     this.setState({
       loading:true
     });
@@ -126,13 +135,14 @@ const ArticleSection = React.createClass({
    */
   _onRefresh:function(){
     const clearStore = true //We will clear the store so we are sure we load the most recent articles.
-    Actions.getList(take, initalSkip, clearStore);
+    const tag = this.state.tag
+    const skip = 0;
+    this._fetch(tag, skip, clearStore)
     this.setState({
       loading:true,
       initalGet: false
     });
   }
-
 });
 
 module.exports = ArticleSection;
