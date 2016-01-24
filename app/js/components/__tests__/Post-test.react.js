@@ -10,7 +10,7 @@ describe('Post', () => {
 
   it('renders', () => {
     // Render a article item
-    const val = {tags:[],_id:123, user:{_id:456, username:'Bar'}, title:'Foo', body: 'Bar'};
+    const val = {tags:[],_id:123, user:{_id:456, username:'JohnSmith'}, title:'Foo', body: 'Bar'};
     var post = TestUtils.renderIntoDocument(
       <Post article={val} />
     );
@@ -20,11 +20,6 @@ describe('Post', () => {
     
     var textarea = TestUtils.findRenderedDOMComponentWithTag(post, 'textarea')
     expect(textarea.textContent).toEqual('Bar');
-    
 
-    
-    // expect(title[0].textContent).toEqual('Foo');
-    // expect(title[0].textContent).toEqual('Foo');
-    // expect(title[0].textContent).toEqual('Foo');
   });
 });

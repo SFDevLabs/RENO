@@ -10,7 +10,7 @@ describe('Comments', () => {
 
   it('renders', () => {
 
-    // Render a article item
+    // Render a comment with the new text area
     var comments = TestUtils.renderIntoDocument(
       <Comments Comments={[]} id={123} />
     );

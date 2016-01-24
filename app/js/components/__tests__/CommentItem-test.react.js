@@ -9,7 +9,8 @@ const CommentItem = require('../CommentItem.react');
 describe('CommentItem', () => {
 
   it('renders', () => {
-    // Render a article item
+    
+    // Render a comment item
     const val = {tags:[],_id:123, user:{_id:456, username:'Foo'}, body: 'Bar'};
     var comment = TestUtils.renderIntoDocument(
       <CommentItem comment={val} articleId={val._id} />

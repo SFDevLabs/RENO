@@ -119,7 +119,6 @@ exports.pwResetSubmit = function (req, res) {
         });
       } else {
         user.resetPassword(function(err){
-          console.log(err, 'pwResetSubmit')
           if (err){ 
            res.render('users/reset', {
               title: 'Password Reset',

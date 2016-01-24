@@ -10,8 +10,8 @@ describe('ArticleItem', () => {
 
   it('renders', () => {
 
-    // Render a article item
-    const val = {tags:[],_id:123, user:{_id:456, username:'Bar'}, title:'Foo', body: 'Bar'};
+    // Render an ArticleItem
+    const val = {tags:[],_id:123, user:{_id:456, username:'JohnSmith'}, title:'Foo', body: 'Bar'};
     var item = TestUtils.renderIntoDocument(
       <ArticleItem article={val} />
     );
@@ -25,8 +25,7 @@ describe('ArticleItem', () => {
     var links = TestUtils.scryRenderedDOMComponentsWithTag(item, 'a')
     expect(links[0].textContent).toEqual('Foo');
 
-    expect(links[1].textContent).toEqual('Bar');
-
+    expect(links[1].textContent).toEqual('JohnSmith');
 
   });
 
