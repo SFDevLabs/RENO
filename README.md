@@ -1,7 +1,7 @@
 
 # RENO - React Express Node mOngoDB 
 
-RENO is an example of a how to set up a full stack [React.js](https://facebook.github.io/react/) app. See it live at [reno-demo.herokuapp.com](https://reno-demo.herokuapp.com).
+RENO is an example app that demonstraptes how to set up a full stack [React.js](https://facebook.github.io/react/) app. See it live at [reno-demo.herokuapp.com](https://reno-demo.herokuapp.com).
 
 
 ## Install
@@ -14,6 +14,18 @@ $ npm start
 
 Then visit [http://localhost:3000/](http://localhost:3000/)
 
+## What's in the box?
+
+1. [React.js](https://facebook.github.io/react/) / [Flux](https://facebook.github.io/flux/) frontent
+2. [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) API  built in [Express.js](http://expressjs.com/) and [MongoDB](https://www.mongodb.org/)
+3. [Webpack](https://webpack.github.io/) configuration
+3. [Passport.js](http://passportjs.org/) authentication
+5. [CDN](https://en.wikipedia.org/wiki/Content_delivery_network) image upload via [Imager](https://github.com/madhums/imager)
+6. Application emails via [Notifier](https://github.com/madhums/node-notifier)
+7. Lots of [tests](https://en.wikipedia.org/wiki/Software_testing)
+
+##Why RENO?
+Because we need a good simple example of an end-to-end React app. Motivated by the [javascript fatigue](https://medium.com/@ericclemmons/javascript-fatigue-48d4011b6fc4#.3fcefof62) some new developers face.
 
 ## Heroku
 
@@ -26,7 +38,7 @@ To run the app on Heroku you must set the [environment variables](https://nodejs
 
 
 	
-You can set config variables on Heroku with [this tool](https://devcenter.heroku.com/articles/config-vars#setting-up-config-vars-for-a-deployed-application).
+*You can set config variables on Heroku with [this tool](https://devcenter.heroku.com/articles/config-vars#setting-up-config-vars-for-a-deployed-application).
 
 
 ## Tests
