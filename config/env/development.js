@@ -14,7 +14,7 @@ let env = {};
 // it is not safe to store id's in files
 // you can add 'config/env/env.json' to the .gitignore file if you would like to store keys on your local
 
-if (fs.existsSync(envFile) && process.env.NODE_ENV==='development') {
+if (fs.existsSync(envFile) && process.env.NODE_ENV!=='production') {
   env = fs.readFileSync(envFile, 'utf-8');
   env = JSON.parse(env);
   Object.keys(env).forEach(key => process.env[key] = env[key]);
