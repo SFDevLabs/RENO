@@ -11,30 +11,27 @@ describe('ArticleApi', function() {
 
   var Constants = require('../../constants/Constants');
   var base = '/api/articles';
-  var apiMock = jest.genMockFromModule('../Api');
 
-  beforeEach(function() {
-    callback = jest.genMockFunction();
-    ArticleApi = require('../ArticlesApi');
-    Api = require('../Api');
-    //Mocking the api functions to return a fake end promise
-    var reqesterMock = function(url, params){
-      return {
-        end: function(cb){
-          cb(url, params)
-        }
+  var reqesterMock = function(url, params){
+    return {
+      end: function(cb){
+        cb(url, params)
       }
     }
-    Api.get = reqesterMock;
-    Api.del = reqesterMock;
-    Api.put = reqesterMock;
-    Api.post = reqesterMock;
+  }
+  const ArticleApi = require('../ArticlesApi');
+  const callback = jest.genMockFunction();
 
-    //Returning the jest mock function with our formed api requests.
-    Api.makeResponseCallback = function(){
-      return callback
-    }
-  });
+  var Api = require('../Api');
+  Api.get = reqesterMock;
+  Api.del = reqesterMock;
+  Api.put = reqesterMock;
+  Api.post = reqesterMock;
+  
+  //Returning the jest mock function with our formed api requests.
+  Api.makeResponseCallback = function(){
+    return callback
+  }
 
   it('should form a get list api request', function() {
     var count =5

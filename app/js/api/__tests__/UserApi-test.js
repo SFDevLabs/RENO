@@ -11,30 +11,28 @@ describe('UserApi', function() {
 
   var Constants = require('../../constants/Constants');
   var base = '/api/users';
-  var apiMock = jest.genMockFromModule('../Api');
 
-  beforeEach(function() {
-    callback = jest.genMockFunction();
-    UserApi = require('../UserApi');
-    Api = require('../Api');
-    //Mocking the api functions to return a fake end promise
-    var reqesterMock = function(url, params){
-      return {
-        end: function(cb){
-          cb(url, params)
-        }
+  var reqesterMock = function(url, params){
+    return {
+      end: function(cb){
+        cb(url, params)
       }
     }
-    Api.get = reqesterMock;
-    Api.del = reqesterMock;
-    Api.put = reqesterMock;
-    Api.post = reqesterMock;
+  }
+  const UserApi = require('../UserApi');
+  const callback = jest.genMockFunction();
 
-    //Returning the jest mock function with our formed api requests.
-    Api.makeResponseCallback = function(){
-      return callback
-    }
-  });
+  var Api = require('../Api');
+  Api.get = reqesterMock;
+  Api.del = reqesterMock;
+  Api.put = reqesterMock;
+  Api.post = reqesterMock;
+  
+
+  //Returning the jest mock function with our formed api requests.
+  Api.makeResponseCallback = function(){
+    return callback
+  }
 
   it('should form a get by user by id api request', function() {
     var id = 'abc123'
