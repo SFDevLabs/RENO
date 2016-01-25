@@ -24,10 +24,11 @@ module.exports = new GithubStrategy({
     };
     User.load(options, function (err, user) {
       if (err) return done(err);
+      const email = profile.emails.length>0?profile.emails[0].value:'';
       if (!user) {
         user = new User({
           name: profile.displayName,
-          email: profile.emails[0].value,
+          email: email,
           username: profile.username,
           provider: 'github',
           github: profile._json
