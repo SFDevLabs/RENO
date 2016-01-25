@@ -7,8 +7,7 @@
 const React = require('react');
 import { Link } from 'react-router';
 
-///Move Mee to another file
-const About = React.createClass({
+const NotFound = React.createClass({
   render :function() {
     return <section className="container">
         <div className="page-header">
@@ -22,4 +21,4 @@ const About = React.createClass({
   }
 })
 
-module.exports = About;
+module.exports = NotFound;

@@ -49,7 +49,7 @@ const Messages = React.createClass({
     return JSX
   },
   /**
-   * _visible
+   * set as _visible
    */
   _visible:function(){
     const that = this;
@@ -61,7 +61,7 @@ const Messages = React.createClass({
     },10)
   },
   /**
-    * _notVisible
+    * set as _notVisible
    */
   _notVisible:function(){
     const that = this;

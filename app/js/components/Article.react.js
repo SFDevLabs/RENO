@@ -73,7 +73,7 @@ const ArticleSection = React.createClass({
          )
     });
 
-    //Logic create image
+    //Logic to create image
     var img 
     if (article.image && article.image.files && article.image.files.length){
       var parser = document.createElement('a');// Stripping the protocol from the link for proper link structure

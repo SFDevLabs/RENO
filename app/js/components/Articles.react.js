@@ -104,6 +104,9 @@ const ArticleSection = React.createClass({
       </div>
     </section>;
   },
+  /**
+   * Utility function to call action that gets articles from the API 
+   */
   _fetch:function(tag, skip, clearStore){
     if (tag) {
         this.setState({tag: tag})

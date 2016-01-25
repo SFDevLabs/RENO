@@ -48,6 +48,7 @@ const ArticleItem = React.createClass({
       </span>
     :null;
     const dateString = new Date(article.createdAt).toLocaleString();
+    
     return <div className="article" >
       <h3 style={overflow} >
         <Link to={"/articles/"+article._id}>
