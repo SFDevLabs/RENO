@@ -12,7 +12,7 @@ $ npm install
 $ npm start
 ```
 
-Then visit [http://localhost:3000/](http://localhost:3000/)
+Then visit [http://localhost:3000/](http://localhost:3000/). This starts the Express powered API and starts the Webpack-dev-server which bundles the frontend JSX/JS every time you make a file change in the app/js folder.
 
 ## What's in the box?
 
@@ -48,6 +48,13 @@ $ npm test
 ```
 [ ![Codeship Status for SFDevLabs/RENO](https://codeship.com/projects/b68dad30-a46c-0133-a156-726ab495672b/status?branch=master)](https://codeship.com/projects/129430)
 
+## Building
+In production the static assets are served from the /build folder (In devlopment they are served by Webpack-dev-server).  To use Webpack to build the JS and JSX assets into /build/js/bundle.js run the following:
+
+```sh
+$ npm run build
+```
+*Running build is required for changes to be seen on production.
 
 ## CREDIT
 
