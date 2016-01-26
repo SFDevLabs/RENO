@@ -36,7 +36,7 @@ const CommentItem = React.createClass({
     return <div style={{position:'relative'}} className="comment">
       {loader}
       <p style={{opacity: opacity}}>
-        <a href="">{comment.user.username}</a>
+        <Link to={'/users/' + comment.user._id} >{comment.user.username}</Link>
         :&nbsp;
         {comment.body}
       </p>
