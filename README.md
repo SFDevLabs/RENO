@@ -50,12 +50,12 @@ $ npm test
 [ ![Codeship Status for SFDevLabs/RENO](https://codeship.com/projects/b68dad30-a46c-0133-a156-726ab495672b/status?branch=master)](https://codeship.com/projects/129430)
 
 ## Building
-In production the static assets are served from the /build folder (In devlopment they are served by Webpack-dev-server).  To use Webpack to build the JS and JSX assets into /build/js/bundle.js run the following:
+In production the static assets are served from the "/build" folder (In devlopment they are served by Webpack-dev-server).  To use Webpack to build the JS and JSX assets into "/build/js/bundle.js" run the following:
 
 ```sh
 $ npm run build
 ```
-*Running build is required for changes to be seen on production.
+*Running build is required for changes to be seen on a production environment.
 
 ## CREDIT
 
