@@ -50,7 +50,7 @@ const CommentItem = React.createClass({
   },
 
   /**
-   * Event handler called within.
+   * Event handler called from DOM.
    * @param  {string} text
    */
   _destroy: function() {
