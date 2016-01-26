@@ -34,16 +34,14 @@ const ArticleSection = React.createClass({
   componentDidMount: function() {
     const tag = this.props.params.tag
     const initalSkip = 0;
+    const initalGet = this.state.initalGet;
 
-    if (this.state.initalGet && tag === this.state.tag){ //This flag tells of if we have hit the list API for this query.
-      this.setState(getState());
-    } else {
-      this._fetch(tag, initalSkip);
+    if (!initalGet || tag != this.state.tag){ //if the tag has changed or we hav not made a fetch we need data.
+      let clearState = true; //Clear the state before we fetch all articles for the first time.
+      this._fetch(tag, initalSkip, clearState);
     }
     ArticleStore.addChangeListener(this._onChange);
   },
-
-
 
   componentWillUnmount: function() {
     ArticleStore.removeChangeListener(this._onChange);
@@ -80,6 +78,7 @@ const ArticleSection = React.createClass({
           ):null;
 
     const articles = _.chain(articlesData)//Lodash functions to sort and map our article items
+      .filter(null) //filtering our null values we use as 404 placeholders.
       .sortBy(function(n){return -new Date(n.createdAt);}) //reverse cronological by creation
       .map(function(val, key){
         return <ArticleItem key={key} article={val} />
