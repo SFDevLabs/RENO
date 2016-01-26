@@ -13,7 +13,7 @@ $ npm install
 $ npm start
 ```
 
-Then visit [http://localhost:3000/](http://localhost:3000/). This starts the Express powered API and starts the Webpack-dev-server which bundles the frontend JSX/JS every time you make a file change in the app/js folder.
+Then visit [http://localhost:3000/](http://localhost:3000/). This starts the Express powered API and the Webpack-dev-server. Webpack will bundle the frontend JSX/JS every time you make a file change in the "app/js" folder.
 
 ## What's in the box?
 
