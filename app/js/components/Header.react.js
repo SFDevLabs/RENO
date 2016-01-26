@@ -59,9 +59,9 @@ const Header = React.createClass({
     navItemsLeft.push(<NavItem key={1} href="https://github.com/sfdevlabs/reno">GitHub Repo</NavItem>);
     // Create the left side based on logged in state.
     var navItemsRight = isLoggedIn?
-          <NavDropdown eventKey={2} className={this._activeClass('/users/'+profile._id)} title={profile.username} id="basic-nav-dropdown">
+          <NavDropdown eventKey={2} title={profile.username} id="basic-nav-dropdown">
             <LinkContainer key={2.0} to={'/users/'+profile._id}>
-              <MenuItem >Profile</MenuItem>
+              <MenuItem className={this._activeClass('/users/'+profile._id)} >Profile</MenuItem>
             </LinkContainer>
             <MenuItem eventKey={2.1} href="/logout" >Logout</MenuItem>
           </NavDropdown>:
