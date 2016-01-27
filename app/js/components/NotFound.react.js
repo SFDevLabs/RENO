@@ -8,7 +8,7 @@ const React = require('react');
 import { Link } from 'react-router';
 
 const NotFound = React.createClass({
-  render :function() {
+  render: function() {
     return <section className="container">
         <div className="page-header">
           <h2>404 - Not Found</h2>
