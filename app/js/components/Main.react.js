@@ -35,7 +35,7 @@ const Root = React.createClass({
    */
   render: function() {
     //Our React Router table
-    return <div className="top" style={{height:'100%'}} onClick={this._onClick}>
+    return <div className="top" style={{height:'100%'}} >
       <Router history={hashHistory}>
         <Route path="/" component={Main} >
           <IndexRoute component={Articles} />
@@ -48,9 +48,6 @@ const Root = React.createClass({
         </Route>
       </Router>
     </div>;
-  },
-  _onClick: function(){
-      AppDispatcher.dispatch({actionType: Constants.APP_CLICK});
   }
 
 });
