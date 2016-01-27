@@ -196,17 +196,6 @@ ArticleSchema.statics = {
       .limit(options.count)
       .skip(options.skip)
       .exec(cb);
-  },
-  //kill me in the future
-  listOld: function (options, cb) {
-    const criteria = options.criteria || {};
-    this.find(criteria)
-      .populate('user', 'name username')
-      .populate('comments.user')
-      .sort({'createdAt': -1}) // sort by date
-      .limit(options.perPage)
-      .skip(options.perPage * options.page)
-      .exec(cb);
   }
 };
 

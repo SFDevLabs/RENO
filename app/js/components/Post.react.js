@@ -83,12 +83,14 @@ const Post = React.createClass({
       {img}
     </div>;
   },
+
   /**
    * Event handler for 'change' events coming the form
    */
-  _handleChange: function(field, e){
+  _handleChange: function(field, e) {
     this.props.handleChange(field, e.target.value);
   },
+
   /**
    * Event handler for 'change' events coming from tag input plugin
    */
@@ -105,12 +107,13 @@ const Post = React.createClass({
       this.props.handleChange('image', file);
     }
   },
+
   /**
    * Event handler from dom for forms
    * @param  {string} text
    */
   _save: function() {
-    this.props.save()  
+    this.props.save();
   }
 
 });

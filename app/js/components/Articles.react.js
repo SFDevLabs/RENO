@@ -106,7 +106,7 @@ const ArticleSection = React.createClass({
   /**
    * Utility function to call action that gets articles from the API 
    */
-  _fetch:function(tag, skip, clearStore){
+  _fetch: function(tag, skip, clearStore){
     if (tag) {
         this.setState({tag: tag})
         Actions.getListByTag(tag, take, skip, clearStore);
@@ -123,9 +123,9 @@ const ArticleSection = React.createClass({
   /**
    * Event handler for 'more' button coming from the DOM
    */
-  _onClickMore:function(){   
-    const skip = Object.keys(this.state.articles).length
-    const tag = this.state.tag 
+  _onClickMore: function(){   
+    const skip = Object.keys(this.state.articles).length;
+    const tag = this.state.tag;
     this._fetch(tag, skip);
     this.setState({
       loading:true
@@ -134,11 +134,11 @@ const ArticleSection = React.createClass({
   /**
    * Event handler for 'refresh' button coming from the DOM
    */
-  _onRefresh:function(){
-    const clearStore = true //We will clear the store so we are sure we load the most recent articles.
-    const tag = this.state.tag
+  _onRefresh: function(){
+    const clearStore = true; //We will clear the store so we are sure we load the most recent articles.
+    const tag = this.state.tag;
     const skip = 0;
-    this._fetch(tag, skip, clearStore)
+    this._fetch(tag, skip, clearStore);
     this.setState({
       loading:true,
       initalGet: false

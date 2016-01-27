@@ -29,9 +29,9 @@ const Comments = React.createClass({
     });
   },
 
-  render :function() {
+  render: function() {
     const commentsData = this.props.comments;
-    const articleId = this.props.id
+    const articleId = this.props.id;
     const comments = _.map(commentsData, function(comment, i){
       return <CommentItem  key={i} comment={comment} articleId={articleId} />
     });
@@ -78,7 +78,6 @@ const Comments = React.createClass({
     }
   }
 
-  
 })
 
 module.exports = Comments;

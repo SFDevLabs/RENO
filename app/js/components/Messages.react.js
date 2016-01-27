@@ -14,17 +14,17 @@ const Messages = React.createClass({
   	type: React.PropTypes.string.isRequired//Possible values: warning, danger, info, success
   },
 
-  getInitialState:function(){
+  getInitialState: function() {
     return {
       removed: false,
     };
   },
 
-  componentDidMount:function(){
+  componentDidMount: function() {
     this._visible();
   },
 
-  componentWillReceiveProps:function(nextProps){
+  componentWillReceiveProps: function(nextProps) {
     this._visible();
   },
 
@@ -51,7 +51,7 @@ const Messages = React.createClass({
   /**
    * set as _visible
    */
-  _visible:function(){
+  _visible: function() {
     const that = this;
     that.setState({removed:false});
     setTimeout(function(){
@@ -63,7 +63,7 @@ const Messages = React.createClass({
   /**
     * set as _notVisible
    */
-  _notVisible:function(){
+  _notVisible: function() {
     const that = this;
     this.setState({alertVisible: false});
     setTimeout(function(){

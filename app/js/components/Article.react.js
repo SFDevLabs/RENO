@@ -25,7 +25,7 @@ function getState(id) {
 }
 const ArticleSection = React.createClass({
   
-  contextTypes:{
+  contextTypes: {
     router: React.PropTypes.object.isRequired
   },
   getInitialState: function() {
@@ -45,7 +45,7 @@ const ArticleSection = React.createClass({
   /**
    * @return {object}
    */
-  render :function() {
+  render: function() {
     if (this.state.article===null){return <NotFound />}//null means the api gave us a 404.
     else if (!this.state.article){return <Loader />}//undefined means that no request for the article has been made.
 
@@ -75,14 +75,14 @@ const ArticleSection = React.createClass({
 
     //Logic to create image
     var img 
-    if (article.image && article.image.files && article.image.files.length){
+    if (article.image && article.image.files && article.image.files.length) {
       var parser = document.createElement('a');// Stripping the protocol from the link for proper link structure
       parser.href = article.image.cdnUri;
-      const cdnUri = parser.host + parser.pathname
+      const cdnUri = parser.host + parser.pathname;
       img =
         <a href={article.image.cdnUri + '/detail_' + article.image.files[0]} target="_blank" >
           <img src = {'//' + cdnUri + 'mini_' + article.image.files[0]} alt="" />
-        </a>
+        </a>;
     }else{
       img = null;
     }
@@ -159,7 +159,7 @@ const ArticleSection = React.createClass({
   /**
    * Event handler for 'refresh' button coming from the DOM
    */
-  _onRefresh:function(){
+  _onRefresh: function() {
     Actions.getById(this.props.params.id);
     this.setState({
       article:undefined

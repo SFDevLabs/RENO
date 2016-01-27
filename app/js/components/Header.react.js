@@ -27,7 +27,7 @@ const Header = React.createClass({
     router: React.PropTypes.object.isRequired
   },
 
-  getInitialState:function(){
+  getInitialState: function() {
     return {
       loading: true
     };
@@ -101,7 +101,7 @@ const Header = React.createClass({
    * @param  {string} path 
    * @return {[type]}      [description]
    */
-  _activeClass: function(path){
+  _activeClass: function(path) {
     return this.context.router.isActive(path)?'active':null;
   }
 

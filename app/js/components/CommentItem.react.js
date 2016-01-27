@@ -29,7 +29,7 @@ const CommentItem = React.createClass({
     })
   },
   render :function() {
-    const comment = this.props.comment
+    const comment = this.props.comment;
     const opacity = this.state.saving?.2:1;
     const loader = this.state.saving?<Loader options={{top:'40%'}} />:null;
     const dateString = new Date(comment.createdAt).toLocaleString();
