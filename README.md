@@ -14,11 +14,11 @@ $ npm install
 $ npm start
 ```
 
-Then visit [http://localhost:3000/](http://localhost:3000/). This starts the Express powered API and the Webpack-dev-server. Webpack will bundle the frontend JSX/JS every time you make a file change in the "app/js" folder.
+Then visit [http://localhost:3000/](http://localhost:3000/). This starts the Express powered API and the Webpack-dev-server. Webpack will bundle the front end JSX/JS every time you make a file change in the "app/js" folder.
 
 ## What's in the box?
 
-1. [React.js](https://facebook.github.io/react/) / [Flux](https://facebook.github.io/flux/) Frontend (Look in the directory /app/js)
+1. [React.js](https://facebook.github.io/react/) / [Flux](https://facebook.github.io/flux/) Front end (Look in the directory /app/js)
 2. [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) API  built in [Express.js](http://expressjs.com/) and [MongoDB](https://www.mongodb.org/)
 3. [Webpack](https://webpack.github.io/) configuration
 3. [Passport.js](http://passportjs.org/) authentication
@@ -30,7 +30,7 @@ Then visit [http://localhost:3000/](http://localhost:3000/). This starts the Exp
 Because we need a good simple example of an end-to-end React app. Motivated by the [javascript fatigue](https://medium.com/@ericclemmons/javascript-fatigue-48d4011b6fc4#.3fcefof62) some new developers face.
 
 
-## Frontend Application Event Flow
+## Front end Application Event Flow
 When a user interacts wth RENO (i.e. creates a post) data flows through a series of steps. These steps mirror the folders structure located at *app/js*.
 
 1. Components: The React classes and JSX that declare our UI elements
@@ -43,7 +43,7 @@ When a user interacts wth RENO (i.e. creates a post) data flows through a series
 	    }
 	  })
 	```  
-2. Actions: The central module for actions we register on our UI elments
+2. Actions: The central module for actions we register on our UI elements
 
 	```js
 	  ...
@@ -85,7 +85,7 @@ When a user interacts wth RENO (i.e. creates a post) data flows through a series
 	  }
 	```
 
-5. Store: The data model where we set new data and then emit events to rerender our components with the new data
+5. Store: The data model where we set new data and then emit events to re-render our components with the new data
 
 	```js
 	  AppDispatcher.register(function(action) {
@@ -143,7 +143,7 @@ To run the app on Heroku you must set the [environment variables](https://nodejs
 
 ## Tests
 
-You can find the pplications test in Two places:
+You can find the application's tests in Two places:
 
 1. Front End tests are in the \__tests__ folders located in same directory of the modules they cover
 2. Back end tests are located in the *test* directory
@@ -156,7 +156,7 @@ $ npm test
 [ ![Codeship Status for SFDevLabs/RENO](https://codeship.com/projects/b68dad30-a46c-0133-a156-726ab495672b/status?branch=master)](https://codeship.com/projects/129430)
 
 ## Building
-In production the static assets are served from the "/build" folder (In devlopment they are served by Webpack-dev-server).  To use Webpack to build the JS and JSX assets into "/build/js/bundle.js" run the following:
+In production the static assets are served from the "/build" folder (In development they are served by webpack-dev-server).  To use Webpack to build the JS and JSX assets into "/build/js/bundle.js" run the following:
 
 ```sh
 $ npm run build
