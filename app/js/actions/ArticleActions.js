@@ -32,8 +32,6 @@ const Actions = {
   },
 
 
-  
-
   /**
    * @param  {string} id
    */
