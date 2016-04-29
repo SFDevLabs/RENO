@@ -30,7 +30,7 @@ Then visit [http://localhost:3000/](http://localhost:3000/). This starts the Exp
 Because we need a good simple example of an end-to-end React app. Motivated by the [javascript fatigue](https://medium.com/@ericclemmons/javascript-fatigue-48d4011b6fc4#.3fcefof62) some new developers face.
 
 
-## Front end Application Event Flow
+## Front End Application Event Flow
 When a user interacts wth RENO (i.e. creates a post) data flows through a series of steps. These steps mirror the folders structure located at *app/js*.
 
 1. Components: The React classes and JSX that declare our UI elements
