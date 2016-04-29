@@ -18,7 +18,7 @@ Then visit [http://localhost:3000/](http://localhost:3000/). This starts the Exp
 
 ## What's in the box?
 
-1. [React.js](https://facebook.github.io/react/) / [Flux](https://facebook.github.io/flux/) Front end (Look in the directory /app/js)
+1. [React.js](https://facebook.github.io/react/) / [Flux](https://facebook.github.io/flux/) Front End (Look in the directory /app/js)
 2. [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) API  built in [Express.js](http://expressjs.com/) and [MongoDB](https://www.mongodb.org/)
 3. [Webpack](https://webpack.github.io/) configuration
 3. [Passport.js](http://passportjs.org/) authentication
